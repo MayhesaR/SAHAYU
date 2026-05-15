@@ -149,9 +149,9 @@
 </form>
 <footer class="mt-10 pt-8 border-t border-surface-container-low flex flex-col items-center">
 <p class="text-on-surface-variant text-sm mb-4">Don't have an account yet?</p>
-<button class="w-full py-3.5 px-6 rounded-xl bg-surface-container-highest text-on-surface font-semibold hover:bg-surface-container-high active:scale-[0.98] transition-all">
+<a href="{{ route('register') }}" class="w-full py-3.5 px-6 rounded-xl bg-surface-container-highest text-on-surface font-semibold hover:bg-surface-container-high active:scale-[0.98] transition-all text-center">
                     Create SAHAYU Workspace
-                </button>
+                </a>
 </footer>
 </div>
 <div class="mt-8 flex justify-center space-x-6">
