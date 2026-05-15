@@ -1,0 +1,12 @@
+{
+  "php": {
+    "extensions": [
+      "gd",
+      "mbstring",
+      "xml",
+      "bcmath",
+      "curl",
+      "zip"
+    ]
+  }
+}
