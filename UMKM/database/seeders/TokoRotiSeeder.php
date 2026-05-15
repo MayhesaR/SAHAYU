@@ -9,6 +9,8 @@ use App\Models\ProductionMaterial;
 use App\Models\Sale;
 use App\Models\SaleItem;
 use App\Models\OverheadCost;
+use App\Models\Company;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -19,27 +21,53 @@ class TokoRotiSeeder extends Seeder
     {
         $this->command->info('🥐 Seeding Toko Roti Data...');
 
+        $company = Company::first();
+        if (!$company) {
+            $company = Company::create(['name' => 'SAHAYU Bakery']);
+        }
+
+        $admin = User::first();
+        $adminId = $admin ? $admin->id : 1;
+
+        $startDate = Carbon::create(2025, 1, 1);
+        $endDate = Carbon::now();
+        $totalMonths = $startDate->diffInMonths($endDate);
+        $totalDays = $startDate->diffInDays($endDate);
+
         // 1. Materials
         $materials = [
-            ['name' => 'Tepung Terigu (Premium)', 'category' => 'Struktur', 'stock' => 100, 'minimum_stock' => 20, 'unit' => 'kg', 'price' => 15000],
-            ['name' => 'Gula Pasir', 'category' => 'Dasar', 'stock' => 50, 'minimum_stock' => 10, 'unit' => 'kg', 'price' => 16000],
-            ['name' => 'Mentega (Butter)', 'category' => 'Dasar', 'stock' => 30, 'minimum_stock' => 5, 'unit' => 'kg', 'price' => 50000],
-            ['name' => 'Telur Ayam', 'category' => 'Dasar', 'stock' => 200, 'minimum_stock' => 50, 'unit' => 'butir', 'price' => 2000],
-            ['name' => 'Cokelat Bubuk', 'category' => 'Finishing', 'stock' => 10, 'minimum_stock' => 2, 'unit' => 'kg', 'price' => 80000],
-            ['name' => 'Keju Cheddar', 'category' => 'Finishing', 'stock' => 15, 'minimum_stock' => 3, 'unit' => 'kg', 'price' => 90000],
-            ['name' => 'Ragi Instan', 'category' => 'Struktur', 'stock' => 5, 'minimum_stock' => 1, 'unit' => 'kg', 'price' => 120000],
+            ['company_id' => $company->id, 'name' => 'Tepung Terigu (Premium)', 'category' => 'Struktur', 'stock' => 100, 'minimum_stock' => 20, 'unit' => 'kg', 'price' => 15000],
+            ['company_id' => $company->id, 'name' => 'Gula Pasir', 'category' => 'Dasar', 'stock' => 50, 'minimum_stock' => 10, 'unit' => 'kg', 'price' => 16000],
+            ['company_id' => $company->id, 'name' => 'Mentega (Butter)', 'category' => 'Dasar', 'stock' => 30, 'minimum_stock' => 5, 'unit' => 'kg', 'price' => 50000],
+            ['company_id' => $company->id, 'name' => 'Telur Ayam', 'category' => 'Dasar', 'stock' => 200, 'minimum_stock' => 50, 'unit' => 'butir', 'price' => 2000],
+            ['company_id' => $company->id, 'name' => 'Cokelat Bubuk', 'category' => 'Finishing', 'stock' => 10, 'minimum_stock' => 2, 'unit' => 'kg', 'price' => 80000],
+            ['company_id' => $company->id, 'name' => 'Keju Cheddar', 'category' => 'Finishing', 'stock' => 15, 'minimum_stock' => 3, 'unit' => 'kg', 'price' => 90000],
+            ['company_id' => $company->id, 'name' => 'Ragi Instan', 'category' => 'Struktur', 'stock' => 5, 'minimum_stock' => 1, 'unit' => 'kg', 'price' => 120000],
         ];
 
-        foreach ($materials as $material) {
-            Material::create($material);
+        foreach ($materials as $materialData) {
+            $material = Material::create($materialData);
+            
+            // Initial Stock Movement
+            $material->stockMovements()->create([
+                'company_id' => $company->id,
+                'user_id' => $adminId,
+                'type' => 'in',
+                'quantity' => $materialData['stock'],
+                'stock_before' => 0,
+                'stock_after' => $materialData['stock'],
+                'unit_price' => $materialData['price'],
+                'transaction_date' => $startDate->toDateString(),
+                'reference' => 'Stok Awal',
+            ]);
         }
 
         // 2. Products
         $products = [
-            ['name' => 'Roti Cokelat Lumer', 'selling_price' => 12000, 'stock' => 0, 'minimum_stock' => 10],
-            ['name' => 'Roti Keju Spesial', 'selling_price' => 15000, 'stock' => 0, 'minimum_stock' => 10],
-            ['name' => 'Croissant Butter', 'selling_price' => 20000, 'stock' => 0, 'minimum_stock' => 5],
-            ['name' => 'Brownies Panggang', 'selling_price' => 45000, 'stock' => 0, 'minimum_stock' => 5],
+            ['company_id' => $company->id, 'name' => 'Roti Cokelat Lumer', 'selling_price' => 12000, 'stock' => 0, 'minimum_stock' => 10],
+            ['company_id' => $company->id, 'name' => 'Roti Keju Spesial', 'selling_price' => 15000, 'stock' => 0, 'minimum_stock' => 10],
+            ['company_id' => $company->id, 'name' => 'Croissant Butter', 'selling_price' => 20000, 'stock' => 0, 'minimum_stock' => 5],
+            ['company_id' => $company->id, 'name' => 'Brownies Panggang', 'selling_price' => 45000, 'stock' => 0, 'minimum_stock' => 5],
         ];
 
         $createdProducts = [];
@@ -47,31 +75,52 @@ class TokoRotiSeeder extends Seeder
             $createdProducts[] = Product::create($product);
         }
 
-        // 3. Overhead Costs (Full 2025 and 2026)
-        $startDate = Carbon::create(2025, 1, 1);
-        $endDate = Carbon::create(2026, 12, 31);
-        $totalMonths = $startDate->diffInMonths($endDate);
-        
+        // 3. Overhead Costs (From 2025 to Now)
         $overheadCategories = ['Listrik', 'Sewa', 'Gaji', 'Kemasan'];
         for ($i = 0; $i <= $totalMonths; $i++) {
             $date = $startDate->copy()->addMonths($i);
+            if ($date->greaterThan($endDate)) break;
+
             foreach ($overheadCategories as $cat) {
                 OverheadCost::create([
+                    'company_id' => $company->id,
                     'name' => "Biaya $cat " . $date->format('F Y'),
                     'category' => 'Operasional',
                     'cost' => rand(500000, 2000000),
-                    'transaction_date' => $date->copy()->startOfMonth()->addDays(rand(0, 27)),
+                    'transaction_date' => $date->copy()->startOfMonth()->addDays(rand(0, min(27, $date->diffInDays($endDate)))),
                 ]);
             }
         }
-
-        // 4. Productions & Sales (Full 2025 and 2026)
+        // 4. Productions & Sales (From 2025 to Now)
         $totalDays = $startDate->diffInDays($endDate);
-        $this->command->info("  - Generating data from 2025-01-01 to 2026-12-31 (~$totalDays days)...");
+        $this->command->info("  - Generating data from 2025-01-01 to " . $endDate->toDateString() . " (~$totalDays days)...");
         
+        $allMaterials = Material::where('company_id', $company->id)->get();
+
         for ($i = 0; $i <= $totalDays; $i++) {
             $date = $startDate->copy()->addDays($i);
             
+            // Weekly Material Re-supply (Stock In)
+            if ($date->dayOfWeek === Carbon::MONDAY) {
+                foreach ($allMaterials as $mat) {
+                    $supplyQty = rand(50, 150);
+                    $before = (int) $mat->stock;
+                    $mat->increment('stock', $supplyQty);
+                    
+                    $mat->stockMovements()->create([
+                        'company_id' => $company->id,
+                        'user_id' => $adminId,
+                        'type' => 'in',
+                        'quantity' => $supplyQty,
+                        'stock_before' => $before,
+                        'stock_after' => $before + $supplyQty,
+                        'unit_price' => $mat->price,
+                        'transaction_date' => $date->toDateString(),
+                        'reference' => 'Restock Mingguan',
+                    ]);
+                }
+            }
+
             // Randomly decide to produce something today
             if (rand(0, 100) < 75) { 
                 $product = $createdProducts[array_rand($createdProducts)];
@@ -80,6 +129,7 @@ class TokoRotiSeeder extends Seeder
                 $good = $qty - $reject;
 
                 $production = Production::create([
+                    'company_id' => $company->id,
                     'batch_code' => 'PROD-' . $date->format('Ymd') . '-' . strtoupper(substr(md5(uniqid()), 0, 4)),
                     'product_id' => $product->id,
                     'quantity' => $qty,
@@ -98,13 +148,33 @@ class TokoRotiSeeder extends Seeder
 
                 $product->increment('stock', $good);
 
-                $randomMaterials = Material::inRandomOrder()->take(3)->get();
+                // Production Usage (Stock Out)
+                $randomMaterials = $allMaterials->random(3);
                 foreach ($randomMaterials as $mat) {
-                    ProductionMaterial::create([
-                        'production_id' => $production->id,
-                        'material_id' => $mat->id,
-                        'quantity' => rand(2, 8),
-                    ]);
+                    $useQty = rand(2, 8);
+                    if ((int) $mat->stock >= $useQty) {
+                        $before = (int) $mat->stock;
+                        $mat->decrement('stock', $useQty);
+
+                        ProductionMaterial::create([
+                            'company_id' => $company->id,
+                            'production_id' => $production->id,
+                            'material_id' => $mat->id,
+                            'quantity' => $useQty,
+                        ]);
+
+                        $mat->stockMovements()->create([
+                            'company_id' => $company->id,
+                            'user_id' => $adminId,
+                            'type' => 'out',
+                            'quantity' => $useQty,
+                            'stock_before' => $before,
+                            'stock_after' => $before - $useQty,
+                            'unit_price' => $mat->price,
+                            'transaction_date' => $date->toDateString(),
+                            'reference' => "Produksi #{$production->batch_code}",
+                        ]);
+                    }
                 }
             }
 
@@ -118,6 +188,7 @@ class TokoRotiSeeder extends Seeder
                 $total = $saleQty * $product->selling_price;
 
                 $sale = Sale::create([
+                    'company_id' => $company->id,
                     'customer' => 'Pelanggan Umum',
                     'total' => $total,
                     'payment_method' => ['Cash', 'QRIS', 'Transfer'][rand(0, 2)],
@@ -126,6 +197,7 @@ class TokoRotiSeeder extends Seeder
                 ]);
 
                 SaleItem::create([
+                    'company_id' => $company->id,
                     'sale_id' => $sale->id,
                     'product_id' => $product->id,
                     'quantity' => $saleQty,

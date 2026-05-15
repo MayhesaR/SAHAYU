@@ -31,6 +31,9 @@ class MaterialController extends Controller
                 defaultSort: 'transaction_date',
                 defaultOrder: 'desc',
                 perPage: 12,
+                dateColumn: 'transaction_date',
+                pageName: 'h_page',
+                prefix: 'h',
             );
 
         $criticalMaterials = Material::query()

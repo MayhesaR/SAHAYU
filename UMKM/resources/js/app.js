@@ -257,9 +257,9 @@ window.Echo.channel("sales-analytics").listen(
             topProductsList.innerHTML = event.top_products
                 .map(
                     (product) => `
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span>${product.name}</span>
-                    <span class="badge bg-primary rounded-pill">${product.qty} unit</span>
+                <li class="list-group-item d-flex justify-content-between align-items-center p-4 bg-surface-container-lowest rounded-lg">
+                    <span class="text-sm font-medium">${product.name}</span>
+                    <span class="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold rounded-full">${Number(product.qty).toLocaleString("id-ID")} unit</span>
                 </li>
             `,
                 )
@@ -284,7 +284,7 @@ window.Echo.channel("sales-analytics").listen(
                 <form action="${event.latest_sale.destroy_url}" method="POST" onsubmit="return confirm('Hapus transaksi ini?')">
                     <input type="hidden" name="_token" value="${csrfToken}">
                     <input type="hidden" name="_method" value="DELETE">
-                    <button class="px-3 py-1.5 text-xs font-semibold text-red-700 bg-red-50 hover:bg-red-100 rounded-full transition-colors inline-flex items-center gap-1" type="submit">
+                    <button class="px-3 py-1.5 rounded-lg text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 transition-colors flex items-center gap-1" type="submit">
                         <span class="material-symbols-outlined text-sm">delete</span>
                         <span>Hapus</span>
                     </button>
@@ -293,9 +293,10 @@ window.Echo.channel("sales-analytics").listen(
                 : "";
 
             const row = document.createElement("tr");
-            row.className = "hover:bg-primary/5 transition-colors group";
+            row.className = "hover:bg-primary/5 transition-colors group border-b border-slate-50";
+            row.dataset.timestamp = event.latest_sale.timestamp;
             row.innerHTML = `
-                <td class="px-8 py-6 text-on-surface-variant">${event.latest_sale.time} WIB</td>
+                <td class="px-8 py-6 text-on-surface-variant">${event.latest_sale.full_time || event.latest_sale.time}</td>
                 <td class="px-8 py-6 font-bold text-teal-900">${event.latest_sale.product}</td>
                 <td class="px-8 py-6 text-center">${Number(event.latest_sale.qty).toLocaleString("id-ID")}</td>
                 <td class="px-8 py-6">${event.latest_sale.customer}</td>
@@ -312,11 +313,27 @@ window.Echo.channel("sales-analytics").listen(
                 <td class="px-8 py-6 text-right">${actionCell}</td>
             `;
 
-            historyTable.prepend(row);
+            // Smart Insertion: Find the correct position based on timestamp (descending)
+            const rows = Array.from(historyTable.querySelectorAll("tr:not([data-sales-history-empty])"));
+            let inserted = false;
 
-            const rows = historyTable.querySelectorAll("tr");
-            if (rows.length > 15) {
-                rows[rows.length - 1].remove();
+            for (const existingRow of rows) {
+                const existingTime = Number(existingRow.dataset.timestamp || 0);
+                if (event.latest_sale.timestamp >= existingTime) {
+                    historyTable.insertBefore(row, existingRow);
+                    inserted = true;
+                    break;
+                }
+            }
+
+            if (!inserted) {
+                historyTable.appendChild(row);
+            }
+
+            // Keep only latest 15
+            const finalRows = historyTable.querySelectorAll("tr");
+            if (finalRows.length > 15) {
+                finalRows[finalRows.length - 1].remove();
             }
         }
     },

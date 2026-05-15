@@ -162,6 +162,7 @@
     <x-table-controls
         :action="route('materials.index')"
         searchPlaceholder="Cari nama bahan, kategori, supplier..."
+        :showDates="false"
         :sortOptions="[
             ['value' => 'name_asc', 'label' => 'Nama (A-Z)'],
             ['value' => 'name_desc', 'label' => 'Nama (Z-A)'],
@@ -185,7 +186,7 @@
                 {{ $materials->total() }} item ditemukan
             </span>
         </div>
-        <div class="w-full overflow-x-auto overflow-y-hidden border border-gray-100 rounded-lg mb-4" style="-webkit-overflow-scrolling: touch; display: block; clear: both; touch-action: pan-x pan-y;">
+        <div class="w-full overflow-x-auto border border-gray-100 rounded-lg mb-4 pb-24" style="-webkit-overflow-scrolling: touch; display: block; clear: both; touch-action: pan-x pan-y;">
             <table class="min-w-[800px] w-full text-xs text-left border-collapse whitespace-nowrap">
                 <thead>
                     <tr class="bg-surface-container-low text-on-surface-variant">
@@ -236,60 +237,18 @@
                         <td class="px-2 sm:px-8 py-3 sm:py-5">
                             <div class="text-[11px] md:text-sm font-semibold text-on-surface">{{ $material->default_supplier ?: '-' }}</div>
                             <div class="text-[10px] text-slate-400">Lead time: {{ $material->supplier_lead_time_days ?? '0' }} hr</div>
-                        </td>
-                        <td class="px-2 sm:px-8 py-3 sm:py-5 text-right relative">
-                            <details class="inline-block text-left dropdown-action">
-                                <summary class="list-none cursor-pointer p-1 sm:p-2 hover:bg-surface-container-highest rounded-full transition-all text-slate-400 group-hover:text-primary">
-                                    <span class="material-symbols-outlined text-xl">more_vert</span>
-                                </summary>
-                                <div class="absolute right-0 mt-2 w-72 bg-white border border-outline-variant/10 rounded-2xl shadow-2xl p-4 space-y-4 z-40 animate-in fade-in zoom-in-95 duration-200">
-                                    <div class="flex items-center justify-between border-b border-outline-variant/5 pb-2">
-                                        <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Opsi Cepat</span>
-                                        @if(auth()->user()->isAdmin())
-                                        <button class="text-primary text-[10px] font-black uppercase hover:underline edit-material-btn"
-                                                data-id="{{ $material->id }}"
-                                                data-name="{{ $material->name }}"
-                                                data-category="{{ $material->category }}"
-                                                data-unit="{{ $material->unit }}"
-                                                data-price="{{ (int)$material->price }}"
-                                                data-minimum_stock="{{ $material->minimum_stock }}"
-                                                data-default_supplier="{{ $material->default_supplier }}">Edit Data</button>
-                                        @endif
-                                    </div>
-
-                                    @if(auth()->user()->isAdmin())
-                                    <form action="{{ route('materials.stock-in', $material) }}" method="POST" class="grid grid-cols-2 gap-2">
-                                        @csrf
-                                        <div class="col-span-1">
-                                            <input name="quantity" min="1" required class="w-full bg-slate-50 border-none rounded-lg px-3 py-2 text-xs focus:ring-1 focus:ring-teal-500" type="number" placeholder="Qty In"/>
-                                        </div>
-                                        <button class="py-2 rounded-lg bg-teal-600 text-white text-[10px] font-bold uppercase tracking-wider" type="submit">Stok Masuk</button>
-                                        <input type="hidden" name="unit_price" value="{{ $material->price }}"/>
-                                    </form>
-
-                                    <form action="{{ route('materials.stock-out', $material) }}" method="POST" class="grid grid-cols-2 gap-2">
-                                        @csrf
-                                        <div class="col-span-1">
-                                            <input name="quantity" min="1" required class="w-full bg-slate-50 border-none rounded-lg px-3 py-2 text-xs focus:ring-1 focus:ring-amber-500" type="number" placeholder="Qty Out"/>
-                                        </div>
-                                        <button class="py-2 rounded-lg bg-amber-500 text-white text-[10px] font-bold uppercase tracking-wider" type="submit">Pakai Stok</button>
-                                    </form>
-
-                                    <div class="pt-2 border-t border-outline-variant/5">
-                                        <form action="{{ route('materials.destroy', $material) }}" method="POST" onsubmit="return confirm('Hapus material ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="w-full py-2.5 text-red-600 text-xs font-bold uppercase tracking-widest hover:bg-red-50 rounded-lg transition-colors flex items-center justify-center gap-2" type="submit">
-                                                <span class="material-symbols-outlined text-sm">delete</span>
-                                                <span>Hapus Permanen</span>
-                                            </button>
-                                        </form>
-                                    </div>
-                                    @else
-                                    <p class="text-[10px] text-center text-slate-400 italic">Hanya Admin yang dapat mengelola stok.</p>
-                                    @endif
-                                </div>
-                            </details>
+                        <td class="px-2 sm:px-8 py-3 sm:py-5 text-right">
+                            <button class="p-2 hover:bg-surface-container-highest rounded-full transition-all text-slate-400 hover:text-primary open-quick-action" 
+                                    data-id="{{ $material->id }}"
+                                    data-name="{{ $material->name }}"
+                                    data-category="{{ $material->category }}"
+                                    data-unit="{{ $material->unit }}"
+                                    data-price="{{ (int)$material->price }}"
+                                    data-minimum_stock="{{ $material->minimum_stock }}"
+                                    data-default_supplier="{{ $material->default_supplier }}"
+                                    title="Klik untuk opsi cepat">
+                                <span class="material-symbols-outlined text-xl">more_vert</span>
+                            </button>
                         </td>
                     </tr>
                     @empty
@@ -313,6 +272,7 @@
     <section class="space-y-4">
         <x-table-controls
             :action="route('materials.index')"
+            prefix="h"
             searchPlaceholder="Cari material, referensi, catatan..."
             :sortOptions="[
                 ['value' => 'transaction_date_desc', 'label' => 'Tanggal Terbaru'],
@@ -386,16 +346,151 @@
             </div>
             {{-- Pagination --}}
             <div class="px-8 py-4 bg-surface-container-low border-t border-outline-variant/5">
-                {{ $recentMovements->appends(request()->query())->links() }}
+                {{ $recentMovements->appends(request()->query())->links('pagination::tailwind', ['pageName' => 'h_page']) }}
             </div>
         </div>
     </section>
+
+    <!-- Modal Opsi Cepat (Quick Action Modal) -->
+    <div id="quick-action-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] flex items-center justify-center hidden">
+        <div class="bg-white rounded-[2rem] w-full max-w-md shadow-2xl p-8 transform scale-95 opacity-0 transition-all duration-300 modal-content relative">
+            <button class="absolute top-6 right-6 text-slate-400 hover:text-error transition-colors" onclick="closeQuickAction()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+
+            <div class="mb-8">
+                <span class="text-[10px] font-black uppercase tracking-[0.2em] text-teal-600 mb-1 block">Opsi Cepat Material</span>
+                <h3 class="text-xl font-black text-teal-900 leading-tight" id="modal-material-name">-</h3>
+                <p class="text-xs text-slate-400 mt-1" id="modal-material-unit">-</p>
+            </div>
+
+            <div class="space-y-6">
+                @if(auth()->user()->isAdmin())
+                <!-- Edit Action -->
+                <button class="w-full group flex items-center justify-between p-4 rounded-2xl bg-slate-50 hover:bg-primary hover:text-white transition-all text-left" onclick="handleQuickEdit()">
+                    <div class="flex items-center gap-4">
+                        <div class="p-2 bg-white rounded-xl text-primary group-hover:bg-primary-container">
+                            <span class="material-symbols-outlined">edit_note</span>
+                        </div>
+                        <div>
+                            <span class="font-bold text-sm block">Ubah Detail</span>
+                            <span class="text-[10px] opacity-60">Ganti nama, kategori, atau harga</span>
+                        </div>
+                    </div>
+                    <span class="material-symbols-outlined text-sm opacity-20 group-hover:opacity-100">chevron_right</span>
+                </button>
+
+                <!-- Stock In Form -->
+                <div class="p-5 rounded-2xl bg-teal-50/50 border border-teal-100 space-y-3">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="material-symbols-outlined text-teal-600 text-sm">add_circle</span>
+                        <span class="text-[10px] font-black uppercase tracking-widest text-teal-700">Stok Masuk (Supply)</span>
+                    </div>
+                    <form id="modal-stock-in-form" method="POST" class="flex gap-2">
+                        @csrf
+                        <input name="quantity" min="1" required class="flex-1 bg-white border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500" type="number" placeholder="Jumlah..."/>
+                        <input type="hidden" name="unit_price" id="modal-stock-in-price"/>
+                        <button class="px-6 py-3 rounded-xl bg-teal-600 text-white text-xs font-black uppercase tracking-wider hover:bg-teal-700 transition-all" type="submit">Update</button>
+                    </form>
+                </div>
+
+                <!-- Stock Out Form -->
+                <div class="p-5 rounded-2xl bg-amber-50/50 border border-amber-100 space-y-3">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="material-symbols-outlined text-amber-600 text-sm">remove_circle</span>
+                        <span class="text-[10px] font-black uppercase tracking-widest text-amber-700">Pakai Stok (Usage)</span>
+                    </div>
+                    <form id="modal-stock-out-form" method="POST" class="flex gap-2">
+                        @csrf
+                        <input name="quantity" min="1" required class="flex-1 bg-white border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-amber-500" type="number" placeholder="Jumlah..."/>
+                        <button class="px-6 py-3 rounded-xl bg-amber-500 text-white text-xs font-black uppercase tracking-wider hover:bg-amber-600 transition-all" type="submit">Update</button>
+                    </form>
+                </div>
+
+                <!-- Delete Action -->
+                <form id="modal-delete-form" method="POST" class="pt-4" onsubmit="return confirm('Hapus material ini secara permanen?')">
+                    @csrf
+                    @method('DELETE')
+                    <button class="w-full py-4 text-red-600 text-xs font-black uppercase tracking-[0.2em] hover:bg-red-50 rounded-2xl transition-colors flex items-center justify-center gap-2" type="submit">
+                        <span class="material-symbols-outlined text-sm">delete</span>
+                        <span>Hapus Permanen</span>
+                    </button>
+                </form>
+                @else
+                <div class="py-12 text-center text-slate-400">
+                    <span class="material-symbols-outlined text-4xl mb-2 opacity-20">lock</span>
+                    <p class="text-sm italic">Hanya Admin yang dapat mengelola stok.</p>
+                </div>
+                @endif
+            </div>
+        </div>
+    </div>
 </div>
+@endsection
+
+@section('styles')
+<style>
+    /* Prevent table container from clipping while maintaining horizontal scroll */
+    .overflow-x-auto {
+        overflow-y: visible !important;
+    }
+    
+    .modal-content.active {
+        transform: scale(1) !important;
+        opacity: 1 !important;
+    }
+</style>
 @endsection
 
 @section('scripts')
 <script>
 (() => {
+  const modal = document.getElementById('quick-action-modal');
+  const modalContent = modal.querySelector('.modal-content');
+  const modalName = document.getElementById('modal-material-name');
+  const modalUnit = document.getElementById('modal-material-unit');
+  const stockInForm = document.getElementById('modal-stock-in-form');
+  const stockInPrice = document.getElementById('modal-stock-in-price');
+  const stockOutForm = document.getElementById('modal-stock-out-form');
+  const deleteForm = document.getElementById('modal-delete-form');
+  
+  let currentMaterialData = null;
+
+  window.closeQuickAction = () => {
+    modalContent.classList.remove('active');
+    setTimeout(() => modal.classList.add('hidden'), 300);
+  };
+
+  window.handleQuickEdit = () => {
+    closeQuickAction();
+    setTimeout(() => {
+        openSidebar('edit', currentMaterialData);
+    }, 350);
+  };
+
+  document.querySelectorAll('.open-quick-action').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const data = btn.dataset;
+      currentMaterialData = data;
+      
+      modalName.innerText = data.name;
+      modalUnit.innerText = `Kategori: ${data.category} | Satuan: ${data.unit}`;
+      
+      if (stockInForm) stockInForm.action = `/bahan-baku/${data.id}/stok-masuk`;
+      if (stockInPrice) stockInPrice.value = data.price;
+      if (stockOutForm) stockOutForm.action = `/bahan-baku/${data.id}/stok-keluar`;
+      if (deleteForm) deleteForm.action = `/bahan-baku/${data.id}`;
+      
+      modal.classList.remove('hidden');
+      setTimeout(() => modalContent.classList.add('active'), 10);
+    });
+  });
+
+  // Close on backdrop click
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeQuickAction();
+  });
+
   const sidebar = document.getElementById('material-form-sidebar');
   const openButton = document.getElementById('open-material-form');
   const closeButton = document.getElementById('close-material-form');
@@ -415,7 +510,7 @@
         document.getElementById('form-stock').required = false;
 
         // Fill data
-                document.getElementById('form-name').value = data.name;
+        document.getElementById('form-name').value = data.name;
         document.getElementById('form-category').value = data.category;
         document.getElementById('form-unit').value = data.unit;
         document.getElementById('form-price').value = data.price;
@@ -440,20 +535,9 @@
   if (openButton) openButton.addEventListener('click', () => openSidebar('add'));
   if (closeButton) closeButton.addEventListener('click', closeSidebar);
 
-  // Edit Button Logic
-  document.querySelectorAll('.edit-material-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-          e.preventDefault();
-          const data = btn.dataset;
-          openSidebar('edit', data);
-          // Close dropdown
-          btn.closest('details').removeAttribute('open');
-      });
-  });
-
   // Close when clicking outside
   document.addEventListener('click', (e) => {
-    if (!sidebar.contains(e.target) && !openButton?.contains(e.target) && !e.target.closest('.edit-material-btn')) {
+    if (sidebar && !sidebar.contains(e.target) && !openButton?.contains(e.target) && !e.target.closest('.open-quick-action')) {
       closeSidebar();
     }
   });

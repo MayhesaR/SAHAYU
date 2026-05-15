@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Model;
 
 class SaleItem extends Model
 {
+    use BelongsToCompany;
     public $timestamps = false;
 
-    protected $fillable = ['sale_id', 'product_id', 'quantity', 'price'];
+    protected $fillable = ['company_id', 'sale_id', 'product_id', 'quantity', 'price'];
 
     public function product()
     {

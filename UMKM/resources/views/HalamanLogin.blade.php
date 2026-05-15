@@ -91,7 +91,7 @@
         }
     </style>
 </head>
-<body class="bg-background text-on-surface min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+<body class="bg-background text-on-surface min-h-screen flex items-center justify-center p-6 relative overflow-x-hidden">
 <div class="absolute inset-0 z-0 opacity-40 pointer-events-none">
 <div class="absolute top-[-10%] left-[-5%] w-[40%] h-[40%] rounded-full bg-secondary-container blur-[120px]"></div>
 <div class="absolute bottom-[-10%] right-[-5%] w-[30%] h-[30%] rounded-full bg-primary-fixed-dim blur-[120px]"></div>
@@ -129,7 +129,7 @@
 <div class="relative group">
 <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline transition-colors group-focus-within:text-primary" data-icon="lock">lock</span>
 <input class="w-full pl-12 pr-12 py-3.5 bg-surface-container-highest border-none rounded-xl focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all text-on-surface placeholder:text-outline/60" id="password" name="password" placeholder="••••••••" required="" type="password"/>
-<button class="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors" type="button">
+<button id="togglePassword" class="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors" type="button">
 <span class="material-symbols-outlined text-xl" data-icon="visibility">visibility</span>
 </button>
 </div>
@@ -165,4 +165,22 @@
 <div class="fixed bottom-8 right-8 hidden lg:block opacity-20 hover:opacity-100 transition-opacity">
 
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const togglePassword = document.querySelector('#togglePassword');
+    const password = document.querySelector('#password');
+
+    if (togglePassword && password) {
+        togglePassword.addEventListener('click', function() {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            
+            const icon = this.querySelector('.material-symbols-outlined');
+            if (icon) {
+                icon.textContent = type === 'password' ? 'visibility' : 'visibility_off';
+            }
+        });
+    }
+});
+</script>
 </body></html>

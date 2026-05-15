@@ -24,11 +24,13 @@ class ReportController extends Controller
         $totalRevenue = Sale::whereBetween('created_at', [$startDate, $endDate])->sum('total');
 
         // 2. COGS (Cost of Goods Sold / HPP) — scoped to sales within the date range
+        $companyId = auth()->user()->company_id;
         $totalCogs = DB::table('sale_items')
             ->join('sales', 'sales.id', '=', 'sale_items.sale_id')
             ->join('products', 'products.id', '=', 'sale_items.product_id')
-            ->leftJoin(DB::raw('(SELECT product_id, AVG(unit_hpp_snapshot) as avg_hpp FROM productions WHERE status = "done" GROUP BY product_id) as p_hpp'), 'p_hpp.product_id', '=', 'products.id')
+            ->leftJoin(DB::raw("(SELECT product_id, AVG(unit_hpp_snapshot) as avg_hpp FROM productions WHERE status = 'done' AND company_id = {$companyId} GROUP BY product_id) as p_hpp"), 'p_hpp.product_id', '=', 'products.id')
             ->whereBetween('sales.created_at', [$startDate, $endDate])
+            ->where('sales.company_id', $companyId)
             ->select(DB::raw('SUM(sale_items.quantity * COALESCE(p_hpp.avg_hpp, products.selling_price * 0.6)) as total_cogs'))
             ->value('total_cogs') ?? 0;
 
@@ -94,8 +96,9 @@ class ReportController extends Controller
                 $hpp = DB::table('sale_items')
                     ->join('sales', 'sales.id', '=', 'sale_items.sale_id')
                     ->join('products', 'products.id', '=', 'sale_items.product_id')
-                    ->leftJoin(DB::raw('(SELECT product_id, AVG(unit_hpp_snapshot) as avg_hpp FROM productions WHERE status = "done" GROUP BY product_id) as p_hpp'), 'p_hpp.product_id', '=', 'products.id')
+                    ->leftJoin(DB::raw("(SELECT product_id, AVG(unit_hpp_snapshot) as avg_hpp FROM productions WHERE status = 'done' AND company_id = {$companyId} GROUP BY product_id) as p_hpp"), 'p_hpp.product_id', '=', 'products.id')
                     ->whereBetween('sales.created_at', [$monthStart, $monthEnd])
+                    ->where('sales.company_id', $companyId)
                     ->select(DB::raw('SUM(sale_items.quantity * COALESCE(p_hpp.avg_hpp, products.selling_price * 0.6)) as total_cogs'))
                     ->value('total_cogs') ?? 0;
 
@@ -141,8 +144,9 @@ class ReportController extends Controller
                     $hpp = DB::table('sale_items')
                         ->join('sales', 'sales.id', '=', 'sale_items.sale_id')
                         ->join('products', 'products.id', '=', 'sale_items.product_id')
-                        ->leftJoin(DB::raw('(SELECT product_id, AVG(unit_hpp_snapshot) as avg_hpp FROM productions WHERE status = "done" GROUP BY product_id) as p_hpp'), 'p_hpp.product_id', '=', 'products.id')
+                        ->leftJoin(DB::raw("(SELECT product_id, AVG(unit_hpp_snapshot) as avg_hpp FROM productions WHERE status = 'done' AND company_id = {$companyId} GROUP BY product_id) as p_hpp"), 'p_hpp.product_id', '=', 'products.id')
                         ->whereBetween('sales.created_at', [$weekStart, $weekEnd])
+                        ->where('sales.company_id', $companyId)
                         ->select(DB::raw('SUM(sale_items.quantity * COALESCE(p_hpp.avg_hpp, products.selling_price * 0.6)) as total_cogs'))
                         ->value('total_cogs') ?? 0;
                 }
@@ -175,8 +179,9 @@ class ReportController extends Controller
                 $hpp = DB::table('sale_items')
                     ->join('sales', 'sales.id', '=', 'sale_items.sale_id')
                     ->join('products', 'products.id', '=', 'sale_items.product_id')
-                    ->leftJoin(DB::raw('(SELECT product_id, AVG(unit_hpp_snapshot) as avg_hpp FROM productions WHERE status = "done" GROUP BY product_id) as p_hpp'), 'p_hpp.product_id', '=', 'products.id')
+                    ->leftJoin(DB::raw("(SELECT product_id, AVG(unit_hpp_snapshot) as avg_hpp FROM productions WHERE status = 'done' AND company_id = {$companyId} GROUP BY product_id) as p_hpp"), 'p_hpp.product_id', '=', 'products.id')
                     ->whereBetween('sales.created_at', [$dayStart, $dayEnd])
+                    ->where('sales.company_id', $companyId)
                     ->select(DB::raw('SUM(sale_items.quantity * COALESCE(p_hpp.avg_hpp, products.selling_price * 0.6)) as total_cogs'))
                     ->value('total_cogs') ?? 0;
 
@@ -350,9 +355,11 @@ class ReportController extends Controller
         try {
             $driver = DB::connection()->getDriverName();
             $totalRevenue = Sale::sum('total');
+            $companyId = auth()->user()->company_id;
             $totalCogs = DB::table('sale_items')
                 ->join('products', 'products.id', '=', 'sale_items.product_id')
-                ->leftJoin(DB::raw('(SELECT product_id, AVG(unit_hpp_snapshot) as avg_hpp FROM productions WHERE status = "done" GROUP BY product_id) as p_hpp'), 'p_hpp.product_id', '=', 'products.id')
+                ->leftJoin(DB::raw("(SELECT product_id, AVG(unit_hpp_snapshot) as avg_hpp FROM productions WHERE status = 'done' AND company_id = {$companyId} GROUP BY product_id) as p_hpp"), 'p_hpp.product_id', '=', 'products.id')
+                ->where('sale_items.company_id', $companyId)
                 ->select(DB::raw('SUM(sale_items.quantity * COALESCE(p_hpp.avg_hpp, products.selling_price * 0.6)) as total_cogs'))
                 ->value('total_cogs') ?? 0;
             $totalOverheadExpense = OverheadCost::sum('cost');

@@ -1,12 +1,12 @@
-<aside class="h-screen w-64 fixed left-0 top-0 z-50 bg-slate-50 flex flex-col py-6 border-r border-outline-variant/10 transition-transform duration-300 -translate-x-full lg:translate-x-0"
-       :class="sidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full lg:translate-x-0'">
+<aside class="h-screen w-64 fixed left-0 top-0 z-50 bg-slate-50 flex flex-col py-6 border-r border-outline-variant/10 transition-transform duration-300 -translate-x-full xl:translate-x-0"
+       :class="sidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full xl:translate-x-0'">
     <div class="px-8 mb-10 flex justify-between items-center">
         <div>
             <h1 class="text-lg font-black text-teal-800 tracking-tight">SAHAYU</h1>
             <p class="text-xs font-semibold text-slate-500 uppercase tracking-widest mt-1"></p>
         </div>
         <!-- Close button for mobile -->
-        <button @click="sidebarOpen = false" class="lg:hidden text-slate-400 hover:text-slate-600">
+        <button @click="sidebarOpen = false" class="xl:hidden text-slate-400 hover:text-slate-600">
             <span class="material-symbols-outlined">close</span>
         </button>
     </div>

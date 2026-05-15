@@ -555,41 +555,6 @@ PROMPT;
             ];
         }
 
-        // Jika semua bulan historis memiliki data 0, gunakan dummy realistis
-        $allZero = collect($history)->every(fn ($h) => $h['revenue'] == 0 && $h['hpp'] == 0);
-
-        if ($allZero) {
-            $history = [
-                [
-                    'period' => $targetMonth->copy()->subMonths(3)->translatedFormat('F Y'),
-                    'revenue' => 12500000,
-                    'hpp' => 8750000,
-                    'profit_margin' => 30.0,
-                    'produced_units' => 500,
-                    'reject_units' => 18,
-                    'reject_rate' => 3.6,
-                ],
-                [
-                    'period' => $targetMonth->copy()->subMonths(2)->translatedFormat('F Y'),
-                    'revenue' => 14200000,
-                    'hpp' => 9800000,
-                    'profit_margin' => 31.0,
-                    'produced_units' => 580,
-                    'reject_units' => 22,
-                    'reject_rate' => 3.8,
-                ],
-                [
-                    'period' => $targetMonth->copy()->subMonths(1)->translatedFormat('F Y'),
-                    'revenue' => 13800000,
-                    'hpp' => 10200000,
-                    'profit_margin' => 26.1,
-                    'produced_units' => 550,
-                    'reject_units' => 25,
-                    'reject_rate' => 4.5,
-                ],
-            ];
-        }
-
         return $history;
     }
 
@@ -608,9 +573,11 @@ PROMPT;
         $start = $targetMonth->copy()->startOfMonth()->toDateString();
         $end = $targetMonth->copy()->endOfMonth()->toDateString();
         
+        $companyId = auth()->user()->company_id;
         $highestRejectProduct = DB::table('productions')
             ->join('products', 'products.id', '=', 'productions.product_id')
             ->where('productions.status', 'done')
+            ->where('productions.company_id', $companyId)
             ->whereBetween('productions.production_date', [$start, $end])
             ->select(
                 'products.name',
@@ -632,6 +599,7 @@ PROMPT;
                 $lostValue = DB::table('productions')
                     ->join('products', 'products.id', '=', 'productions.product_id')
                     ->where('productions.status', 'done')
+                    ->where('productions.company_id', $companyId)
                     ->whereBetween('productions.production_date', [$start, $end])
                     ->where('products.name', $highestRejectProduct->name)
                     ->selectRaw('SUM((material_cost_snapshot / quantity) * reject_quantity) as lost_value')

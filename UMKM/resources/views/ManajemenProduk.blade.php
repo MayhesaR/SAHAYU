@@ -118,7 +118,7 @@
                 </h3>
 <span class="text-[10px] font-bold text-slate-400 bg-white px-3 py-1 rounded-full border border-outline-variant/5">{{ $products->total() }} item ditemukan</span>
 </div>
-<div class="w-full overflow-x-auto overflow-y-hidden border border-gray-100 rounded-lg mb-4" style="-webkit-overflow-scrolling: touch; display: block; clear: both; touch-action: pan-x pan-y;">
+<div class="w-full overflow-x-auto border border-gray-100 rounded-lg mb-4" style="-webkit-overflow-scrolling: touch; display: block; clear: both; touch-action: pan-x pan-y;">
 <table class="min-w-[800px] w-full text-xs text-left whitespace-nowrap">
 <thead class="bg-slate-50 text-left text-slate-500 uppercase text-xs tracking-widest">
 <tr>

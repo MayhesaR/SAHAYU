@@ -268,7 +268,7 @@
     {{ $runningProductions->total() }} batch ditemukan
 </span>
 </div>
-<div class="w-full overflow-x-auto overflow-y-hidden border border-gray-100 rounded-lg mb-4 bg-surface-container-lowest shadow-sm" style="-webkit-overflow-scrolling: touch; display: block; clear: both; touch-action: pan-x pan-y;">
+<div class="w-full overflow-x-auto border border-gray-100 rounded-lg mb-4 bg-surface-container-lowest shadow-sm" style="-webkit-overflow-scrolling: touch; display: block; clear: both; touch-action: pan-x pan-y;">
 <table class="min-w-[800px] w-full text-xs text-left border-collapse whitespace-nowrap">
 <thead>
 <tr class="bg-surface-container-high">

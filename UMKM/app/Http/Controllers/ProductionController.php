@@ -32,8 +32,10 @@ class ProductionController extends Controller
                 perPage: 10,
             );
 
+        $companyId = auth()->user()->company_id;
         $materialCost = DB::table('production_materials')
             ->join('materials', 'materials.id', '=', 'production_materials.material_id')
+            ->where('production_materials.company_id', $companyId)
             ->selectRaw('SUM(production_materials.quantity * materials.price) as total')
             ->value('total') ?? 0;
 
@@ -180,9 +182,13 @@ class ProductionController extends Controller
             ]);
 
             $syncData = [];
+            $companyId = auth()->user()->company_id;
 
             foreach ($materialsInput as $material) {
-                $syncData[$material['material_id']] = ['quantity' => $material['quantity']];
+                $syncData[$material['material_id']] = [
+                    'quantity' => $material['quantity'],
+                    'company_id' => $companyId
+                ];
             }
 
             $production->materials()->sync($syncData);

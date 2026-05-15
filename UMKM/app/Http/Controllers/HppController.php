@@ -41,6 +41,7 @@ class HppController extends Controller
 
         $productionIds = (clone $productionBaseQuery)->pluck('id');
 
+        $companyId = auth()->user()->company_id;
         $materialBreakdown = DB::table('production_materials')
             ->join('productions', 'productions.id', '=', 'production_materials.production_id')
             ->join('materials', 'materials.id', '=', 'production_materials.material_id')
@@ -52,6 +53,7 @@ class HppController extends Controller
                 DB::raw('SUM(production_materials.quantity * materials.price) as subtotal')
             )
             ->where('productions.status', 'done')
+            ->where('productions.company_id', $companyId)
             ->whereBetween('productions.production_date', [$from->toDateString(), $to->toDateString()])
             ->when($selectedProductId, fn ($query, $productId) => $query->where('productions.product_id', $productId))
             ->groupBy('materials.id', 'materials.name', 'materials.unit', 'materials.price')

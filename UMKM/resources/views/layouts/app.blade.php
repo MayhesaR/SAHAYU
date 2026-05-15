@@ -92,14 +92,14 @@
 
     <!-- Mobile sidebar backdrop -->
     <div x-show="sidebarOpen" 
-         class="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm lg:hidden transition-opacity"
+         class="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm xl:hidden transition-opacity"
          x-transition.opacity
          @click="sidebarOpen = false"></div>
 
     @include('components.sidebar')
 
     <!-- Main Content expands when sidebar is hidden on small screens -->
-    <main class="ml-0 lg:ml-64 min-h-screen flex flex-col w-full min-w-0 lg:w-auto transition-all duration-300">
+    <main class="ml-0 xl:ml-64 min-h-screen flex flex-col w-full min-w-0 xl:w-auto transition-all duration-300">
         @include('components.topbar')
 
         <div class="w-full px-4 md:px-8 pt-20 pb-8 mx-auto space-y-8 flex-1 max-w-full">

@@ -35,11 +35,14 @@ class SaleController extends Controller
                 defaultSort: 'created_at',
                 defaultOrder: 'desc',
                 perPage: 15,
+                dateColumn: 'created_at',
             );
 
+        $companyId = auth()->user()->company_id;
         $topProductsRaw = SaleItem::query()
             ->join('sales', 'sales.id', '=', 'sale_items.sale_id')
             ->whereDate('sales.created_at', $today)
+            ->where('sales.company_id', $companyId)
             ->select('sale_items.product_id', DB::raw('SUM(sale_items.quantity) as total'))
             ->groupBy('sale_items.product_id')
             ->orderByDesc('total')
@@ -156,6 +159,7 @@ class SaleController extends Controller
             ]);
 
             $sale = Sale::create([
+                'company_id' => auth()->user()->company_id,
                 'customer' => $validated['customer'] ?? null,
                 'total' => $total,
                 'payment_method' => $validated['payment_method'],
@@ -165,6 +169,7 @@ class SaleController extends Controller
             $createdSaleId = $sale->id;
 
             SaleItem::create([
+                'company_id' => auth()->user()->company_id,
                 'sale_id' => $sale->id,
                 'product_id' => $validated['product_id'],
                 'quantity' => $validated['quantity'],
@@ -192,6 +197,7 @@ class SaleController extends Controller
         $topProducts = SaleItem::query()
             ->join('sales', 'sales.id', '=', 'sale_items.sale_id')
             ->whereDate('sales.created_at', Carbon::today())
+            ->where('sales.company_id', auth()->user()->company_id)
             ->select('sale_items.product_id', DB::raw('SUM(sale_items.quantity) as total'))
             ->groupBy('sale_items.product_id')
             ->orderByDesc('total')
@@ -213,7 +219,9 @@ class SaleController extends Controller
             if ($sale) {
                 $latestSale = [
                     'id' => (int) $sale->id,
+                    'timestamp' => $sale->created_at->timestamp,
                     'time' => $sale->created_at->format('H:i'),
+                    'full_time' => $sale->created_at->format('d M Y H:i'),
                     'product' => $sale->items->first()?->product?->name ?? '-',
                     'qty' => (int) $sale->items->sum('quantity'),
                     'customer' => $sale->customer ?: 'Walk-in',

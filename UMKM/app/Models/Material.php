@@ -3,13 +3,15 @@
 namespace App\Models;
 
 use App\Traits\Filterable;
+use App\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Material extends Model
 {
-    use Filterable;
+    use Filterable, BelongsToCompany;
     protected $fillable = [
+        'company_id',
         'name',
         'category',
         'stock',

@@ -168,7 +168,7 @@
     {{ $salesHistory->total() }} transaksi ditemukan
 </span>
 </div>
-<div class="w-full overflow-x-auto overflow-y-hidden border border-gray-100 rounded-lg mb-4 bg-surface-container-lowest shadow-sm" style="-webkit-overflow-scrolling: touch; display: block; clear: both; touch-action: pan-x pan-y;">
+<div class="w-full overflow-x-auto border border-gray-100 rounded-lg mb-4 bg-surface-container-lowest shadow-sm" style="-webkit-overflow-scrolling: touch; display: block; clear: both; touch-action: pan-x pan-y;">
 <table class="min-w-[800px] w-full text-xs text-left border-collapse whitespace-nowrap">
 <thead>
 <tr class="bg-surface-container-high border-b border-outline-variant/10">
@@ -184,7 +184,7 @@
 </thead>
 <tbody class="text-sm font-body divide-y divide-slate-50" data-sales-history-table="true">
 @forelse ($salesHistory as $sale)
-<tr class="hover:bg-primary/5 transition-colors group">
+<tr class="hover:bg-primary/5 transition-colors group" data-timestamp="{{ $sale->created_at->timestamp }}">
 <td class="px-8 py-6 text-on-surface-variant">{{ $sale->created_at->format('d M Y H:i') }}</td>
 <td class="px-8 py-6 font-bold text-teal-900">{{ $sale->items->first()?->product?->name ?? '-' }}</td>
 <td class="px-8 py-6 text-center">{{ (int) $sale->items->sum('quantity') }}</td>

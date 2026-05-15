@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Traits\Filterable;
+use App\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
-    use Filterable;
-    protected $fillable = ['name', 'selling_price', 'stock', 'minimum_stock'];
+    use Filterable, BelongsToCompany;
+    protected $fillable = ['company_id', 'name', 'selling_price', 'stock', 'minimum_stock'];
 
     protected $casts = [
         'selling_price' => 'decimal:2',

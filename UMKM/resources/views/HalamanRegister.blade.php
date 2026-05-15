@@ -38,7 +38,7 @@
         }
     </style>
 </head>
-<body class="bg-background text-on-surface min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+<body class="bg-background text-on-surface min-h-screen flex items-center justify-center p-6 relative overflow-x-hidden">
     <div class="absolute inset-0 z-0 opacity-40 pointer-events-none">
         <div class="absolute top-[-10%] left-[-5%] w-[40%] h-[40%] rounded-full bg-teal-100 blur-[120px]"></div>
         <div class="absolute bottom-[-10%] right-[-5%] w-[30%] h-[30%] rounded-full bg-teal-200 blur-[120px]"></div>
@@ -69,6 +69,16 @@
                     @enderror
                 </div>
                 <div class="space-y-1">
+                    <label class="block text-xs font-bold text-on-surface-variant ml-1 uppercase" for="company_name">Company Name</label>
+                    <div class="relative group">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-sm" data-icon="business">business</span>
+                        <input class="w-full pl-10 pr-4 py-3 bg-surface-container-highest border-none rounded-xl focus:ring-2 focus:ring-primary/20 transition-all text-sm" id="company_name" name="company_name" placeholder="Bakery Shop" required type="text" value="{{ old('company_name') }}"/>
+                    </div>
+                    @error('company_name')
+                        <p class="text-error text-xs font-semibold ml-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div class="space-y-1">
                     <label class="block text-xs font-bold text-on-surface-variant ml-1 uppercase" for="email">Email Address</label>
                     <div class="relative group">
                         <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-sm" data-icon="mail">mail</span>
@@ -82,7 +92,10 @@
                     <label class="block text-xs font-bold text-on-surface-variant ml-1 uppercase" for="password">Password</label>
                     <div class="relative group">
                         <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-sm" data-icon="lock">lock</span>
-                        <input class="w-full pl-10 pr-4 py-3 bg-surface-container-highest border-none rounded-xl focus:ring-2 focus:ring-primary/20 transition-all text-sm" id="password" name="password" placeholder="••••••••" required type="password"/>
+                        <input class="w-full pl-10 pr-12 py-3 bg-surface-container-highest border-none rounded-xl focus:ring-2 focus:ring-primary/20 transition-all text-sm" id="password" name="password" placeholder="••••••••" required type="password"/>
+                        <button id="togglePassword" class="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors" type="button">
+                            <span class="material-symbols-outlined text-sm">visibility</span>
+                        </button>
                     </div>
                     @error('password')
                         <p class="text-error text-xs font-semibold ml-1">{{ $message }}</p>
@@ -92,7 +105,10 @@
                     <label class="block text-xs font-bold text-on-surface-variant ml-1 uppercase" for="password_confirmation">Confirm Password</label>
                     <div class="relative group">
                         <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-sm" data-icon="lock_reset">lock_reset</span>
-                        <input class="w-full pl-10 pr-4 py-3 bg-surface-container-highest border-none rounded-xl focus:ring-2 focus:ring-primary/20 transition-all text-sm" id="password_confirmation" name="password_confirmation" placeholder="••••••••" required type="password"/>
+                        <input class="w-full pl-10 pr-12 py-3 bg-surface-container-highest border-none rounded-xl focus:ring-2 focus:ring-primary/20 transition-all text-sm" id="password_confirmation" name="password_confirmation" placeholder="••••••••" required type="password"/>
+                        <button id="togglePasswordConfirmation" class="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors" type="button">
+                            <span class="material-symbols-outlined text-sm">visibility</span>
+                        </button>
                     </div>
                 </div>
                 <div class="pt-4">
@@ -109,5 +125,26 @@
             </footer>
         </div>
     </main>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const setupToggle = (buttonId, inputId) => {
+            const toggle = document.querySelector(buttonId);
+            const input = document.querySelector(inputId);
+            if (toggle && input) {
+                toggle.addEventListener('click', function() {
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+                    const icon = this.querySelector('.material-symbols-outlined');
+                    if (icon) {
+                        icon.textContent = type === 'password' ? 'visibility' : 'visibility_off';
+                    }
+                });
+            }
+        };
+
+        setupToggle('#togglePassword', '#password');
+        setupToggle('#togglePasswordConfirmation', '#password_confirmation');
+    });
+    </script>
 </body>
 </html>

@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\BelongsToCompany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class ProductionMaterial extends Model
+class ProductionMaterial extends Pivot
 {
+    use BelongsToCompany;
     public $timestamps = false;
+    protected $table = 'production_materials';
 
-    protected $fillable = ['production_id', 'material_id', 'quantity'];
+    protected $fillable = ['company_id', 'production_id', 'material_id', 'quantity'];
 }

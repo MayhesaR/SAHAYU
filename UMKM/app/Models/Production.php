@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Traits\Filterable;
+use App\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Model;
 
 class Production extends Model
 {
-    use Filterable;
+    use Filterable, BelongsToCompany;
     protected $fillable = [
+        'company_id',
         'batch_code',
         'product_id',
         'quantity',
@@ -44,6 +46,7 @@ class Production extends Model
     public function materials()
     {
         return $this->belongsToMany(Material::class, 'production_materials')
+                    ->using(ProductionMaterial::class)
                     ->withPivot('quantity');
     }
 }

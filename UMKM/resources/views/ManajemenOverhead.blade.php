@@ -117,7 +117,7 @@
         <div class="px-8 py-5 bg-surface-container-high/50 border-b border-outline-variant/5">
             <h4 class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Rincian Pengeluaran Periode {{ $months[$selectedMonth] }} {{ $selectedYear }}</h4>
         </div>
-        <div class="w-full overflow-x-auto overflow-y-hidden border border-gray-100 rounded-lg mb-4" style="-webkit-overflow-scrolling: touch; display: block; clear: both; touch-action: pan-x pan-y;">
+        <div class="w-full overflow-x-auto border border-gray-100 rounded-lg mb-4" style="-webkit-overflow-scrolling: touch; display: block; clear: both; touch-action: pan-x pan-y;">
             <table class="min-w-[800px] w-full text-xs text-left whitespace-nowrap">
                 <thead>
                     <tr class="bg-surface-container-low text-on-surface-variant">

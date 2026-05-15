@@ -40,20 +40,23 @@ trait Filterable
         string $defaultSort = 'created_at',
         string $defaultOrder = 'desc',
         int $perPage = 10,
+        string $dateColumn = 'created_at',
+        string $pageName = 'page',
+        string $prefix = '',
     ): LengthAwarePaginator {
+        // Apply prefix to all input names
+        $p = $prefix ? "{$prefix}_" : "";
+
         // ═══ 1. SEARCH (OR LIKE across multiple columns) ═══
-        $search = trim($request->input('search', ''));
+        $search = trim($request->input($p . 'search', ''));
 
         if ($search !== '' && count($searchableColumns) > 0) {
             $query->where(function (Builder $q) use ($search, $searchableColumns) {
                 foreach ($searchableColumns as $column) {
-                    // Support dot-notation for relationship searches
-                    // Single level: 'product.name' -> whereHas('product', ...)
-                    // Multi level:  'items.product.name' -> whereHas('items.product', ...)
                     if (str_contains($column, '.')) {
                         $segments = explode('.', $column);
-                        $field = array_pop($segments);          // Last segment = column name
-                        $relation = implode('.', $segments);    // Rest = relation path
+                        $field = array_pop($segments);
+                        $relation = implode('.', $segments);
                         $q->orWhereHas($relation, function (Builder $relQuery) use ($field, $search) {
                             $relQuery->where($field, 'LIKE', "%{$search}%");
                         });
@@ -64,14 +67,16 @@ trait Filterable
             });
         }
 
-        // ═══ 2. EXACT-MATCH FILTERS (e.g. ?status=done&category=Dasar) ═══
+        // ═══ 2. EXACT-MATCH FILTERS ═══
         foreach ($filterableColumns as $column) {
-            $value = $request->input($column);
+            $inputKey = $p . $column; // Prefix the filter name too
+            $value = $request->input($inputKey);
 
             if ($value !== null && $value !== '') {
-                // Support dot-notation for relationship filters
                 if (str_contains($column, '.')) {
-                    [$relation, $field] = explode('.', $column, 2);
+                    $segments = explode('.', $column);
+                    $field = array_pop($segments);
+                    $relation = implode('.', $segments);
                     $query->whereHas($relation, function (Builder $relQuery) use ($field, $value) {
                         $relQuery->where($field, $value);
                     });
@@ -81,37 +86,47 @@ trait Filterable
             }
         }
 
-        // ═══ 3. SORT (parse 'column_asc' or 'column_desc' from ?sort=) ═══
-        $sortParam = $request->input('sort', '');
+        // ═══ 2.5 DATE RANGE FILTERS ═══
+        $startDate = $request->input($p . 'start_date');
+        $endDate = $request->input($p . 'end_date');
+
+        if ($startDate) {
+            $query->whereDate($dateColumn, '>=', $startDate);
+        }
+        if ($endDate) {
+            $query->whereDate($dateColumn, '<=', $endDate);
+        }
+
+        // ═══ 3. SORT ═══
+        $sortParam = $request->input($p . 'sort', '');
 
         if ($sortParam !== '') {
-            // Try to parse the sort parameter: last segment is direction, rest is column name
-            // Examples: 'name_asc', 'created_at_desc', 'production_date_asc'
             if (preg_match('/^(.+)_(asc|desc)$/i', $sortParam, $matches)) {
                 $sortColumn = $matches[1];
                 $sortDirection = strtolower($matches[2]);
 
-                // Security: only allow sorting by actual table columns (prevent SQL injection)
                 $table = (new static)->getTable();
                 $tableColumns = \Illuminate\Support\Facades\Schema::getColumnListing($table);
 
                 if (in_array($sortColumn, $tableColumns, true)) {
                     $query->orderBy($sortColumn, $sortDirection);
+                    if ($sortColumn !== 'id') {
+                        $query->orderBy('id', 'desc');
+                    }
                 } else {
-                    // Fallback to default if column doesn't exist
-                    $query->orderBy($defaultSort, $defaultOrder);
+                    $query->orderBy($defaultSort, $defaultOrder)->orderBy('id', 'desc');
                 }
             } else {
-                $query->orderBy($defaultSort, $defaultOrder);
+                $query->orderBy($defaultSort, $defaultOrder)->orderBy('id', 'desc');
             }
         } else {
-            $query->orderBy($defaultSort, $defaultOrder);
+            $query->orderBy($defaultSort, $defaultOrder)->orderBy('id', 'desc');
         }
 
         // ═══ 4. PAGINATE ═══
-        $perPage = (int) $request->input('per_page', $perPage);
-        $perPage = min(max($perPage, 5), 100); // Clamp between 5 and 100
+        $perPageInput = (int) $request->input($p . 'per_page', $perPage);
+        $perPageInput = min(max($perPageInput, 5), 100);
 
-        return $query->paginate($perPage)->withQueryString();
+        return $query->paginate($perPageInput, ['*'], $pageName)->withQueryString();
     }
 }
