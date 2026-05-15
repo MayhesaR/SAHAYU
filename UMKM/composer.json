@@ -11,6 +11,10 @@
     "require": {
         "php": "^8.5",
         "ext-gd": "*",
+        "ext-mbstring": "*",
+        "ext-xml": "*",
+        "ext-bcmath": "*",
+        "ext-curl": "*",
         "ext-zip": "*",
         "barryvdh/laravel-dompdf": "^3.1",
         "google/apiclient": "^2.19",
