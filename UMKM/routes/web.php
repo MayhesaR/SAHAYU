@@ -17,6 +17,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TransactionHistoryController;
 use App\Http\Controllers\DebtController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ExpenseController;
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class, 'login'])->middleware('guest');
@@ -81,6 +82,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/overhead', [OverheadCostController::class, 'index'])->name('overhead.index');
     Route::post('/overhead', [OverheadCostController::class, 'store'])->name('overhead.store');
     Route::delete('/overhead/{overheadCost}', [OverheadCostController::class, 'destroy'])->name('overhead.destroy');
+
+    // Pengeluaran Operasional (Petty Cash/Kas Keluar)
+    Route::get('/pengeluaran', [ExpenseController::class, 'index'])->name('expenses.index');
+    Route::post('/pengeluaran', [ExpenseController::class, 'store'])->name('expenses.store');
+    Route::delete('/pengeluaran/{expense}', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
+
+
 
     // Khusus Admin
     Route::middleware('role:admin')->group(function () {

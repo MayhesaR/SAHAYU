@@ -114,6 +114,8 @@
                         <option value="sale_debt" {{ $currentType === 'sale_debt' ? 'selected' : '' }}>Penjualan Piutang</option>
                         <option value="payment" {{ $currentType === 'payment' ? 'selected' : '' }}>Pembayaran Cicilan</option>
                         <option value="production" {{ $currentType === 'production' ? 'selected' : '' }}>Produksi Barang</option>
+                        <option value="expense" {{ $currentType === 'expense' ? 'selected' : '' }}>Pengeluaran Operasional</option>
+                        <option value="purchase" {{ $currentType === 'purchase' ? 'selected' : '' }}>Belanja Bahan Baku</option>
                     </select>
                 </div>
 
@@ -181,6 +183,14 @@
                    class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ $currentType === 'production' ? 'bg-primary text-white shadow-sm' : 'text-slate-500 hover:bg-white/50' }}">
                     Produksi
                 </a>
+                <a href="{{ route('history.index', array_merge(request()->query(), ['type' => 'expense'])) }}" 
+                   class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ $currentType === 'expense' ? 'bg-primary text-white shadow-sm' : 'text-slate-500 hover:bg-white/50' }}">
+                    Operasional
+                </a>
+                <a href="{{ route('history.index', array_merge(request()->query(), ['type' => 'purchase'])) }}" 
+                   class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ $currentType === 'purchase' ? 'bg-primary text-white shadow-sm' : 'text-slate-500 hover:bg-white/50' }}">
+                    Belanja Bahan
+                </a>
             </div>
         </div>
 
@@ -230,6 +240,16 @@
                                         <span class="h-1.5 w-1.5 rounded-full bg-indigo-500"></span>
                                         Produksi
                                     </span>
+                                @elseif($log['type'] === 'expense')
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-rose-50 text-rose-600 border border-rose-100/50">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-rose-500"></span>
+                                        Pengeluaran Operasional
+                                    </span>
+                                @elseif($log['type'] === 'purchase')
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-rose-50 text-rose-600 border border-rose-100/50">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-rose-500"></span>
+                                        Belanja Bahan Baku
+                                    </span>
                                 @else
                                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-blue-50 text-blue-600 border border-blue-100/50">
                                         <span class="h-1.5 w-1.5 rounded-full bg-blue-500"></span>
@@ -251,7 +271,7 @@
                             </td>
                             <!-- Column 4: Jumlah / Nominal -->
                             <td class="px-6 py-5">
-                                <span class="text-sm font-black text-slate-900 bg-slate-100/50 px-3 py-1.5 rounded-xl border border-slate-200/20 font-mono">
+                                <span class="text-sm font-black {{ ($log['type'] === 'expense' || $log['type'] === 'purchase') ? 'text-rose-600' : (($log['type'] === 'production') ? 'text-slate-500 font-bold' : 'text-slate-900') }} bg-slate-100/50 px-3 py-1.5 rounded-xl border border-slate-200/20 font-mono">
                                     {{ $log['amount'] }}
                                 </span>
                             </td>

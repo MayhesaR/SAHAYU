@@ -168,6 +168,7 @@ class MaterialController extends Controller
             'transaction_date' => ['nullable', 'date'],
             'reference' => ['nullable', 'string', 'max:255'],
             'note' => ['nullable', 'string', 'max:1000'],
+            'total_spent' => ['nullable', 'numeric', 'min:0'],
         ]);
 
         DB::transaction(function () use ($validated, $material): void {
@@ -194,6 +195,17 @@ class MaterialController extends Controller
                 'reference' => $validated['reference'] ?? 'Pembelian bahan',
                 'note' => $validated['note'] ?? null,
             ]);
+
+            // Automatically record cash-basis purchases if total spent > 0
+            $totalSpent = isset($validated['total_spent']) ? (float)$validated['total_spent'] : 0.0;
+            if ($totalSpent > 0) {
+                \App\Models\Purchase::create([
+                    'company_id' => auth()->user()->company_id,
+                    'purchase_date' => $validated['transaction_date'] ?? now()->toDateString(),
+                    'total_amount' => $totalSpent,
+                    'description' => "Belanja Stok: {$freshMaterial->name} sebanyak {$quantity} {$freshMaterial->unit}",
+                ]);
+            }
         });
 
         event(new MaterialUsed(

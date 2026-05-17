@@ -74,14 +74,14 @@ class DashboardController extends Controller
 
         $salesGrowth = $salesPrevPeriod > 0 ? (($salesThisPeriod - $salesPrevPeriod) / $salesPrevPeriod) * 100 : ($salesThisPeriod > 0 ? 100 : 0);
 
-        // 2. Expense Statistics
-        $prodCostsThis = Production::where('company_id', $companyId)->whereBetween('production_date', [$startDate, $endDate])->sum('total_cost_snapshot');
-        $overheadThis = OverheadCost::where('company_id', $companyId)->whereBetween('transaction_date', [$startDate, $endDate])->sum('cost');
-        $expensesThisPeriod = $prodCostsThis + $overheadThis;
+        // 2. Expense Statistics (Strict Cash Basis: Petty Cash Expenses + Raw Material Purchases)
+        $opExpensesThis = \App\Models\Expense::where('company_id', $companyId)->whereBetween('expense_date', [$startDate->toDateString(), $endDate->toDateString()])->sum('amount');
+        $purchasesThis = \App\Models\Purchase::where('company_id', $companyId)->whereBetween('purchase_date', [$startDate->toDateString(), $endDate->toDateString()])->sum('total_amount');
+        $expensesThisPeriod = $opExpensesThis + $purchasesThis;
 
-        $prodCostsPrev = Production::where('company_id', $companyId)->whereBetween('production_date', [$prevStartDate, $prevEndDate])->sum('total_cost_snapshot');
-        $overheadPrev = OverheadCost::where('company_id', $companyId)->whereBetween('transaction_date', [$prevStartDate, $prevEndDate])->sum('cost');
-        $expensesPrevPeriod = $prodCostsPrev + $overheadPrev;
+        $opExpensesPrev = \App\Models\Expense::where('company_id', $companyId)->whereBetween('expense_date', [$prevStartDate->toDateString(), $prevEndDate->toDateString()])->sum('amount');
+        $purchasesPrev = \App\Models\Purchase::where('company_id', $companyId)->whereBetween('purchase_date', [$prevStartDate->toDateString(), $prevEndDate->toDateString()])->sum('total_amount');
+        $expensesPrevPeriod = $opExpensesPrev + $purchasesPrev;
         $expenseGrowth = $expensesPrevPeriod > 0 ? (($expensesThisPeriod - $expensesPrevPeriod) / $expensesPrevPeriod) * 100 : ($expensesThisPeriod > 0 ? 100 : 0);
 
         // 3. Production & Stock Alerts
@@ -157,20 +157,20 @@ class DashboardController extends Controller
                 ->selectRaw('HOUR(created_at) as hour, SUM(amount_paid) as total')
                 ->groupBy('hour')->get()->keyBy('hour');
                 
-            $prodTrend = Production::where('company_id', $companyId)
-                ->whereDate('production_date', $now->toDateString())
-                ->selectRaw('HOUR(created_at) as hour, SUM(total_cost_snapshot) as total')
+            $expTrend = \App\Models\Expense::where('company_id', $companyId)
+                ->where('expense_date', $now->toDateString())
+                ->selectRaw('HOUR(created_at) as hour, SUM(amount) as total')
                 ->groupBy('hour')->get()->keyBy('hour');
-                
-            $ohTrend = OverheadCost::where('company_id', $companyId)
-                ->whereDate('transaction_date', $now->toDateString())
-                ->selectRaw('HOUR(created_at) as hour, SUM(cost) as total')
+
+            $purTrend = \App\Models\Purchase::where('company_id', $companyId)
+                ->where('purchase_date', $now->toDateString())
+                ->selectRaw('HOUR(created_at) as hour, SUM(total_amount) as total')
                 ->groupBy('hour')->get()->keyBy('hour');
 
             for ($i = 0; $i < 24; $i++) {
                 $chartLabels[] = sprintf('%02d:00', $i);
                 $chartSales[] = (float) ($salesTrend[$i]->total ?? 0) + (float) ($paymentTrend[$i]->total ?? 0);
-                $chartExpenses[] = (float) ($prodTrend[$i]->total ?? 0) + (float) ($ohTrend[$i]->total ?? 0);
+                $chartExpenses[] = (float) ($expTrend[$i]->total ?? 0) + (float) ($purTrend[$i]->total ?? 0);
             }
         } else {
             // Daily grouping for Weekly/Monthly (Cash Inflow = Cash Sales + Installment Payments)
@@ -186,22 +186,22 @@ class DashboardController extends Controller
                 ->whereBetween('payment_date', [$startDate->toDateString(), $endDate->toDateString()])
                 ->selectRaw('payment_date as date, SUM(amount_paid) as total')
                 ->groupBy('date')->get()->keyBy('date');
-                
-            $prodTrend = Production::where('company_id', $companyId)
-                ->whereBetween('production_date', [$startDate, $endDate])
-                ->selectRaw('DATE(production_date) as date, SUM(total_cost_snapshot) as total')
+
+            $expTrend = \App\Models\Expense::where('company_id', $companyId)
+                ->whereBetween('expense_date', [$startDate->toDateString(), $endDate->toDateString()])
+                ->selectRaw('expense_date as date, SUM(amount) as total')
                 ->groupBy('date')->get()->keyBy('date');
-                
-            $ohTrend = OverheadCost::where('company_id', $companyId)
-                ->whereBetween('transaction_date', [$startDate, $endDate])
-                ->selectRaw('DATE(transaction_date) as date, SUM(cost) as total')
+
+            $purTrend = \App\Models\Purchase::where('company_id', $companyId)
+                ->whereBetween('purchase_date', [$startDate->toDateString(), $endDate->toDateString()])
+                ->selectRaw('purchase_date as date, SUM(total_amount) as total')
                 ->groupBy('date')->get()->keyBy('date');
 
             for ($i = $days; $i >= 0; $i--) {
                 $date = $now->copy()->subDays($i)->toDateString();
                 $chartLabels[] = Carbon::parse($date)->format('d/m');
                 $chartSales[] = (float) ($salesTrend[$date]->total ?? 0) + (float) ($paymentTrend[$date]->total ?? 0);
-                $chartExpenses[] = (float) ($prodTrend[$date]->total ?? 0) + (float) ($ohTrend[$date]->total ?? 0);
+                $chartExpenses[] = (float) ($expTrend[$date]->total ?? 0) + (float) ($purTrend[$date]->total ?? 0);
             }
         }
 

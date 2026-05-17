@@ -31,6 +31,10 @@
                 <span class="material-symbols-outlined mr-3 flex-shrink-0">history</span> Riwayat Transaksi
             </a>
 
+            <a class="{{ request()->routeIs('expenses.*') ? $activeClass : $inactiveClass }}" href="{{ route('expenses.index') }}">
+                <span class="material-symbols-outlined mr-3 flex-shrink-0">receipt_long</span> Catat Pengeluaran
+            </a>
+
             <a class="{{ request()->routeIs('debts.*') ? $activeClass : $inactiveClass }}" href="{{ route('debts.index') }}">
                 <span class="material-symbols-outlined mr-3 flex-shrink-0">book</span> Piutang / Kasbon
             </a>
@@ -114,6 +118,12 @@
             <a class="{{ request()->routeIs('sales.*') ? $activeClass : $inactiveClass }}" href="{{ route('sales.index') }}">
                 <span class="material-symbols-outlined mr-3 flex-shrink-0">point_of_sale</span> Penjualan
             </a>
+
+            <a class="{{ request()->routeIs('expenses.*') ? $activeClass : $inactiveClass }}" href="{{ route('expenses.index') }}">
+                <span class="material-symbols-outlined mr-3 flex-shrink-0">receipt_long</span> Catat Pengeluaran
+            </a>
+
+
 
             <a class="{{ request()->routeIs('customers.*') ? $activeClass : $inactiveClass }}" href="{{ route('customers.index') }}">
                 <span class="material-symbols-outlined mr-3 flex-shrink-0">group</span> Data Pelanggan

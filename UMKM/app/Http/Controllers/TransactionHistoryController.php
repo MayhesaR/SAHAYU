@@ -31,23 +31,31 @@ class TransactionHistoryController extends Controller
         $paymentsQuery = \App\Models\DebtPayment::whereHas('debt', function ($q) use ($companyId) {
                 $q->where('company_id', $companyId);
             })->with(['debt.customer']);
+        $expensesQuery = \App\Models\Expense::where('company_id', $companyId);
+        $purchasesQuery = \App\Models\Purchase::where('company_id', $companyId);
 
         // 3. Apply Date Filters at DB level for efficiency
         if ($startDate) {
             $salesQuery->whereDate('created_at', '>=', $startDate);
             $prodsQuery->whereDate('production_date', '>=', $startDate);
             $paymentsQuery->whereDate('payment_date', '>=', $startDate);
+            $expensesQuery->whereDate('expense_date', '>=', $startDate);
+            $purchasesQuery->whereDate('purchase_date', '>=', $startDate);
         }
         if ($endDate) {
             $salesQuery->whereDate('created_at', '<=', $endDate);
             $prodsQuery->whereDate('production_date', '<=', $endDate);
             $paymentsQuery->whereDate('payment_date', '<=', $endDate);
+            $expensesQuery->whereDate('expense_date', '<=', $endDate);
+            $purchasesQuery->whereDate('purchase_date', '<=', $endDate);
         }
 
         // 4. Fetch logs (up to 500 of each type to optimize performance)
         $sales = $salesQuery->latest()->limit(500)->get();
         $prods = $prodsQuery->latest()->limit(500)->get();
         $payments = $paymentsQuery->latest()->limit(500)->get();
+        $expenses = $expensesQuery->latest()->limit(500)->get();
+        $purchases = $purchasesQuery->latest()->limit(500)->get();
 
         // 5. Map records into structured array formats
         $salesItems = $sales->map(function ($sale) {
@@ -114,8 +122,56 @@ class TransactionHistoryController extends Controller
             ];
         });
 
+        $expensesItems = $expenses->map(function ($exp) {
+            $parsedDate = \Carbon\Carbon::parse($exp->expense_date);
+            if ($exp->created_at) {
+                $parsedDate->setTimeFrom($exp->created_at);
+            }
+            return [
+                'type' => 'expense',
+                'subtype' => 'expense',
+                'id' => $exp->id,
+                'title' => "Pengeluaran Operasional (" . $exp->category . ")",
+                'raw_amount' => (float) $exp->amount,
+                'amount' => '- Rp ' . number_format($exp->amount, 0, ',', '.'),
+                'time' => $parsedDate,
+                'transaction_date' => \Carbon\Carbon::parse($exp->expense_date)->startOfDay(),
+                'created_at' => $exp->created_at,
+                'icon' => 'shopping_cart',
+                'color' => 'rose',
+                'status' => 'Kas Keluar',
+                'status_color' => 'bg-rose-100 text-rose-700',
+                'details' => $exp->description ?: 'Tanpa keterangan',
+                'customer_name' => '',
+            ];
+        });
+
+        $purchasesItems = $purchases->map(function ($pur) {
+            $parsedDate = \Carbon\Carbon::parse($pur->purchase_date);
+            if ($pur->created_at) {
+                $parsedDate->setTimeFrom($pur->created_at);
+            }
+            return [
+                'type' => 'purchase',
+                'subtype' => 'purchase',
+                'id' => $pur->id,
+                'title' => "Belanja Bahan Baku",
+                'raw_amount' => (float) $pur->total_amount,
+                'amount' => '- Rp ' . number_format($pur->total_amount, 0, ',', '.'),
+                'time' => $parsedDate,
+                'transaction_date' => \Carbon\Carbon::parse($pur->purchase_date)->startOfDay(),
+                'created_at' => $pur->created_at,
+                'icon' => 'shopping_bag',
+                'color' => 'rose',
+                'status' => 'Kas Keluar',
+                'status_color' => 'bg-rose-100 text-rose-700',
+                'details' => $pur->description ?: 'Pembelian bahan baku restok',
+                'customer_name' => '',
+            ];
+        });
+
         // 6. Concatenate collections
-        $merged = $salesItems->concat($prodsItems)->concat($paymentsItems);
+        $merged = $salesItems->concat($prodsItems)->concat($paymentsItems)->concat($expensesItems)->concat($purchasesItems);
 
         // 7. Apply Search query
         if ($search) {
@@ -137,6 +193,10 @@ class TransactionHistoryController extends Controller
                 $merged = $merged->where('type', 'payment');
             } elseif ($type === 'production') {
                 $merged = $merged->where('type', 'production');
+            } elseif ($type === 'expense') {
+                $merged = $merged->where('type', 'expense');
+            } elseif ($type === 'purchase') {
+                $merged = $merged->where('type', 'purchase');
             }
         }
 

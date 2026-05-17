@@ -397,11 +397,23 @@
                         <span class="material-symbols-outlined text-teal-600 text-sm">add_circle</span>
                         <span class="text-[10px] font-black uppercase tracking-widest text-teal-700">Stok Masuk (Supply)</span>
                     </div>
-                    <form id="modal-stock-in-form" method="POST" class="flex gap-2">
+                    <form id="modal-stock-in-form" method="POST" class="space-y-3">
                         @csrf
-                        <input name="quantity" min="1" required class="flex-1 bg-white border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500" type="number" placeholder="Jumlah..."/>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="space-y-1">
+                                <label class="block text-[9px] font-black text-teal-700 uppercase tracking-wider">Jumlah Stok Masuk</label>
+                                <input name="quantity" min="1" required class="w-full bg-white border-2 border-slate-100/80 rounded-xl px-3 py-2 text-sm focus:border-teal-500 outline-none transition-all" type="number" placeholder="Jumlah..."/>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="block text-[9px] font-black text-teal-700 uppercase tracking-wider">Total Belanja (Rp)</label>
+                                <input name="total_spent" min="0" value="0" class="w-full bg-white border-2 border-slate-100/80 rounded-xl px-3 py-2 text-sm focus:border-teal-500 outline-none transition-all" type="number" placeholder="Default: 0"/>
+                            </div>
+                        </div>
                         <input type="hidden" name="unit_price" id="modal-stock-in-price"/>
-                        <button class="px-6 py-3 rounded-xl bg-teal-600 text-white text-xs font-black uppercase tracking-wider hover:bg-teal-700 transition-all" type="submit">Update</button>
+                        <button class="w-full py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-md shadow-teal-900/10" type="submit">
+                            <span class="material-symbols-outlined text-sm">save</span>
+                            Simpan Stok & Belanja
+                        </button>
                     </form>
                 </div>
 
