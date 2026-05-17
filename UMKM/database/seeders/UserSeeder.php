@@ -25,5 +25,15 @@ class UserSeeder extends Seeder
                 'role' => 'admin',
             ]
         );
+
+        User::updateOrCreate(
+            ['email' => 'staff@umkm.com'],
+            [
+                'company_id' => $company->id,
+                'name' => 'Staff Kasir',
+                'password' => Hash::make('password123'),
+                'role' => 'staff',
+            ]
+        );
     }
 }

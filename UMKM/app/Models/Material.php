@@ -14,6 +14,7 @@ class Material extends Model
         'company_id',
         'name',
         'category',
+        'raw_material_category_id',
         'stock',
         'minimum_stock',
         'unit',
@@ -28,6 +29,11 @@ class Material extends Model
         'price' => 'decimal:2',
         'unit_conversion_factor' => 'decimal:4',
     ];
+
+    public function rawMaterialCategory()
+    {
+        return $this->belongsTo(RawMaterialCategory::class, 'raw_material_category_id');
+    }
 
     public function productions()
     {

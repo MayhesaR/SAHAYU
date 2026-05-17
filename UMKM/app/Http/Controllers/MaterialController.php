@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Material;
 use App\Models\MaterialStockMovement;
+use App\Models\RawMaterialCategory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,10 +16,13 @@ class MaterialController extends Controller
 {
     public function index(Request $request)
     {
-        $materials = Material::filterSortPaginate(
+        $rawMaterialCategories = RawMaterialCategory::orderBy('name')->get();
+        $categoryChoices = RawMaterialCategory::pluck('name', 'id')->toArray();
+
+        $materials = Material::with('rawMaterialCategory')->filterSortPaginate(
             $request,
-            searchableColumns: ['name', 'category', 'default_supplier', 'unit'],
-            filterableColumns: ['category'],
+            searchableColumns: ['name', 'rawMaterialCategory.name', 'default_supplier', 'unit'],
+            filterableColumns: ['raw_material_category_id'],
             defaultSort: 'created_at',
             defaultOrder: 'desc',
             perPage: 15,
@@ -42,7 +46,9 @@ class MaterialController extends Controller
 
         return view('ManajemenBahanBaku', [
             'materials' => $materials,
-            'totalCategories' => Material::distinct('category')->count('category'),
+            'rawMaterialCategories' => $rawMaterialCategories,
+            'categoryChoices' => $categoryChoices,
+            'totalCategories' => RawMaterialCategory::count(),
             'lowStockCount' => $criticalMaterials,
             'inventoryValue' => Material::selectRaw('SUM(stock * price) as total')->value('total') ?? 0,
             'materialsLastUpdatedAt' => Material::max('updated_at'),
@@ -63,7 +69,7 @@ class MaterialController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'category' => ['required', 'in:Struktur,Dasar,Finishing'],
+            'raw_material_category_id' => ['required', 'exists:raw_material_categories,id'],
             'stock' => ['required', 'integer', 'min:0'],
             'minimum_stock' => ['required', 'integer', 'min:0'],
             'unit' => ['required', 'string', 'max:50'],
@@ -81,6 +87,10 @@ class MaterialController extends Controller
         if (! filled($validated['unit_conversion_factor'] ?? null)) {
             $validated['unit_conversion_factor'] = 1;
         }
+
+        // Backward compatibility: Populate category string column with the category name
+        $categoryName = RawMaterialCategory::where('id', $validated['raw_material_category_id'])->value('name');
+        $validated['category'] = $categoryName;
 
         DB::transaction(function () use ($validated): void {
             $material = Material::create($validated);
@@ -107,8 +117,8 @@ class MaterialController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'category' => ['required', 'in:Struktur,Dasar,Finishing'],
-                        'unit' => ['required', 'string', 'max:50'],
+            'raw_material_category_id' => ['required', 'exists:raw_material_categories,id'],
+            'unit' => ['required', 'string', 'max:50'],
             'price' => ['required', 'numeric', 'min:0'],
             'purchase_unit' => ['nullable', 'string', 'max:50'],
             'unit_conversion_factor' => ['nullable', 'numeric', 'min:0.0001'],
@@ -116,9 +126,38 @@ class MaterialController extends Controller
             'supplier_lead_time_days' => ['nullable', 'integer', 'min:0', 'max:365'],
         ]);
 
+        // Backward compatibility: Populate category string column with the category name
+        $categoryName = RawMaterialCategory::where('id', $validated['raw_material_category_id'])->value('name');
+        $validated['category'] = $categoryName;
+
         $material->update($validated);
 
         return redirect()->route('materials.index')->with('success', 'Data material berhasil diperbarui.');
+    }
+
+    public function storeCategory(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+        ]);
+
+        $companyId = auth()->user()->company_id;
+
+        $category = RawMaterialCategory::where('company_id', $companyId)
+            ->where('name', $validated['name'])
+            ->first();
+
+        if (!$category) {
+            $category = RawMaterialCategory::create([
+                'company_id' => $companyId,
+                'name' => $validated['name'],
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'category' => $category,
+        ]);
     }
 
     public function stockIn(Request $request, Material $material): RedirectResponse

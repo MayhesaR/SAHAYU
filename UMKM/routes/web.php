@@ -14,6 +14,9 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AiReportController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\TransactionHistoryController;
+use App\Http\Controllers\DebtController;
+use App\Http\Controllers\CustomerController;
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class, 'login'])->middleware('guest');
@@ -22,24 +25,34 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register')->middleware('guest');
 Route::post('/register', [RegisterController::class, 'register'])->middleware('guest');
 
+// Main Authenticated Workspace Routes
 Route::middleware('auth')->group(function () {
-    // Profil (Bisa diakses Admin & Staff)
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Profil Saya
     Route::get('/profil', [ProfileController::class, 'index'])->name('profile.index');
     Route::put('/profil', [ProfileController::class, 'update'])->name('profile.update');
-    Route::put('/profil/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 
-    // SAHAYU AI Assistant (Semua user)
-    Route::get('/ai-assistant', [AiReportController::class, 'index'])->name('ai.index');
-    Route::post('/ai/analyze', [AiReportController::class, 'analyze'])->name('ai.analyze');
-    Route::post('/ai/chatbot', [AiReportController::class, 'askChatbot'])->name('ai.chatbot');
+    // SAHAYU AI Assistant
+    Route::get('/assistant', [AiReportController::class, 'index'])->name('ai.index');
+    Route::post('/assistant/analyze', [AiReportController::class, 'analyze'])->name('ai.analyze');
+    Route::post('/assistant/chat', [AiReportController::class, 'askChatbot'])->name('ai.chatbot');
 
-    // Dashboard
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    // Riwayat Transaksi & Catatan Utang
+    Route::get('/history-transaksi', [TransactionHistoryController::class, 'index'])->name('history.index');
+    Route::get('/catatan-utang', [DebtController::class, 'index'])->name('debts.index');
+    Route::post('/catatan-utang/{debt}/bayar', [DebtController::class, 'payInstallment'])->name('debts.pay');
+
+    // Customer CRM Routes
+    Route::get('/pelanggan', [CustomerController::class, 'index'])->name('customers.index');
+    Route::post('/pelanggan', [CustomerController::class, 'store'])->name('customers.store');
+    Route::put('/pelanggan/{customer}', [CustomerController::class, 'update'])->name('customers.update');
 
     // Bahan Baku
     Route::get('/bahan-baku', [MaterialController::class, 'index'])->name('materials.index');
     Route::get('/bahan-baku/export-pdf', [MaterialController::class, 'exportPdf'])->name('materials.export-pdf');
     Route::get('/bahan-baku/export-sheets', [MaterialController::class, 'exportGoogleSheets'])->name('materials.export-sheets');
+    Route::post('/bahan-baku/kategori', [MaterialController::class, 'storeCategory'])->name('materials.categories.store');
     Route::post('/bahan-baku/{material}/stok-masuk', [MaterialController::class, 'stockIn'])->name('materials.stock-in');
     Route::post('/bahan-baku/{material}/stok-keluar', [MaterialController::class, 'stockOut'])->name('materials.stock-out');
 
@@ -56,15 +69,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/penjualan/export-pdf', [SaleController::class, 'exportPdf'])->name('sales.export-pdf');
     Route::get('/penjualan/export-sheets', [SaleController::class, 'exportGoogleSheets'])->name('sales.export-sheets');
     Route::post('/penjualan', [SaleController::class, 'store'])->name('sales.store');
+    Route::get('/penjualan/{sale}/struk', [SaleController::class, 'showReceipt'])->name('sales.receipt');
 
     // Laporan
     Route::get('/laporan', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/laporan/export-csv', [ReportController::class, 'exportExcel'])->name('reports.export-csv');
     Route::get('/laporan/export-pdf', [ReportController::class, 'exportPdf'])->name('reports.export-pdf');
     Route::get('/laporan/export-sheets', [ReportController::class, 'exportGoogleSheets'])->name('reports.export-sheets');
-
-    // Export Bahan Baku (Hapus route lama yang ambigu)
-    // Route::get('/bahan-baku-export', [MaterialController::class, 'exportPdf'])->name('materials.export');
 
     // Biaya Operasional (Overhead)
     Route::get('/overhead', [OverheadCostController::class, 'index'])->name('overhead.index');
@@ -83,10 +94,13 @@ Route::middleware('auth')->group(function () {
         Route::patch('/bahan-baku/{material}/minimum-stok', [MaterialController::class, 'updateMinimumStock'])->name('materials.update-minimum-stock');
         Route::delete('/bahan-baku/{material}', [MaterialController::class, 'destroy'])->name('materials.destroy');
 
-        // Produk Jadi
+        // Produk Jadi (Admin CRUD)
         Route::post('/products', [ProductController::class, 'store'])->name('products.store');
         Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
         Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+
+        // Customer Delete (Admin Only)
+        Route::delete('/pelanggan/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
 
         // Produksi
         Route::post('/produksi', [ProductionController::class, 'store'])->name('productions.store');
@@ -94,7 +108,7 @@ Route::middleware('auth')->group(function () {
         Route::patch('/produksi/{production}/status', [ProductionController::class, 'updateStatus'])->name('productions.update-status');
         Route::delete('/produksi/{production}', [ProductionController::class, 'destroy'])->name('productions.destroy');
 
-        // Penjualan
+        // Penjualan Destroy (Admin Only)
         Route::delete('/penjualan/{sale}', [SaleController::class, 'destroy'])->name('sales.destroy');
 
         // Manajemen Akun

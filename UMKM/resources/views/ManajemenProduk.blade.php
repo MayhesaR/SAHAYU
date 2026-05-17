@@ -63,13 +63,30 @@
 <div class="px-6 py-5 bg-surface-container-low border-b border-gray-100">
 <h3 class="text-lg font-bold text-primary flex items-center">
 <span class="material-symbols-outlined mr-2 text-primary flex-shrink-0">inventory</span> Tambah Produk
-                </h3>
+</h3>
 </div>
-<form action="{{ route('products.store') }}" method="POST" class="p-6 space-y-5">
+<form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-5">
 @csrf
 <div class="space-y-2">
 <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Nama Produk</label>
 <input class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all" name="name" placeholder="Contoh: Kue Kering Premium" required type="text"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Foto Produk</label>
+<div class="relative bg-surface-container-highest rounded-lg p-3 flex items-center gap-3 border-2 border-dashed border-slate-200">
+    <span class="material-symbols-outlined text-slate-400">image</span>
+    <input class="w-full text-xs text-slate-500 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 cursor-pointer" name="image" accept="image/*" type="file"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Kategori Produk</label>
+<select name="category_id" class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all">
+    <option value="">-- Pilih Kategori (Opsional) --</option>
+    @foreach($categories as $cat)
+        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+    @endforeach
+</select>
+<input class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-xs focus:ring-2 focus:ring-primary/20 transition-all mt-1" name="new_category_name" placeholder="Atau ketik kategori baru..." type="text"/>
 </div>
 <div class="space-y-2">
 <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Harga Jual (Rp)</label>
@@ -85,12 +102,12 @@
 <input class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all" min="0" name="minimum_stock" placeholder="0" required type="number"/>
 </div>
 </div>
-                <button class="w-full px-6 py-3 rounded-full shadow-lg shadow-teal-900/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2" 
-                        style="background-color: #005050 !important; color: #ffffff !important; font-weight: 900;" 
-                        type="submit">
-                    <span class="material-symbols-outlined text-base">save</span>
-                    <span>Simpan Produk</span>
-                </button>
+<button class="w-full px-6 py-3 rounded-full shadow-lg shadow-teal-900/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2" 
+        style="background-color: #005050 !important; color: #ffffff !important; font-weight: 900;" 
+        type="submit">
+    <span class="material-symbols-outlined text-base">save</span>
+    <span>Simpan Produk</span>
+</button>
 </form>
 </section>
 @endif
@@ -115,7 +132,7 @@
 <div class="px-6 py-5 bg-surface-container-low border-b border-gray-100 flex items-center justify-between">
 <h3 class="text-lg font-bold text-teal-900 flex items-center">
 <span class="material-symbols-outlined mr-2 text-teal-600 flex-shrink-0">table_view</span> Daftar Produk
-                </h3>
+</h3>
 <span class="text-[10px] font-bold text-slate-400 bg-white px-3 py-1 rounded-full border border-outline-variant/5">{{ $products->total() }} item ditemukan</span>
 </div>
 <div class="w-full overflow-x-auto border border-gray-100 rounded-lg mb-4" style="-webkit-overflow-scrolling: touch; display: block; clear: both; touch-action: pan-x pan-y;">
@@ -132,111 +149,158 @@
 <tbody>
 @forelse ($products as $product)
 <tr class="border-t border-surface-container-high hover:bg-slate-50/70 transition-colors">
-<td class="px-6 py-4 font-semibold text-teal-900">{{ $product->name }}</td>
+<td class="px-6 py-4 font-semibold text-teal-900">
+    <div class="flex items-center gap-3">
+        @if($product->image)
+            <img src="{{ asset('storage/' . $product->image) }}" class="w-10 h-10 object-cover rounded-xl border border-slate-100 shadow-sm" alt="{{ $product->name }}">
+        @else
+            <div class="w-10 h-10 rounded-xl bg-teal-50 border border-teal-100 text-teal-700 font-black text-sm flex items-center justify-center shadow-sm">
+                {{ strtoupper(substr($product->name, 0, 2)) }}
+            </div>
+        @endif
+        <div class="flex flex-col">
+            <span class="font-bold tracking-tight text-slate-800">{{ $product->name }}</span>
+            <div class="mt-0.5">
+                @if($product->category)
+                    <span class="inline-block text-[9px] font-black uppercase bg-teal-50 text-[#005050] px-2 py-0.5 rounded-md border border-teal-100/50">
+                        {{ $product->category->name }}
+                    </span>
+                @else
+                    <span class="inline-block text-[9px] font-black uppercase bg-slate-50 text-slate-400 px-2 py-0.5 rounded-md border border-slate-100">
+                        Umum
+                    </span>
+                @endif
+            </div>
+        </div>
+    </div>
+</td>
 <td class="px-6 py-4 text-slate-700" data-product-stock="{{ $product->id }}" data-stock-value="{{ (int) ($product->stock ?? 0) }}">{{ number_format((int) ($product->stock ?? 0), 0, ',', '.') }}</td>
 <td class="px-6 py-4 text-slate-700">{{ number_format((int) ($product->minimum_stock ?? 0), 0, ',', '.') }}</td>
 <td class="px-6 py-4 text-slate-700">Rp {{ number_format($product->selling_price, 0, ',', '.') }}</td>
-                        <td class="px-6 py-4">
-                            <div class="flex justify-end gap-2">
-                                @if(auth()->user()->isAdmin())
-                                    <button class="px-4 py-2 rounded-lg text-xs font-black text-[#005050] bg-[#005050]/10 hover:bg-[#005050]/20 transition-colors flex items-center gap-1 edit-product-btn"
-                                            data-id="{{ $product->id }}"
-                                            data-name="{{ $product->name }}"
-                                            data-price="{{ (int)$product->selling_price }}">
-                                        <span class="material-symbols-outlined text-sm">edit</span>
-                                        <span>Edit</span>
-                                    </button>
-                                    <form action="{{ route('products.destroy', $product) }}" method="POST" onsubmit="return confirm('Hapus produk ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="px-4 py-2 rounded-lg text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 transition-colors flex items-center gap-1" type="submit">
-                                            <span class="material-symbols-outlined text-sm">delete</span>
-                                            <span>Hapus</span>
-                                        </button>
-                                    </form>
-                                @endif
-                            </div>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td class="px-6 py-10 text-slate-500" colspan="5">
-                            <div class="flex flex-col items-center justify-center gap-2 text-center">
-                                <span class="material-symbols-outlined text-4xl text-slate-400">inventory_2</span>
-                                <p class="font-semibold">Belum ada produk.</p>
-                                <p class="text-xs text-slate-400">Tambahkan produk pertama agar modul Produksi dan Penjualan bisa dipakai.</p>
-                            </div>
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+<td class="px-6 py-4">
+    <div class="flex justify-end gap-2">
+        @if(auth()->user()->isAdmin())
+            <button class="px-4 py-2 rounded-lg text-xs font-black text-[#005050] bg-[#005050]/10 hover:bg-[#005050]/20 transition-colors flex items-center gap-1 edit-product-btn"
+                    data-id="{{ $product->id }}"
+                    data-name="{{ $product->name }}"
+                    data-price="{{ (int)$product->selling_price }}"
+                    data-category-id="{{ $product->category_id }}">
+                <span class="material-symbols-outlined text-sm">edit</span>
+                <span>Edit</span>
+            </button>
+            <form action="{{ route('products.destroy', $product) }}" method="POST" onsubmit="return confirm('Hapus produk ini?')">
+                @csrf
+                @method('DELETE')
+                <button class="px-4 py-2 rounded-lg text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 transition-colors flex items-center gap-1" type="submit">
+                    <span class="material-symbols-outlined text-sm">delete</span>
+                    <span>Hapus</span>
+                </button>
+            </form>
+        @endif
     </div>
-    {{-- Pagination --}}
-    <div class="px-6 py-4 bg-surface-container-low border-t border-outline-variant/5">
-        {{ $products->appends(request()->query())->links() }}
+</td>
+</tr>
+@empty
+<tr>
+<td class="px-6 py-10 text-slate-500" colspan="5">
+    <div class="flex flex-col items-center justify-center gap-2 text-center">
+        <span class="material-symbols-outlined text-4xl text-slate-400">inventory_2</span>
+        <p class="font-semibold">Belum ada produk.</p>
+        <p class="text-xs text-slate-400">Tambahkan produk pertama agar modul Produksi dan Penjualan bisa dipakai.</p>
     </div>
+</td>
+</tr>
+@endforelse
+</tbody>
+</table>
+</div>
+{{-- Pagination --}}
+<div class="px-6 py-4 bg-surface-container-low border-t border-outline-variant/5">
+{{ $products->appends(request()->query())->links() }}
+</div>
 </div>
 </section>
 
 <!-- Edit Product Modal -->
 <div id="editProductModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden">
-    <div class="bg-white rounded-3xl p-8 w-full max-w-md shadow-2xl scale-95 opacity-0 transition-all duration-300 modal-content">
-        <div class="flex items-center justify-between mb-8">
-            <h3 class="text-xl font-bold text-slate-800">Edit Produk</h3>
-            <button onclick="closeEditModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors">
-                <span class="material-symbols-outlined text-slate-400">close</span>
-            </button>
+<div class="bg-white rounded-3xl p-8 w-full max-w-md shadow-2xl scale-95 opacity-0 transition-all duration-300 modal-content">
+<div class="flex items-center justify-between mb-8">
+    <h3 class="text-xl font-bold text-slate-800">Edit Produk</h3>
+    <button onclick="closeEditModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors">
+        <span class="material-symbols-outlined text-slate-400">close</span>
+    </button>
+</div>
+<form id="editProductForm" method="POST" enctype="multipart/form-data">
+    @csrf
+    @method('PUT')
+    <div class="space-y-6">
+        <div class="space-y-2">
+            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Nama Produk</label>
+            <input name="name" id="edit_name" required class="w-full px-4 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-slate-700 font-semibold" type="text"/>
         </div>
-        <form id="editProductForm" method="POST">
-            @csrf
-            @method('PUT')
-            <div class="space-y-6">
-                <div class="space-y-2">
-                    <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Nama Produk</label>
-                    <input name="name" id="edit_name" required class="w-full px-4 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-slate-700 font-semibold" type="text"/>
+        <div class="space-y-2">
+            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Foto Produk</label>
+            <div class="relative bg-slate-50 rounded-xl p-3 flex flex-col gap-2 border-2 border-dashed border-slate-200">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-slate-400">image</span>
+                    <input class="w-full text-xs text-slate-500 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 cursor-pointer" name="image" accept="image/*" type="file"/>
                 </div>
-                <div class="space-y-2">
-                    <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Harga Jual (Rp)</label>
-                    <input name="selling_price" id="edit_price" required class="w-full px-4 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-slate-700 font-semibold" type="number"/>
-                </div>
-                <button class="w-full py-4 rounded-xl shadow-lg shadow-teal-900/30 transition-all" 
-                        style="background-color: #005050 !important; color: #ffffff !important; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em;" 
-                        type="submit">
-                    <span>Simpan Perubahan</span>
-                </button>
+                <p class="text-[10px] text-slate-400 font-semibold">*Biarkan kosong jika tidak ingin mengubah foto</p>
             </div>
-        </form>
+        </div>
+        <div class="space-y-2">
+            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Kategori Produk</label>
+            <select name="category_id" id="edit_category_id" class="w-full px-4 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-slate-700 font-semibold">
+                <option value="">-- Pilih Kategori (Opsional) --</option>
+                @foreach($categories as $cat)
+                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                @endforeach
+            </select>
+            <input class="w-full px-4 py-2.5 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-slate-600 text-xs mt-1" name="new_category_name" placeholder="Atau ketik kategori baru..." type="text"/>
+        </div>
+        <div class="space-y-2">
+            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Harga Jual (Rp)</label>
+            <input name="selling_price" id="edit_price" required class="w-full px-4 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-slate-700 font-semibold" type="number"/>
+        </div>
+        <button class="w-full py-4 rounded-xl shadow-lg shadow-teal-900/30 transition-all" 
+                style="background-color: #005050 !important; color: #ffffff !important; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em;" 
+                type="submit">
+            <span>Simpan Perubahan</span>
+        </button>
     </div>
+</form>
+</div>
 </div>
 
 <script>
-    const editModal = document.getElementById('editProductModal');
-    const editContent = editModal.querySelector('.modal-content');
-    const editForm = document.getElementById('editProductForm');
+const editModal = document.getElementById('editProductModal');
+const editContent = editModal.querySelector('.modal-content');
+const editForm = document.getElementById('editProductForm');
 
-    document.querySelectorAll('.edit-product-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const id = btn.dataset.id;
-            const name = btn.dataset.name;
-            const price = btn.dataset.price;
+document.querySelectorAll('.edit-product-btn').forEach(btn => {
+btn.addEventListener('click', () => {
+    const id = btn.dataset.id;
+    const name = btn.dataset.name;
+    const price = btn.dataset.price;
+    const categoryId = btn.dataset.categoryId;
 
-            document.getElementById('edit_name').value = name;
-            document.getElementById('edit_price').value = price;
-            editForm.action = `/products/${id}`;
+    document.getElementById('edit_name').value = name;
+    document.getElementById('edit_price').value = price;
+    document.getElementById('edit_category_id').value = categoryId || '';
+    editForm.action = `/products/${id}`;
 
-            editModal.classList.remove('hidden');
-            setTimeout(() => {
-                editContent.classList.remove('scale-95', 'opacity-0');
-                editContent.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        });
-    });
+    editModal.classList.remove('hidden');
+    setTimeout(() => {
+        editContent.classList.remove('scale-95', 'opacity-0');
+        editContent.classList.add('scale-100', 'opacity-100');
+    }, 10);
+});
+});
 
-    function closeEditModal() {
-        editContent.classList.add('scale-95', 'opacity-0');
-        editContent.classList.remove('scale-100', 'opacity-100');
-        setTimeout(() => editModal.classList.add('hidden'), 300);
-    }
+function closeEditModal() {
+editContent.classList.add('scale-95', 'opacity-0');
+editContent.classList.remove('scale-100', 'opacity-100');
+setTimeout(() => editModal.classList.add('hidden'), 300);
+}
 </script>
 @endsection

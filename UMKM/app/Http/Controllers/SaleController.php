@@ -8,6 +8,9 @@ use App\Events\SalesAnalyticsUpdated;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleItem;
+use App\Models\Category;
+use App\Models\Customer;
+use App\Models\Debt;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -59,7 +62,9 @@ class SaleController extends Controller
         ])->toArray();
 
         return view('PencatatanPenjualan', [
-            'products' => Product::orderBy('name')->get(),
+            'products' => Product::with('category')->orderBy('name')->get(),
+            'categories' => Category::orderBy('name')->get(),
+            'customers' => Customer::orderBy('name')->get(),
             'todayRevenue' => $todaySales->sum('total'),
             'todayTransactions' => $todaySales->count(),
             'todayUnits' => $todayUnits,
@@ -72,7 +77,6 @@ class SaleController extends Controller
 
     private function generateDynamicTip()
     {
-        // 1. Check for Low Stock
         $lowStockProduct = Product::whereColumn('stock', '<=', 'minimum_stock')->first();
         if ($lowStockProduct) {
             return [
@@ -82,7 +86,6 @@ class SaleController extends Controller
             ];
         }
 
-        // 2. Check for Popular Product (All Time)
         $popular = SaleItem::select('product_id', DB::raw('SUM(quantity) as total'))
             ->groupBy('product_id')
             ->orderByDesc('total')
@@ -99,7 +102,6 @@ class SaleController extends Controller
             }
         }
 
-        // 3. Payment Method Insight
         $qrisUsage = Sale::where('payment_method', 'qris')->count();
         if ($qrisUsage < 5) {
             return [
@@ -109,7 +111,6 @@ class SaleController extends Controller
             ];
         }
 
-        // Default Tip
         return [
             'title' => 'Tips Harian',
             'content' => "Selalu catat setiap transaksi sekecil apa pun untuk akurasi laporan laba rugi di akhir bulan.",
@@ -122,9 +123,23 @@ class SaleController extends Controller
         $validated = $request->validate([
             'product_id' => ['required', 'exists:products,id'],
             'quantity' => ['required', 'integer', 'min:1'],
-            'customer' => ['nullable', 'string', 'max:255'],
-            'payment_method' => ['required', 'in:cash,transfer,qris'],
+            'customer_id' => ['nullable', 'exists:customers,id'],
+            'payment_method' => ['required', 'in:cash,transfer,qris,debt'],
         ]);
+
+        if ($validated['payment_method'] === 'debt' && empty($validated['customer_id'])) {
+            throw ValidationException::withMessages([
+                'customer_id' => 'Pelanggan wajib dipilih jika metode pembayaran adalah Piutang / Kasbon.',
+            ]);
+        }
+
+        $customerName = 'Pelanggan Umum';
+        if (!empty($validated['customer_id'])) {
+            $customer = Customer::find($validated['customer_id']);
+            if ($customer) {
+                $customerName = $customer->name;
+            }
+        }
 
         $product = Product::findOrFail($validated['product_id']);
         $unitPrice = (float) ($product->selling_price ?? 0);
@@ -133,7 +148,7 @@ class SaleController extends Controller
 
         $createdSaleId = null;
 
-        DB::transaction(function () use ($validated, $total, $unitPrice, $product, $quantity, &$createdSaleId) {
+        DB::transaction(function () use ($validated, $total, $unitPrice, $product, $quantity, $customerName, &$createdSaleId) {
             $freshProduct = Product::query()->lockForUpdate()->findOrFail($product->id);
 
             if ((int) $freshProduct->stock < $quantity) {
@@ -160,13 +175,26 @@ class SaleController extends Controller
 
             $sale = Sale::create([
                 'company_id' => auth()->user()->company_id,
-                'customer' => $validated['customer'] ?? null,
+                'customer_id' => $validated['customer_id'] ?? null,
+                'customer' => $customerName,
                 'total' => $total,
                 'payment_method' => $validated['payment_method'],
-                'status' => 'paid',
+                'status' => $validated['payment_method'] === 'debt' ? 'unpaid' : 'paid',
             ]);
 
             $createdSaleId = $sale->id;
+
+            if ($validated['payment_method'] === 'debt') {
+                Debt::create([
+                    'company_id' => auth()->user()->company_id,
+                    'customer_id' => $validated['customer_id'],
+                    'sale_id' => $sale->id,
+                    'total_amount' => $total,
+                    'remaining_amount' => $total,
+                    'due_date' => now()->addDays(14)->toDateString(),
+                    'status' => 'unpaid',
+                ]);
+            }
 
             SaleItem::create([
                 'company_id' => auth()->user()->company_id,
@@ -250,7 +278,41 @@ class SaleController extends Controller
             latestSale: $latestSale
         ));
 
-        return redirect()->route('sales.index')->with('success', 'Transaksi berhasil dicatat.');
+        return redirect()->route('sales.index')
+            ->with('success', 'Transaksi berhasil dicatat.')
+            ->with('print_sale_id', $createdSaleId);
+    }
+
+    public function showReceipt(Sale $sale)
+    {
+        if ($sale->company_id !== auth()->user()->company_id) {
+            abort(403, 'Unauthorized.');
+        }
+
+        $sale->load(['items.product', 'customer']);
+
+        return view('sales.receipt', [
+            'sale' => $sale,
+            'company' => auth()->user()->company,
+        ]);
+    }
+
+    public function storeCustomer(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:50'],
+            'address' => ['nullable', 'string'],
+        ]);
+
+        Customer::create([
+            'company_id' => auth()->user()->company_id,
+            'name' => $validated['name'],
+            'phone' => $validated['phone'] ?? null,
+            'address' => $validated['address'] ?? null,
+        ]);
+
+        return redirect()->back()->with('success', 'Pelanggan baru berhasil disimpan.');
     }
 
     public function destroy(Sale $sale): RedirectResponse
@@ -289,10 +351,8 @@ class SaleController extends Controller
 
     public function exportPdf()
     {
-        // Limit data SIGNIFICANTLY to prevent memory exhaustion - export only last 100 sales
         $sales = Sale::with('items.product')->orderByDesc('created_at')->limit(100)->get();
 
-        // Set very high memory limit for PDF generation (must be before DomPDF loads)
         ini_set('memory_limit', '512M');
         ini_set('max_execution_time', '300');
 
@@ -321,7 +381,6 @@ class SaleController extends Controller
             $data = [];
 
             foreach ($sales as $s) {
-                // Kumpulkan produk yang dibeli
                 $products = $s->items->map(function ($item) {
                     return ($item->product ? $item->product->name : '-') . ' ('.$item->quantity.')';
                 })->join(', ');

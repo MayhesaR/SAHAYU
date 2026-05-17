@@ -9,7 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 class Sale extends Model
 {
     use Filterable, BelongsToCompany;
-    protected $fillable = ['company_id', 'customer', 'total', 'payment_method', 'status'];
+    protected $fillable = ['company_id', 'customer_id', 'customer', 'total', 'payment_method', 'status'];
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 
     public function items()
     {

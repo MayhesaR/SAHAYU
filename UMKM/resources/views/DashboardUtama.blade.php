@@ -10,25 +10,42 @@
             <h1 class="text-3xl font-black text-slate-900 tracking-tight font-manrope">
                 Selamat Datang, <span class="text-primary">{{ $companyName }}</span> 👋
             </h1>
-            <p class="text-slate-500 font-medium text-sm flex items-center gap-2">
+            <p class="text-slate-500 font-medium text-sm flex items-center flex-wrap gap-2">
                 <span class="material-symbols-outlined text-sm">calendar_today</span>
-                {{ now()->translatedFormat('l, d F Y') }}
+                <span>{{ \Carbon\Carbon::parse($targetDate)->translatedFormat('l, d F Y') }}</span>
+                @if($isTimeTravel)
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider bg-amber-500/10 text-amber-700 border border-amber-500/10 animate-pulse">
+                        <span class="material-symbols-outlined text-[12px]">hourglass_empty</span>
+                        <span>Mode Penelusuran Waktu</span>
+                    </span>
+                @endif
             </p>
         </div>
 
-        <div class="flex items-center gap-2 bg-white p-1.5 rounded-2xl shadow-sm border border-slate-100 w-fit">
-            <a href="{{ route('dashboard', ['range' => '1']) }}" 
-               class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ $currentFilter == '1' ? 'bg-primary text-white shadow-md' : 'text-slate-500 hover:bg-slate-50' }}">
-                Hari Ini
-            </a>
-            <a href="{{ route('dashboard', ['range' => '7']) }}" 
-               class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ $currentFilter == '7' ? 'bg-primary text-white shadow-md' : 'text-slate-500 hover:bg-slate-50' }}">
-                7 Hari
-            </a>
-            <a href="{{ route('dashboard', ['range' => '30']) }}" 
-               class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ $currentFilter == '30' ? 'bg-primary text-white shadow-md' : 'text-slate-500 hover:bg-slate-50' }}">
-                30 Hari
-            </a>
+        <div class="flex items-center bg-white p-2 rounded-2xl shadow-sm border border-slate-100 w-fit">
+            <form action="{{ route('dashboard') }}" method="GET" class="flex items-center gap-3">
+                <div class="flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-slate-400 text-[16px] pl-2">travel_explore</span>
+                    <input type="date" 
+                           name="date" 
+                           value="{{ $targetDate }}"
+                           onchange="this.form.submit()"
+                           class="border-none bg-slate-50 hover:bg-slate-100 rounded-lg p-2 text-xs font-black text-slate-700 focus:ring-0 outline-none cursor-pointer transition-all" />
+                </div>
+                
+                <div class="h-4 w-px bg-slate-200"></div>
+
+                <div class="flex items-center gap-1.5">
+                    <a href="{{ route('dashboard', ['range' => '7']) }}" 
+                       class="px-3.5 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all {{ $currentFilter == '7' && !$isTimeTravel ? 'bg-primary text-white shadow-md' : 'text-slate-500 hover:bg-slate-50' }}">
+                        7 Hari
+                    </a>
+                    <a href="{{ route('dashboard', ['range' => '30']) }}" 
+                       class="px-3.5 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all {{ $currentFilter == '30' && !$isTimeTravel ? 'bg-primary text-white shadow-md' : 'text-slate-500 hover:bg-slate-50' }}">
+                        30 Hari
+                    </a>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -85,69 +102,130 @@
     </div>
 
     <!-- METRICS CARDS -->
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-        <!-- Sales Card -->
-        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden group">
-            <div class="relative z-10">
-                <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-4">
-                    <span class="material-symbols-outlined text-xl">payments</span>
-                </div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Penjualan</p>
-                <h3 class="text-2xl font-black text-slate-900 mt-1">Rp {{ number_format($totalSales, 0, ',', '.') }}</h3>
-                <div class="mt-4 flex items-center gap-2">
-                    <span class="flex items-center gap-0.5 text-xs font-black {{ $salesGrowth >= 0 ? 'text-emerald-500' : 'text-rose-500' }}">
-                        <span class="material-symbols-outlined text-sm">{{ $salesGrowth >= 0 ? 'trending_up' : 'trending_down' }}</span>
-                        {{ abs(round($salesGrowth, 1)) }}%
-                    </span>
-                    <span class="text-[10px] text-slate-400 font-medium">vs periode lalu</span>
+    @if(auth()->check() && auth()->user()->isStaff())
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Pemasukan Card (Sales) -->
+            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden group">
+                <div class="relative z-10">
+                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-4">
+                        <span class="material-symbols-outlined text-xl">payments</span>
+                    </div>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pemasukan (Omzet)</p>
+                    <h3 class="text-2xl font-black text-slate-900 mt-1">Rp {{ number_format($totalSales, 0, ',', '.') }}</h3>
+                    <div class="mt-4 flex items-center gap-2">
+                        <span class="flex items-center gap-0.5 text-xs font-black {{ $salesGrowth >= 0 ? 'text-emerald-500' : 'text-rose-500' }}">
+                            <span class="material-symbols-outlined text-sm">{{ $salesGrowth >= 0 ? 'trending_up' : 'trending_down' }}</span>
+                            {{ abs(round($salesGrowth, 1)) }}%
+                        </span>
+                        <span class="text-[10px] text-slate-400 font-medium">vs periode lalu</span>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Expense Card -->
-        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden group">
-            <div class="relative z-10">
-                <div class="w-10 h-10 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center mb-4">
-                    <span class="material-symbols-outlined text-xl">shopping_cart</span>
-                </div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Pengeluaran</p>
-                <h3 class="text-2xl font-black text-slate-900 mt-1">Rp {{ number_format($totalExpenses, 0, ',', '.') }}</h3>
-                <div class="mt-4 flex items-center gap-2">
-                    <span class="flex items-center gap-0.5 text-xs font-black {{ $expenseGrowth <= 0 ? 'text-emerald-500' : 'text-rose-500' }}">
-                        <span class="material-symbols-outlined text-sm">{{ $expenseGrowth <= 0 ? 'trending_down' : 'trending_up' }}</span>
-                        {{ abs(round($expenseGrowth, 1)) }}%
-                    </span>
-                    <span class="text-[10px] text-slate-400 font-medium">vs periode lalu</span>
+            <!-- Pengeluaran Card (Expenses) -->
+            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden group">
+                <div class="relative z-10">
+                    <div class="w-10 h-10 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center mb-4">
+                        <span class="material-symbols-outlined text-xl">shopping_cart</span>
+                    </div>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pengeluaran (Biaya)</p>
+                    <h3 class="text-2xl font-black text-slate-900 mt-1">Rp {{ number_format($totalExpenses, 0, ',', '.') }}</h3>
+                    <div class="mt-4 flex items-center gap-2">
+                        <span class="flex items-center gap-0.5 text-xs font-black {{ $expenseGrowth <= 0 ? 'text-emerald-500' : 'text-rose-500' }}">
+                            <span class="material-symbols-outlined text-sm">{{ $expenseGrowth <= 0 ? 'trending_down' : 'trending_up' }}</span>
+                            {{ abs(round($expenseGrowth, 1)) }}%
+                        </span>
+                        <span class="text-[10px] text-slate-400 font-medium">vs periode lalu</span>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Production Card -->
-        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden group">
-            <div class="relative z-10">
-                <div class="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mb-4">
-                    <span class="material-symbols-outlined text-xl">precision_manufacturing</span>
+            <!-- Profit Card (Earnings) -->
+            @php
+                $profit = $totalSales - $totalExpenses;
+            @endphp
+            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden group">
+                <div class="relative z-10">
+                    <div class="w-10 h-10 bg-teal-50 text-teal-600 rounded-xl flex items-center justify-center mb-4">
+                        <span class="material-symbols-outlined text-xl">account_balance_wallet</span>
+                    </div>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Keuntungan (Profit)</p>
+                    <h3 class="text-2xl font-black {{ $profit >= 0 ? 'text-slate-900' : 'text-rose-600' }} mt-1">Rp {{ number_format($profit, 0, ',', '.') }}</h3>
+                    <div class="mt-4 flex items-center gap-2">
+                        <span class="flex items-center gap-0.5 text-xs font-black {{ $profit >= 0 ? 'text-emerald-500' : 'text-rose-500' }}">
+                            <span class="material-symbols-outlined text-sm">trending_flat</span>
+                            Selisih Bersih
+                        </span>
+                        <span class="text-[10px] text-slate-400 font-medium">Pemasukan - Pengeluaran</span>
+                    </div>
                 </div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Produksi Selesai</p>
-                <h3 class="text-2xl font-black text-slate-900 mt-1">{{ number_format($totalProduction, 0, ',', '.') }} <span class="text-sm text-slate-400">Unit</span></h3>
-                <p class="text-[10px] text-slate-400 font-medium mt-4">Selama periode ini</p>
             </div>
         </div>
+    @else
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+            <!-- Sales Card -->
+            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden group">
+                <div class="relative z-10">
+                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-4">
+                        <span class="material-symbols-outlined text-xl">payments</span>
+                    </div>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Penjualan</p>
+                    <h3 class="text-2xl font-black text-slate-900 mt-1">Rp {{ number_format($totalSales, 0, ',', '.') }}</h3>
+                    <div class="mt-4 flex items-center gap-2">
+                        <span class="flex items-center gap-0.5 text-xs font-black {{ $salesGrowth >= 0 ? 'text-emerald-500' : 'text-rose-500' }}">
+                            <span class="material-symbols-outlined text-sm">{{ $salesGrowth >= 0 ? 'trending_up' : 'trending_down' }}</span>
+                            {{ abs(round($salesGrowth, 1)) }}%
+                        </span>
+                        <span class="text-[10px] text-slate-400 font-medium">vs periode lalu</span>
+                    </div>
+                </div>
+            </div>
 
-        <!-- Stock Health Card -->
-        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden group {{ $lowStock > 0 ? 'ring-2 ring-amber-500/20' : '' }}">
-            <div class="relative z-10">
-                <div class="w-10 h-10 {{ $lowStock > 0 ? 'bg-amber-50 text-amber-600' : 'bg-emerald-50 text-emerald-600' }} rounded-xl flex items-center justify-center mb-4">
-                    <span class="material-symbols-outlined text-xl">{{ $lowStock > 0 ? 'inventory_2' : 'check_circle' }}</span>
+            <!-- Expense Card -->
+            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden group">
+                <div class="relative z-10">
+                    <div class="w-10 h-10 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center mb-4">
+                        <span class="material-symbols-outlined text-xl">shopping_cart</span>
+                    </div>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Pengeluaran</p>
+                    <h3 class="text-2xl font-black text-slate-900 mt-1">Rp {{ number_format($totalExpenses, 0, ',', '.') }}</h3>
+                    <div class="mt-4 flex items-center gap-2">
+                        <span class="flex items-center gap-0.5 text-xs font-black {{ $expenseGrowth <= 0 ? 'text-emerald-500' : 'text-rose-500' }}">
+                            <span class="material-symbols-outlined text-sm">{{ $expenseGrowth <= 0 ? 'trending_down' : 'trending_up' }}</span>
+                            {{ abs(round($expenseGrowth, 1)) }}%
+                        </span>
+                        <span class="text-[10px] text-slate-400 font-medium">vs periode lalu</span>
+                    </div>
                 </div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Kesehatan Stok</p>
-                <h3 class="text-2xl font-black text-slate-900 mt-1">{{ $stockSafePercent }}% <span class="text-sm text-slate-400">Aman</span></h3>
-                <p class="text-[10px] {{ $lowStock > 0 ? 'text-amber-600 font-black' : 'text-emerald-500 font-medium' }} mt-4">
-                    {{ $lowStock > 0 ? $lowStock . ' Bahan Baku Kritis' : 'Semua Stok Aman' }}
-                </p>
+            </div>
+
+            <!-- Production Card -->
+            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden group">
+                <div class="relative z-10">
+                    <div class="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mb-4">
+                        <span class="material-symbols-outlined text-xl">precision_manufacturing</span>
+                    </div>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Produksi Selesai</p>
+                    <h3 class="text-2xl font-black text-slate-900 mt-1">{{ number_format($totalProduction, 0, ',', '.') }} <span class="text-sm text-slate-400">Unit</span></h3>
+                    <p class="text-[10px] text-slate-400 font-medium mt-4">Selama periode ini</p>
+                </div>
+            </div>
+
+            <!-- Stock Health Card -->
+            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden group {{ $lowStock > 0 ? 'ring-2 ring-amber-500/20' : '' }}">
+                <div class="relative z-10">
+                    <div class="w-10 h-10 {{ $lowStock > 0 ? 'bg-amber-50 text-amber-600' : 'bg-emerald-50 text-emerald-600' }} rounded-xl flex items-center justify-center mb-4">
+                        <span class="material-symbols-outlined text-xl">{{ $lowStock > 0 ? 'inventory_2' : 'check_circle' }}</span>
+                    </div>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Kesehatan Stok</p>
+                    <h3 class="text-2xl font-black text-slate-900 mt-1">{{ $stockSafePercent }}% <span class="text-sm text-slate-400">Aman</span></h3>
+                    <p class="text-[10px] {{ $lowStock > 0 ? 'text-amber-600 font-black' : 'text-emerald-500 font-medium' }} mt-4">
+                        {{ $lowStock > 0 ? $lowStock . ' Bahan Baku Kritis' : 'Semua Stok Aman' }}
+                    </p>
+                </div>
             </div>
         </div>
-    </div>
+    @endif
 
     <!-- MAIN CHART & INFO GRID -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -189,72 +267,112 @@
     </div>
 
     <!-- BOTTOM SECTION: ACTIVITY & ALERTS -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 pb-10">
-        <!-- Recent Activities -->
-        <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
-            <div class="flex items-center justify-between mb-8">
-                <h4 class="text-xl font-black text-slate-900 font-manrope">Aktivitas Terbaru</h4>
-                <span class="material-symbols-outlined text-slate-300">history</span>
-            </div>
-            <div class="space-y-6">
-                @forelse($recentActivities as $activity)
-                    <div class="flex items-center justify-between group">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-{{ $activity['color'] }}-50 text-{{ $activity['color'] }}-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                                <span class="material-symbols-outlined">{{ $activity['icon'] }}</span>
+    @if(auth()->check() && auth()->user()->isStaff())
+        <div class="grid grid-cols-1 gap-8 pb-10">
+            <!-- Stock Alerts (Full Width for Staff) -->
+            <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                <div class="flex items-center justify-between mb-8">
+                    <h4 class="text-xl font-black text-slate-900 font-manrope">Peringatan Stok Bahan Baku</h4>
+                    <span class="material-symbols-outlined text-{{ $lowStock > 0 ? 'amber-500' : 'emerald-500' }}">
+                        {{ $lowStock > 0 ? 'warning' : 'verified' }}
+                    </span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    @forelse($lowStockMaterials as $mat)
+                        <div class="flex items-center justify-between p-4 bg-amber-50/50 border border-amber-100 rounded-2xl">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-white text-amber-600 rounded-xl flex items-center justify-center shadow-sm">
+                                    <span class="material-symbols-outlined">inventory_2</span>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-black text-slate-900">{{ $mat->name }}</p>
+                                    <p class="text-[10px] text-slate-400 font-medium italic">Sisa Stok: {{ $mat->stock }} {{ $mat->unit }}</p>
+                                </div>
                             </div>
-                            <div>
-                                <p class="text-sm font-black text-slate-900">{{ $activity['title'] }}</p>
-                                <p class="text-[10px] text-slate-400 font-medium">{{ $activity['time']->diffForHumans() }}</p>
-                            </div>
+                            <a href="{{ route('materials.index') }}" class="text-[10px] font-black text-amber-700 bg-white px-3 py-1.5 rounded-lg border border-amber-200 hover:bg-amber-600 hover:text-white transition-all">
+                                Restok
+                            </a>
                         </div>
-                        <span class="text-sm font-black text-slate-900 bg-slate-50 px-3 py-1 rounded-lg">{{ $activity['amount'] }}</span>
-                    </div>
-                @empty
-                    <div class="py-10 text-center text-slate-300">
-                        <span class="material-symbols-outlined text-4xl mb-2 opacity-20">hourglass_empty</span>
-                        <p class="text-xs font-bold">Belum ada aktivitas tercatat</p>
-                    </div>
-                @endforelse
+                    @empty
+                        <div class="col-span-2 flex flex-col items-center justify-center py-10">
+                            <div class="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mb-4">
+                                <span class="material-symbols-outlined text-3xl">done_all</span>
+                            </div>
+                            <p class="text-sm font-black text-slate-900">Semua stok aman</p>
+                            <p class="text-xs text-slate-400 mt-1">Tidak ada bahan baku di bawah batas minimum</p>
+                        </div>
+                    @endforelse
+                </div>
             </div>
         </div>
+    @else
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 pb-10">
+            <!-- Recent Activities -->
+            <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                <div class="flex items-center justify-between mb-8">
+                    <h4 class="text-xl font-black text-slate-900 font-manrope">Aktivitas Terbaru</h4>
+                    <span class="material-symbols-outlined text-slate-300">history</span>
+                </div>
+                <div class="space-y-6">
+                    @forelse($recentActivities as $activity)
+                        <div class="flex items-center justify-between group">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-{{ $activity['color'] }}-50 text-{{ $activity['color'] }}-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                                    <span class="material-symbols-outlined">{{ $activity['icon'] }}</span>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-black text-slate-900">{{ $activity['title'] }}</p>
+                                    <p class="text-[10px] text-slate-400 font-medium">{{ $activity['time']->diffForHumans() }}</p>
+                                </div>
+                            </div>
+                            <span class="text-sm font-black text-slate-900 bg-slate-50 px-3 py-1 rounded-lg">{{ $activity['amount'] }}</span>
+                        </div>
+                    @empty
+                        <div class="py-10 text-center text-slate-300">
+                            <span class="material-symbols-outlined text-4xl mb-2 opacity-20">hourglass_empty</span>
+                            <p class="text-xs font-bold">Belum ada aktivitas tercatat</p>
+                        </div>
+                    @endforelse
+                </div>
+            </div>
 
-        <!-- Stock Alerts -->
-        <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
-            <div class="flex items-center justify-between mb-8">
-                <h4 class="text-xl font-black text-slate-900 font-manrope">Peringatan Stok</h4>
-                <span class="material-symbols-outlined text-{{ $lowStock > 0 ? 'amber-500' : 'emerald-500' }}">
-                    {{ $lowStock > 0 ? 'warning' : 'verified' }}
-                </span>
-            </div>
-            <div class="space-y-4">
-                @forelse($lowStockMaterials as $mat)
-                    <div class="flex items-center justify-between p-4 bg-amber-50/50 border border-amber-100 rounded-2xl">
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 bg-white text-amber-600 rounded-xl flex items-center justify-center shadow-sm">
-                                <span class="material-symbols-outlined">inventory_2</span>
+            <!-- Stock Alerts -->
+            <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                <div class="flex items-center justify-between mb-8">
+                    <h4 class="text-xl font-black text-slate-900 font-manrope">Peringatan Stok</h4>
+                    <span class="material-symbols-outlined text-{{ $lowStock > 0 ? 'amber-500' : 'emerald-500' }}">
+                        {{ $lowStock > 0 ? 'warning' : 'verified' }}
+                    </span>
+                </div>
+                <div class="space-y-4">
+                    @forelse($lowStockMaterials as $mat)
+                        <div class="flex items-center justify-between p-4 bg-amber-50/50 border border-amber-100 rounded-2xl">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-white text-amber-600 rounded-xl flex items-center justify-center shadow-sm">
+                                    <span class="material-symbols-outlined">inventory_2</span>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-black text-slate-900">{{ $mat->name }}</p>
+                                    <p class="text-[10px] text-slate-400 font-medium italic">Sisa Stok: {{ $mat->stock }} {{ $mat->unit }}</p>
+                                </div>
                             </div>
-                            <div>
-                                <p class="text-sm font-black text-slate-900">{{ $mat->name }}</p>
-                                <p class="text-[10px] text-slate-400 font-medium italic">Sisa Stok: {{ $mat->stock }} {{ $mat->unit }}</p>
+                            <a href="{{ route('materials.index') }}" class="text-[10px] font-black text-amber-700 bg-white px-3 py-1.5 rounded-lg border border-amber-200 hover:bg-amber-600 hover:text-white transition-all">
+                                Restok
+                            </a>
+                        </div>
+                    @empty
+                        <div class="h-full flex flex-col items-center justify-center py-10">
+                            <div class="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mb-4">
+                                <span class="material-symbols-outlined text-3xl">done_all</span>
                             </div>
+                            <p class="text-sm font-black text-slate-900">Semua stok aman</p>
+                            <p class="text-xs text-slate-400 mt-1">Tidak ada bahan baku di bawah batas minimum</p>
                         </div>
-                        <a href="{{ route('materials.index') }}" class="text-[10px] font-black text-amber-700 bg-white px-3 py-1.5 rounded-lg border border-amber-200 hover:bg-amber-600 hover:text-white transition-all">
-                            Restok
-                        </a>
-                    </div>
-                @empty
-                    <div class="h-full flex flex-col items-center justify-center py-10">
-                        <div class="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mb-4">
-                            <span class="material-symbols-outlined text-3xl">done_all</span>
-                        </div>
-                        <p class="text-sm font-black text-slate-900">Semua stok aman</p>
-                        <p class="text-xs text-slate-400 mt-1">Tidak ada bahan baku di bawah batas minimum</p>
-                    </div>
-                @endforelse
+                    @endforelse
+                </div>
             </div>
         </div>
-    </div>
+    @endif
 </div>
 
 <!-- SCRIPTS: Chart.js -->

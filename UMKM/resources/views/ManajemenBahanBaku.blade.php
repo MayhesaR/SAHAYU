@@ -111,11 +111,17 @@
                 </div>
                 <div class="space-y-2 w-full">
                     <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider w-full">Kategori</label>
-                    <select class="block w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all" name="category" id="form-category" required>
-                        <option value="Struktur">Struktur</option>
-                        <option value="Dasar">Dasar</option>
-                        <option value="Finishing">Finishing</option>
-                    </select>
+                    <div class="flex gap-2">
+                        <select class="block flex-1 bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all font-bold text-slate-700" name="raw_material_category_id" id="form-category" required>
+                            <option value="" disabled selected>-- Pilih Kategori --</option>
+                            @foreach($rawMaterialCategories as $cat)
+                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                            @endforeach
+                        </select>
+                        <button type="button" onclick="openAddCategoryModal()" class="px-3 bg-teal-50 text-teal-700 border border-teal-200 hover:bg-teal-100 rounded-lg flex items-center justify-center transition-all" title="Tambah Kategori Baru">
+                            <span class="material-symbols-outlined text-base">add</span>
+                        </button>
+                    </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
                     <div class="space-y-2 w-full">
@@ -174,7 +180,7 @@
             ['value' => 'created_at_asc', 'label' => 'Terlama'],
         ]"
         :filterOptions="[
-            ['name' => 'category', 'label' => 'Kategori', 'choices' => ['Struktur' => 'Struktur', 'Dasar' => 'Dasar', 'Finishing' => 'Finishing']],
+            ['name' => 'raw_material_category_id', 'label' => 'Kategori', 'choices' => $categoryChoices],
         ]"
     />
 
@@ -214,10 +220,14 @@
                             </div>
                         </td>
                         <td class="px-2 sm:px-8 py-3 sm:py-5 text-center">
+                            @php
+                                $catName = $material->rawMaterialCategory?->name ?? $material->category;
+                            @endphp
                             <span class="px-2 sm:px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest border {{
-                                $material->category === 'Struktur' ? 'bg-indigo-50 text-indigo-700 border-indigo-100' :
-                                ($material->category === 'Dasar' ? 'bg-teal-50 text-teal-700 border-teal-100' : 'bg-amber-50 text-amber-700 border-amber-100')
-                            }}">{{ $material->category }}</span>
+                                $catName === 'Struktur' ? 'bg-indigo-50 text-indigo-700 border-indigo-100' :
+                                ($catName === 'Dasar' ? 'bg-teal-50 text-teal-700 border-teal-100' : 
+                                ($catName === 'Finishing' ? 'bg-amber-50 text-amber-700 border-amber-100' : 'bg-slate-50 text-slate-700 border-slate-100'))
+                            }}">{{ $catName }}</span>
                         </td>
                         <td class="px-2 sm:px-8 py-3 sm:py-5">
                             <div class="flex flex-col">
@@ -241,7 +251,8 @@
                             <button class="p-2 hover:bg-surface-container-highest rounded-full transition-all text-slate-400 hover:text-primary open-quick-action" 
                                     data-id="{{ $material->id }}"
                                     data-name="{{ $material->name }}"
-                                    data-category="{{ $material->category }}"
+                                    data-category_id="{{ $material->raw_material_category_id }}"
+                                    data-category="{{ $material->rawMaterialCategory?->name ?? $material->category }}"
                                     data-unit="{{ $material->unit }}"
                                     data-price="{{ (int)$material->price }}"
                                     data-minimum_stock="{{ $material->minimum_stock }}"
@@ -425,6 +436,41 @@
             </div>
         </div>
     </div>
+
+    <!-- ADD RAW MATERIAL CATEGORY MODAL -->
+    <div id="add-category-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[70] flex items-center justify-center hidden animate-fade-in">
+        <div class="bg-white rounded-[2rem] w-full max-w-md shadow-2xl p-8 transform scale-95 opacity-0 transition-all duration-300 modal-content relative">
+            <button class="absolute top-6 right-6 text-slate-400 hover:text-error transition-colors" type="button" onclick="closeAddCategoryModal()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            
+            <div class="mb-6 flex items-center gap-3">
+                <div class="w-10 h-10 bg-teal-50 text-teal-700 rounded-xl flex items-center justify-center">
+                    <span class="material-symbols-outlined text-xl">category</span>
+                </div>
+                <div>
+                    <span class="text-[10px] font-black uppercase tracking-[0.2em] text-teal-600 block">Kategori Baru</span>
+                    <h3 class="text-lg font-black text-teal-900 leading-tight">Tambah Kategori Bahan</h3>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <div class="space-y-1.5">
+                    <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Nama Kategori</label>
+                    <input type="text" id="new-category-name" placeholder="Contoh: Tepung & Pati" class="block w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-bold focus:outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 transition-all"/>
+                </div>
+                
+                <div class="flex items-center justify-end gap-3 pt-4">
+                    <button type="button" onclick="closeAddCategoryModal()" class="px-5 py-2.5 bg-white text-slate-600 font-bold text-xs rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-all">
+                        Batal
+                    </button>
+                    <button type="button" onclick="submitNewCategory()" class="px-5 py-2.5 bg-teal-600 text-white font-black text-xs rounded-xl shadow-md hover:bg-teal-700 transition-all">
+                        Simpan Kategori
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 
@@ -511,7 +557,7 @@
 
         // Fill data
         document.getElementById('form-name').value = data.name;
-        document.getElementById('form-category').value = data.category;
+        document.getElementById('form-category').value = data.category_id || '';
         document.getElementById('form-unit').value = data.unit;
         document.getElementById('form-price').value = data.price;
         document.getElementById('form-minimum_stock').value = data.minimum_stock;
@@ -537,10 +583,86 @@
 
   // Close when clicking outside
   document.addEventListener('click', (e) => {
-    if (sidebar && !sidebar.contains(e.target) && !openButton?.contains(e.target) && !e.target.closest('.open-quick-action')) {
+    if (sidebar && !sidebar.contains(e.target) && !openButton?.contains(e.target) && !e.target.closest('.open-quick-action') && !e.target.closest('#add-category-modal')) {
       closeSidebar();
     }
   });
+
+  // Dynamic Categories Addition Script
+  window.openAddCategoryModal = () => {
+    const modal = document.getElementById('add-category-modal');
+    const modalContent = modal.querySelector('.modal-content');
+    modal.classList.remove('hidden');
+    setTimeout(() => modalContent.classList.add('active'), 10);
+  };
+
+  window.closeAddCategoryModal = () => {
+    const modal = document.getElementById('add-category-modal');
+    const modalContent = modal.querySelector('.modal-content');
+    modalContent.classList.remove('active');
+    setTimeout(() => modal.classList.add('hidden'), 300);
+  };
+
+  window.submitNewCategory = () => {
+    const nameInput = document.getElementById('new-category-name');
+    const name = nameInput.value.trim();
+    if (!name) {
+        alert('Nama kategori tidak boleh kosong.');
+        return;
+    }
+
+    fetch('{{ route("materials.categories.store") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({ name: name })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            // Append to selection dropdown
+            const select = document.getElementById('form-category');
+            
+            // Check if already exists in options
+            let exists = false;
+            for (let i = 0; i < select.options.length; i++) {
+                if (select.options[i].value == data.category.id) {
+                    exists = true;
+                    break;
+                }
+            }
+            
+            if (!exists) {
+                const opt = document.createElement('option');
+                opt.value = data.category.id;
+                opt.innerHTML = data.category.name;
+                select.appendChild(opt);
+            }
+            
+            // Auto select
+            select.value = data.category.id;
+            
+            // Clean up and close modal
+            nameInput.value = '';
+            closeAddCategoryModal();
+            
+            // Show alert
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'fixed bottom-5 right-5 z-[100] p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl flex items-center gap-3 shadow-xl';
+            alertDiv.innerHTML = '<span class="material-symbols-outlined text-emerald-600">check_circle</span><span class="font-bold text-sm">Kategori ' + data.category.name + ' berhasil ditambahkan!</span>';
+            document.body.appendChild(alertDiv);
+            setTimeout(() => alertDiv.remove(), 3000);
+        } else {
+            alert('Gagal menambahkan kategori.');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert('Terjadi kesalahan koneksi.');
+    });
+  };
 })();
 </script>
 @endsection

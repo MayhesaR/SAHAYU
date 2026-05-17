@@ -10,11 +10,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Product extends Model
 {
     use Filterable, BelongsToCompany;
-    protected $fillable = ['company_id', 'name', 'selling_price', 'stock', 'minimum_stock'];
+    protected $fillable = ['company_id', 'name', 'image', 'category_id', 'selling_price', 'stock', 'minimum_stock'];
 
     protected $casts = [
         'selling_price' => 'decimal:2',
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 
     public function productions()
     {
