@@ -460,4 +460,18 @@ class MaterialController extends Controller
             return redirect()->back()->withErrors(['export' => 'Gagal export spreadsheet: ' . $e->getMessage()]);
         }
     }
+
+    /**
+     * Export raw materials to native styled Excel (.xlsx).
+     */
+    public function exportExcel(Request $request)
+    {
+        try {
+            $export = new \App\Exports\BahanBakuExport($request->all());
+            return $export->download();
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Material XLSX Export Error: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['export' => 'Gagal export XLSX: ' . $e->getMessage()]);
+        }
+    }
 }

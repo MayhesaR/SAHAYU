@@ -336,4 +336,325 @@ class DashboardController extends Controller
         // Pick 1 random from qualified insights
         return $insights[array_rand($insights)];
     }
+
+    public function exportExcel(Request $request)
+    {
+        try {
+            $targetDateString = $request->input('date', Carbon::today()->toDateString());
+            $isTimeTravel = $request->filled('date');
+
+            $filter = $request->query('range');
+            if (!$filter) {
+                $filter = auth()->check() && auth()->user()->isStaff() ? '1' : '30';
+            }
+            if ($isTimeTravel) {
+                $filter = '1';
+            }
+
+            $companyId = auth()->user()->company_id;
+
+            if ($filter === '1') {
+                $startDate = Carbon::parse($targetDateString)->startOfDay();
+                $endDate = Carbon::parse($targetDateString)->endOfDay();
+                $periodLabel = Carbon::parse($targetDateString)->translatedFormat('d F Y');
+            } else {
+                $days = (int) $filter;
+                $now = Carbon::now();
+                $startDate = $now->copy()->subDays($days)->startOfDay();
+                $endDate = $now->copy()->endOfDay();
+                $periodLabel = $startDate->translatedFormat('d F Y') . ' s/d ' . $endDate->translatedFormat('d F Y');
+            }
+
+            // 1. Sales Statistics (Strict Cash Basis: Cash Sales + Debt/Installment Payments)
+            $cashSales = Sale::where('company_id', $companyId)
+                ->whereIn(DB::raw('LOWER(payment_method)'), ['cash', 'transfer', 'qris'])
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->sum('total');
+
+            $debtPayments = \App\Models\DebtPayment::whereHas('debt', function ($q) use ($companyId) {
+                    $q->where('company_id', $companyId);
+                })
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->sum('amount_paid');
+
+            // 2. Expense Statistics (Strict Cash Basis: Petty Cash Expenses + Raw Material Purchases)
+            $opExpenses = \App\Models\Expense::where('company_id', $companyId)->whereBetween('created_at', [$startDate, $endDate])->sum('amount');
+            $purchases = \App\Models\Purchase::where('company_id', $companyId)->whereBetween('created_at', [$startDate, $endDate])->sum('total_amount');
+
+            // 3. Raw detailed mutasi lists for Sheet 2
+            $salesList = Sale::where('company_id', $companyId)
+                ->whereIn(DB::raw('LOWER(payment_method)'), ['cash', 'transfer', 'qris'])
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->get();
+
+            $paymentsList = \App\Models\DebtPayment::with(['debt.customer'])
+                ->whereHas('debt', function ($q) use ($companyId) {
+                    $q->where('company_id', $companyId);
+                })
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->get();
+
+            $expensesList = \App\Models\Expense::where('company_id', $companyId)
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->get();
+
+            $purchasesList = \App\Models\Purchase::where('company_id', $companyId)
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->get();
+
+            // Merge & chronological sort
+            $mutasi = collect();
+
+            foreach ($salesList as $sale) {
+                $mutasi->push([
+                    'time' => $sale->created_at,
+                    'ref_id' => sprintf('TRX-%05d', $sale->id),
+                    'type' => 'Uang Masuk',
+                    'category' => 'Penjualan Tunai',
+                    'description' => 'Penjualan produk POS (' . strtoupper($sale->payment_method) . ')',
+                    'amount' => (float)$sale->total,
+                ]);
+            }
+
+            foreach ($paymentsList as $pay) {
+                $custName = $pay->debt->customer->name ?? 'Pelanggan';
+                $mutasi->push([
+                    'time' => $pay->created_at,
+                    'ref_id' => sprintf('PAY-%05d', $pay->id),
+                    'type' => 'Uang Masuk',
+                    'category' => 'Cicilan Piutang',
+                    'description' => 'Pembayaran cicilan piutang oleh ' . $custName,
+                    'amount' => (float)$pay->amount_paid,
+                ]);
+            }
+
+            foreach ($expensesList as $exp) {
+                $mutasi->push([
+                    'time' => $exp->created_at,
+                    'ref_id' => sprintf('EXP-%05d', $exp->id),
+                    'type' => 'Uang Keluar',
+                    'category' => 'Operasional',
+                    'description' => $exp->description ?: 'Pengeluaran operasional harian',
+                    'amount' => (float)$exp->amount,
+                ]);
+            }
+
+            foreach ($purchasesList as $pur) {
+                $mutasi->push([
+                    'time' => $pur->created_at,
+                    'ref_id' => sprintf('PUR-%05d', $pur->id),
+                    'type' => 'Uang Keluar',
+                    'category' => 'Belanja Stok',
+                    'description' => 'Pembelian bahan baku (' . strtoupper($pur->payment_method) . ')',
+                    'amount' => (float)$pur->total_amount,
+                ]);
+            }
+
+            $sortedMutasi = $mutasi->sortBy('time');
+
+            // Construct PhpSpreadsheet
+            $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+
+            // --- SHEET 1: Ringkasan Arus Kas ---
+            $sheet1 = $spreadsheet->getActiveSheet();
+            $sheet1->setTitle('Ringkasan Arus Kas');
+            $sheet1->setShowGridlines(true);
+
+            // Title & Metadata
+            $sheet1->setCellValue('A1', 'LAPORAN ARUS KAS DIGITAL (CASH-BASIS) - SAHAYU');
+            $sheet1->getStyle('A1')->getFont()->setBold(true)->setSize(14)->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FF047857'));
+
+            $sheet1->setCellValue('A2', 'UMKM: ' . (auth()->user()->company->name ?? 'SAHAYU UMKM'));
+            $sheet1->getStyle('A2')->getFont()->setBold(true)->setSize(10)->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FF475569'));
+
+            $sheet1->setCellValue('A3', 'Periode Laporan: ' . $periodLabel);
+            $sheet1->getStyle('A3')->getFont()->setItalic(true)->setSize(9)->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FF64748B'));
+
+            $sheet1->setCellValue('A4', 'Dicetak Oleh: ' . auth()->user()->name . ' | Waktu: ' . now()->translatedFormat('d F Y, H:i'));
+            $sheet1->getStyle('A4')->getFont()->setSize(8)->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FF94A3B8'));
+
+            // Table 1: ARUS KAS MASUK
+            $sheet1->setCellValue('A6', 'I. ARUS KAS MASUK');
+            $sheet1->getStyle('A6')->getFont()->setBold(true)->setSize(11)->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FF047857'));
+
+            $sheet1->setCellValue('A7', 'Sumber Penerimaan');
+            $sheet1->setCellValue('B7', 'Nominal Tunai');
+            $sheet1->getStyle('A7:B7')->getFont()->setBold(true)->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_WHITE));
+            $sheet1->getStyle('A7:B7')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FF047857');
+            $sheet1->getStyle('A7:B7')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+            $sheet1->setCellValue('A8', 'Pendapatan Penjualan Tunai POS');
+            $sheet1->setCellValue('B8', (float)$cashSales);
+
+            $sheet1->setCellValue('A9', 'Pembayaran Cicilan Piutang Masuk');
+            $sheet1->setCellValue('B9', (float)$debtPayments);
+
+            $sheet1->setCellValue('A10', 'Total Arus Kas Masuk');
+            $sheet1->setCellValue('B10', '=SUM(B8:B9)');
+
+            // Styling Table 1
+            $sheet1->getStyle('B8:B10')->getNumberFormat()->setFormatCode('Rp #,##0');
+            $sheet1->getStyle('A10:B10')->getFont()->setBold(true);
+            $sheet1->getStyle('A10:B10')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFE6F4EA');
+            $borderStyle = [
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                        'color' => ['argb' => 'FFE2E8F0'],
+                    ],
+                ],
+            ];
+            $sheet1->getStyle('A7:B10')->applyFromArray($borderStyle);
+
+            // Table 2: ARUS KAS KELUAR
+            $sheet1->setCellValue('A12', 'II. ARUS KAS KELUAR');
+            $sheet1->getStyle('A12')->getFont()->setBold(true)->setSize(11)->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FF047857'));
+
+            $sheet1->setCellValue('A13', 'Jenis Pengeluaran');
+            $sheet1->setCellValue('B13', 'Nominal Tunai');
+            $sheet1->getStyle('A13:B13')->getFont()->setBold(true)->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_WHITE));
+            $sheet1->getStyle('A13:B13')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FF047857');
+            $sheet1->getStyle('A13:B13')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+            $sheet1->setCellValue('A14', 'Biaya Operasional / Petty Cash');
+            $sheet1->setCellValue('B14', (float)$opExpenses);
+
+            $sheet1->setCellValue('A15', 'Belanja Stok Bahan Baku / Purchases');
+            $sheet1->setCellValue('B15', (float)$purchases);
+
+            $sheet1->setCellValue('A16', 'Total Arus Kas Keluar');
+            $sheet1->setCellValue('B16', '=SUM(B14:B15)');
+
+            // Styling Table 2
+            $sheet1->getStyle('B14:B16')->getNumberFormat()->setFormatCode('Rp #,##0');
+            $sheet1->getStyle('A16:B16')->getFont()->setBold(true);
+            $sheet1->getStyle('A16:B16')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFFCE8E6');
+            $sheet1->getStyle('A13:B16')->applyFromArray($borderStyle);
+
+            // Table 3: NET SUMMARY
+            $sheet1->setCellValue('A18', 'III. RINGKASAN NET KAS');
+            $sheet1->getStyle('A18')->getFont()->setBold(true)->setSize(11)->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FF047857'));
+
+            $sheet1->setCellValue('A19', 'Sisa Arus Kas / Net Cash Flow');
+            $sheet1->setCellValue('B19', '=B10-B16');
+
+            $sheet1->getStyle('B19')->getNumberFormat()->setFormatCode('Rp #,##0');
+            $sheet1->getStyle('A19:B19')->getFont()->setBold(true);
+            $sheet1->getStyle('A19:B19')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFE8F5E9');
+            $sheet1->getStyle('A19:B19')->applyFromArray($borderStyle);
+
+            // Auto-size columns
+            $sheet1->getColumnDimension('A')->setAutoSize(true);
+            $sheet1->getColumnDimension('B')->setAutoSize(true);
+
+            // --- SHEET 2: Buku Kas Umum (Jurnal Mutasi) ---
+            $sheet2 = $spreadsheet->createSheet();
+            $sheet2->setTitle('Buku Kas Umum');
+            $sheet2->setShowGridlines(true);
+
+            // Header info
+            $sheet2->setCellValue('A1', 'BUKU KAS UMUM (CASH MUTATION LEDGER)');
+            $sheet2->getStyle('A1')->getFont()->setBold(true)->setSize(12)->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FF047857'));
+
+            $sheet2->setCellValue('A2', 'UMKM: ' . (auth()->user()->company->name ?? 'SAHAYU UMKM'));
+            $sheet2->setCellValue('A3', 'Periode Laporan: ' . $periodLabel);
+            $sheet2->getStyle('A2:A3')->getFont()->setBold(true)->setSize(10)->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FF475569'));
+
+            // Table Headers
+            $sheet2->setCellValue('A5', 'Tanggal & Waktu');
+            $sheet2->setCellValue('B5', 'ID Referensi');
+            $sheet2->setCellValue('C5', 'Tipe Mutasi');
+            $sheet2->setCellValue('D5', 'Kategori');
+            $sheet2->setCellValue('E5', 'Deskripsi/Keterangan Rinci');
+            $sheet2->setCellValue('F5', 'Nominal Tunai');
+
+            $sheet2->getStyle('A5:F5')->getFont()->setBold(true)->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_WHITE));
+            $sheet2->getStyle('A5:F5')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FF047857');
+            $sheet2->getStyle('A5:F5')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+            // Populate rows
+            $rowNum = 6;
+            foreach ($sortedMutasi as $item) {
+                $sheet2->setCellValue('A' . $rowNum, $item['time']->format('Y-m-d H:i'));
+                $sheet2->setCellValue('B' . $rowNum, $item['ref_id']);
+                $sheet2->setCellValue('C' . $rowNum, $item['type']);
+                $sheet2->setCellValue('D' . $rowNum, $item['category']);
+                $sheet2->setCellValue('E' . $rowNum, $item['description']);
+                $sheet2->setCellValue('F' . $rowNum, (float)$item['amount']);
+
+                // Alternating type color helpers (light emerald for Masuk, light rose for Keluar)
+                if ($item['type'] === 'Uang Masuk') {
+                    $sheet2->getStyle('C' . $rowNum)->getFont()->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FF047857'))->setBold(true);
+                } else {
+                    $sheet2->getStyle('C' . $rowNum)->getFont()->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FFB91C1C'))->setBold(true);
+                }
+
+                $rowNum++;
+            }
+
+            $lastRow = $rowNum - 1;
+
+            if ($lastRow >= 6) {
+                // Add sum totals row at the bottom
+                $sheet2->setCellValue('D' . $rowNum, 'TOTAL KAS MASUK');
+                $sheet2->setCellValue('F' . $rowNum, '=SUMIF(C6:C' . $lastRow . ', "Uang Masuk", F6:F' . $lastRow . ')');
+                $sheet2->getStyle('D' . $rowNum . ':F' . $rowNum)->getFont()->setBold(true);
+                $sheet2->getStyle('F' . $rowNum)->getNumberFormat()->setFormatCode('Rp #,##0');
+                $sheet2->getStyle('D' . $rowNum . ':F' . $rowNum)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFE6F4EA');
+                $sheet2->getStyle('A' . $rowNum . ':F' . $rowNum)->applyFromArray($borderStyle);
+                $rowNum++;
+
+                $sheet2->setCellValue('D' . $rowNum, 'TOTAL KAS KELUAR');
+                $sheet2->setCellValue('F' . $rowNum, '=SUMIF(C6:C' . $lastRow . ', "Uang Keluar", F6:F' . $lastRow . ')');
+                $sheet2->getStyle('D' . $rowNum . ':F' . $rowNum)->getFont()->setBold(true);
+                $sheet2->getStyle('F' . $rowNum)->getNumberFormat()->setFormatCode('Rp #,##0');
+                $sheet2->getStyle('D' . $rowNum . ':F' . $rowNum)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFFCE8E6');
+                $sheet2->getStyle('A' . $rowNum . ':F' . $rowNum)->applyFromArray($borderStyle);
+                $rowNum++;
+
+                $sheet2->setCellValue('D' . $rowNum, 'SALDO KAS BERSIH');
+                $sheet2->setCellValue('F' . $rowNum, '=F' . ($rowNum - 2) . '-F' . ($rowNum - 1));
+                $sheet2->getStyle('D' . $rowNum . ':F' . $rowNum)->getFont()->setBold(true);
+                $sheet2->getStyle('F' . $rowNum)->getNumberFormat()->setFormatCode('Rp #,##0');
+                $sheet2->getStyle('D' . $rowNum . ':F' . $rowNum)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFE8F5E9');
+                $sheet2->getStyle('A' . $rowNum . ':F' . $rowNum)->applyFromArray($borderStyle);
+
+                $sheet2->getStyle('F6:F' . $lastRow)->getNumberFormat()->setFormatCode('Rp #,##0');
+                $sheet2->getStyle('F6:F' . $rowNum)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+                $sheet2->getStyle('A5:F' . $lastRow)->applyFromArray($borderStyle);
+            } else {
+                $sheet2->setCellValue('A6', 'Belum ada data mutasi kas pada periode terpilih.');
+                $sheet2->mergeCells('A6:F6');
+                $sheet2->getStyle('A6')->getFont()->setItalic(true);
+                $sheet2->getStyle('A5:F6')->applyFromArray($borderStyle);
+            }
+
+            // Auto-size columns
+            for ($col = 'A'; $col <= 'F'; $col++) {
+                $sheet2->getColumnDimension($col)->setAutoSize(true);
+            }
+
+            // Set active sheet to Summary
+            $spreadsheet->setActiveSheetIndex(0);
+
+            // Output XLSX
+            $safeFilename = 'Buku_Kas_Umum_' . now()->format('Y-m-d');
+            
+            $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+            
+            $response = new \Symfony\Component\HttpFoundation\StreamedResponse(function() use ($writer) {
+                $writer->save('php://output');
+            });
+
+            $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            $response->headers->set('Content-Disposition', 'attachment;filename="' . $safeFilename . '.xlsx"');
+            $response->headers->set('Cache-Control', 'max-age=0');
+
+            return $response;
+
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Dashboard XLSX Export Error: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['export' => 'Gagal export Buku Kas: ' . $e->getMessage()]);
+        }
+    }
 }

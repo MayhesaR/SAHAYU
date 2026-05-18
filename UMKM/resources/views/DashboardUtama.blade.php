@@ -22,30 +22,38 @@
             </p>
         </div>
 
-        <div class="flex items-center bg-white p-2 rounded-2xl shadow-sm border border-slate-100 w-fit">
-            <form action="{{ route('dashboard') }}" method="GET" class="flex items-center gap-3">
-                <div class="flex items-center gap-1.5">
-                    <span class="material-symbols-outlined text-slate-400 text-[16px] pl-2">travel_explore</span>
-                    <input type="date" 
-                           name="date" 
-                           value="{{ $targetDate }}"
-                           onchange="this.form.submit()"
-                           class="border-none bg-slate-50 hover:bg-slate-100 rounded-lg p-2 text-xs font-black text-slate-700 focus:ring-0 outline-none cursor-pointer transition-all" />
-                </div>
-                
-                <div class="h-4 w-px bg-slate-200"></div>
+        <div class="flex flex-wrap items-center gap-3">
+            <div class="flex items-center bg-white p-2 rounded-2xl shadow-sm border border-slate-100 w-fit">
+                <form action="{{ route('dashboard') }}" method="GET" class="flex items-center gap-3">
+                    <div class="flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-slate-400 text-[16px] pl-2">travel_explore</span>
+                        <input type="date" 
+                               name="date" 
+                               value="{{ $targetDate }}"
+                               onchange="this.form.submit()"
+                               class="border-none bg-slate-50 hover:bg-slate-100 rounded-lg p-2 text-xs font-black text-slate-700 focus:ring-0 outline-none cursor-pointer transition-all" />
+                    </div>
+                    
+                    <div class="h-4 w-px bg-slate-200"></div>
 
-                <div class="flex items-center gap-1.5">
-                    <a href="{{ route('dashboard', ['range' => '7']) }}" 
-                       class="px-3.5 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all {{ $currentFilter == '7' && !$isTimeTravel ? 'bg-primary text-white shadow-md' : 'text-slate-500 hover:bg-slate-50' }}">
-                        7 Hari
-                    </a>
-                    <a href="{{ route('dashboard', ['range' => '30']) }}" 
-                       class="px-3.5 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all {{ $currentFilter == '30' && !$isTimeTravel ? 'bg-primary text-white shadow-md' : 'text-slate-500 hover:bg-slate-50' }}">
-                        30 Hari
-                    </a>
-                </div>
-            </form>
+                    <div class="flex items-center gap-1.5">
+                        <a href="{{ route('dashboard', ['range' => '7']) }}" 
+                           class="px-3.5 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all {{ $currentFilter == '7' && !$isTimeTravel ? 'bg-primary text-white shadow-md' : 'text-slate-500 hover:bg-slate-50' }}">
+                            7 Hari
+                        </a>
+                        <a href="{{ route('dashboard', ['range' => '30']) }}" 
+                           class="px-3.5 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all {{ $currentFilter == '30' && !$isTimeTravel ? 'bg-primary text-white shadow-md' : 'text-slate-500 hover:bg-slate-50' }}">
+                            30 Hari
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <a href="{{ route('dashboard.export', array_merge(request()->all(), ['date' => $targetDate, 'range' => $currentFilter])) }}" 
+               class="flex items-center gap-2 px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl text-xs font-black uppercase tracking-wider shadow-sm hover:shadow-md transition-all duration-300">
+                <span class="material-symbols-outlined text-[18px]">download_for_offline</span>
+                <span>Ekspor Buku Kas (Excel)</span>
+            </a>
         </div>
     </div>
 
@@ -117,7 +125,7 @@
                                 <span class="material-symbols-outlined text-[14px]">info</span>
                             </button>
                             <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-900 text-white text-[10px] rounded-lg shadow-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 transition-opacity duration-200 z-50 text-center font-medium font-sans normal-case tracking-normal">
-                                Total uang tunai fisik yang benar-benar masuk ke laci kasir hari ini (Hasil Jualan Tunai + Pembayaran Cicilan Utang masa lalu).
+                                Total uang tunai fisik yang benar-benar masuk ke laci kasir pada periode terpilih (Hasil Jualan Tunai + Pembayaran Cicilan Utang masa lalu).
                                 <span class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></span>
                             </span>
                         </span>
@@ -146,7 +154,7 @@
                                 <span class="material-symbols-outlined text-[14px]">info</span>
                             </button>
                             <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-900 text-white text-[10px] rounded-lg shadow-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 transition-opacity duration-200 z-50 text-center font-medium font-sans normal-case tracking-normal">
-                                Total uang tunai fisik yang keluar dari laci hari ini (Biaya Operasional harian + Belanja Stok Bahan Baku).
+                                Total uang tunai fisik yang keluar dari laci pada periode terpilih (Biaya Operasional + Belanja Stok Bahan Baku).
                                 <span class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></span>
                             </span>
                         </span>
@@ -178,7 +186,7 @@
                                 <span class="material-symbols-outlined text-[14px]">info</span>
                             </button>
                             <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-900 text-white text-[10px] rounded-lg shadow-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 transition-opacity duration-200 z-50 text-center font-medium font-sans normal-case tracking-normal">
-                                Sisa saldo uang tunai fisik di laci kasir hari ini (Arus Kas Masuk Tunai - Arus Kas Keluar Tunai).
+                                Sisa saldo uang tunai fisik di laci kasir pada periode terpilih (Arus Kas Masuk Tunai - Arus Kas Keluar Tunai).
                                 <span class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></span>
                             </span>
                         </span>
@@ -209,7 +217,7 @@
                                 <span class="material-symbols-outlined text-[14px]">info</span>
                             </button>
                             <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-900 text-white text-[10px] rounded-lg shadow-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 transition-opacity duration-200 z-50 text-center font-medium font-sans normal-case tracking-normal">
-                                Total uang tunai fisik yang benar-benar masuk ke laci kasir hari ini (Hasil Jualan Tunai + Pembayaran Cicilan Utang masa lalu).
+                                Total uang tunai fisik yang benar-benar masuk ke laci kasir pada periode terpilih (Hasil Jualan Tunai + Pembayaran Cicilan Utang masa lalu).
                                 <span class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></span>
                             </span>
                         </span>
@@ -238,7 +246,7 @@
                                 <span class="material-symbols-outlined text-[14px]">info</span>
                             </button>
                             <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-900 text-white text-[10px] rounded-lg shadow-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 transition-opacity duration-200 z-50 text-center font-medium font-sans normal-case tracking-normal">
-                                Total uang tunai fisik yang keluar dari laci hari ini (Biaya Operasional harian + Belanja Stok Bahan Baku).
+                                Total uang tunai fisik yang keluar dari laci pada periode terpilih (Biaya Operasional + Belanja Stok Bahan Baku).
                                 <span class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></span>
                             </span>
                         </span>

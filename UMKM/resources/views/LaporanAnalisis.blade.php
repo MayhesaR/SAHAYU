@@ -105,54 +105,54 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
         <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 border-l-4 border-l-primary">
             <span class="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 mb-1">
-                <span>Total Pendapatan</span>
+                <span>Nilai Barang Terjual</span>
                 <span class="relative inline-block group/tooltip">
                     <button type="button" class="text-slate-400 hover:text-slate-600 transition-colors focus:outline-none flex items-center">
                         <span class="material-symbols-outlined text-[14px]">info</span>
                     </button>
                     <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-900 text-white text-[10px] rounded-lg shadow-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 transition-opacity duration-200 z-50 text-center font-medium font-sans normal-case tracking-normal">
-                        Nilai murni omzet penjualan barang khusus hari ini (Tunai + Nota Utang Baru). Tidak mencakup uang tagihan/cicilan masa lalu.
+                        Total omzet dari barang yang laku pada periode terpilih, baik tunai maupun utang. Tidak mencakup uang tagihan/cicilan masa lalu. Catatan: Angka ini adalah nilai performa barang, BUKAN jumlah uang fisik di laci kasir. Untuk melihat mutasi uang fisik, silakan cek menu Dashboard.
                         <span class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></span>
                     </span>
                 </span>
             </span>
-            <span class="text-[10px] text-slate-400 font-medium block mb-3">Penjualan Riil (Tunai + Piutang)</span>
+            <span class="text-[10px] text-slate-400 font-medium block mb-3">Total omzet dari barang yang laku pada periode terpilih, baik tunai maupun utang</span>
             <div class="flex items-baseline gap-2">
                 <span class="text-2xl font-black text-on-surface">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</span>
             </div>
         </div>
         <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
             <span class="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 mb-1">
-                <span>Laba Bersih</span>
+                <span>Margin Laba Penjualan</span>
                 <span class="relative inline-block group/tooltip">
                     <button type="button" class="text-slate-400 hover:text-slate-600 transition-colors focus:outline-none flex items-center">
                         <span class="material-symbols-outlined text-[14px]">info</span>
                     </button>
                     <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-900 text-white text-[10px] rounded-lg shadow-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 transition-opacity duration-200 z-50 text-center font-medium font-sans normal-case tracking-normal">
-                        Performa keuntungan bisnis riil hari ini (Total Pendapatan Omzet - Total Modal HPP & Operasional).
+                        Perkiraan keuntungan bersih dari performa bisnis pada periode terpilih. Catatan: Angka ini adalah nilai performa barang, BUKAN jumlah uang fisik di laci kasir. Untuk melihat mutasi uang fisik, silakan cek menu Dashboard.
                         <span class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></span>
                     </span>
                 </span>
             </span>
-            <span class="text-[10px] text-slate-400 font-medium block mb-3">Margin Akrual Bisnis</span>
+            <span class="text-[10px] text-slate-400 font-medium block mb-3">Perkiraan keuntungan bersih dari performa hari ini</span>
             <div class="flex items-baseline gap-2">
                 <span class="text-2xl font-black text-on-surface">Rp {{ number_format($netProfit, 0, ',', '.') }}</span>
             </div>
         </div>
         <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
             <span class="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 mb-1">
-                <span>Total Pengeluaran</span>
+                <span>Total Modal (HPP) & Operasional</span>
                 <span class="relative inline-block group/tooltip">
                     <button type="button" class="text-slate-400 hover:text-slate-600 transition-colors focus:outline-none flex items-center">
                         <span class="material-symbols-outlined text-[14px]">info</span>
                     </button>
                     <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-900 text-white text-[10px] rounded-lg shadow-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 transition-opacity duration-200 z-50 text-center font-medium font-sans normal-case tracking-normal">
-                        Nilai total Modal (HPP) dari barang yang laku terjual hari ini + Biaya Operasional harian.
+                        Nilai modal dari barang yang laku ditambah total biaya operasional selama periode terpilih. Catatan: Angka ini adalah nilai performa barang, BUKAN jumlah uang fisik di laci kasir. Untuk melihat mutasi uang fisik, silakan cek menu Dashboard.
                         <span class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></span>
                     </span>
                 </span>
             </span>
-            <span class="text-[10px] text-slate-400 font-medium block mb-3">HPP Terjual + Operasional</span>
+            <span class="text-[10px] text-slate-400 font-medium block mb-3">Nilai modal dari barang yang laku ditambah biaya operasional harian</span>
             <div class="flex items-baseline gap-2">
                 <span class="text-2xl font-black text-on-surface">Rp {{ number_format($totalExpense, 0, ',', '.') }}</span>
             </div>
@@ -179,10 +179,10 @@
         <!-- Growth Chart -->
         <div class="lg:col-span-2 bg-surface-container-lowest p-8 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-                <h3 class="text-xl font-bold text-on-surface">Tren Penjualan ({{ ucfirst($activePeriod) }})</h3>
+                <h3 class="text-xl font-bold text-on-surface">Tren Penjualan vs Modal Keluar ({{ ucfirst($activePeriod) }})</h3>
                 <div class="flex items-center gap-2">
                     <span class="w-3 h-3 rounded-full bg-primary flex-shrink-0"></span>
-                    <span class="text-[10px] font-bold text-slate-400 uppercase">Realisasi (Rp)</span>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">Penjualan (Rp)</span>
                 </div>
             </div>
 
@@ -237,13 +237,13 @@
         <div class="px-4 sm:px-8 py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between bg-surface-container-high/50 border-b border-outline-variant/5 gap-4">
             <h3 class="text-lg font-bold text-on-surface">Rincian Performa ({{ ucfirst($activePeriod) }})</h3>
             <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-                <a href="{{ route('reports.export-pdf') }}" target="_blank" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-surface-container-highest text-on-surface rounded-lg text-sm font-semibold hover:bg-surface-dim transition-all border border-outline-variant/20" title="Ekspor ke PDF">
+                <a href="{{ route('reports.export-pdf', ['view_mode' => $activePeriod, 'specific_month' => $specificMonth, 'week_number' => $weekNumber, 'filter_date' => $filterDate]) }}" target="_blank" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-surface-container-highest text-on-surface rounded-lg text-sm font-semibold hover:bg-surface-dim transition-all border border-outline-variant/20" title="Ekspor ke PDF">
                     <span class="material-symbols-outlined text-sm flex-shrink-0">picture_as_pdf</span> PDF
                 </a>
-                <a href="{{ route('reports.export-sheets') }}" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-teal-50 text-teal-700 rounded-lg text-sm font-semibold hover:bg-teal-100 transition-all border border-teal-200" title="Unduh Excel (XLSX)">
+                <a href="{{ route('reports.export-sheets', ['view_mode' => $activePeriod, 'specific_month' => $specificMonth, 'week_number' => $weekNumber, 'filter_date' => $filterDate]) }}" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-teal-50 text-teal-700 rounded-lg text-sm font-semibold hover:bg-teal-100 transition-all border border-teal-200" title="Unduh Excel (XLSX)">
                     <span class="material-symbols-outlined text-sm flex-shrink-0">table</span> Spreadsheet
                 </a>
-                <a href="{{ route('reports.export-csv') }}" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm shadow-sm transition-all" 
+                <a href="{{ route('reports.export-csv', ['view_mode' => $activePeriod, 'specific_month' => $specificMonth, 'week_number' => $weekNumber, 'filter_date' => $filterDate]) }}" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm shadow-sm transition-all" 
                    style="background-color: #005050 !important; color: #ffffff !important; font-weight: 900;" 
                    title="Unduh CSV Native">
                     <span class="material-symbols-outlined text-sm flex-shrink-0">description</span> CSV
@@ -376,7 +376,7 @@
                     datasets: [
                         {
                             type: 'bar',
-                            label: 'Pendapatan (Realisasi)',
+                            label: 'Penjualan (Performa)',
                             data: realizationData,
                             backgroundColor: '#0f766e', // SAHAYU Teal 700
                             borderRadius: 4,
@@ -384,7 +384,7 @@
                         },
                         {
                             type: 'line',
-                            label: 'HPP (Pengeluaran)',
+                            label: 'Modal (HPP & Ops)',
                             data: hppData,
                             borderColor: '#f59e0b', // SAHAYU Amber 500
                             backgroundColor: '#ffffff',

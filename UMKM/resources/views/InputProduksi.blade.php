@@ -18,8 +18,8 @@
             <a href="{{ route('productions.export-pdf') }}" target="_blank" class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-surface-container-highest text-on-surface font-semibold text-sm hover:bg-surface-container-high transition-colors flex items-center justify-center gap-2" title="Ekspor ke PDF">
                 <span class="material-symbols-outlined text-sm flex-shrink-0">picture_as_pdf</span> PDF
             </a>
-            <a href="{{ route('productions.export-sheets') }}" class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-teal-50 text-teal-700 font-semibold text-sm hover:bg-teal-100 transition-colors flex items-center justify-center gap-2 border border-teal-200" title="Unduh Excel (XLSX)">
-                <span class="material-symbols-outlined text-sm flex-shrink-0">table</span> Spreadsheet
+            <a href="{{ route('productions.export', request()->all()) }}" class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-emerald-600 text-white font-semibold text-sm hover:bg-emerald-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/20" title="Ekspor ke Excel (.xlsx)">
+                <span class="material-symbols-outlined text-sm flex-shrink-0">download</span> Ekspor Excel
             </a>
         </div>
         @if(auth()->user()->isAdmin())

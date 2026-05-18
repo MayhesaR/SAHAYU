@@ -30,6 +30,7 @@ class ProductionController extends Controller
                 defaultSort: 'production_date',
                 defaultOrder: 'desc',
                 perPage: 10,
+                dateColumn: 'production_date',
             );
 
         $companyId = auth()->user()->company_id;
@@ -618,6 +619,20 @@ class ProductionController extends Controller
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Export Spreadsheet Error: ' . $e->getMessage());
             return redirect()->back()->withErrors(['export' => 'Gagal export spreadsheet: ' . $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Export production history to native styled Excel (.xlsx).
+     */
+    public function exportExcel(Request $request)
+    {
+        try {
+            $export = new \App\Exports\ProduksiExport($request->all());
+            return $export->download();
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Production XLSX Export Error: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['export' => 'Gagal export XLSX: ' . $e->getMessage()]);
         }
     }
 }

@@ -29,10 +29,12 @@ Route::post('/register', [RegisterController::class, 'register'])->middleware('g
 // Main Authenticated Workspace Routes
 Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/export', [DashboardController::class, 'exportExcel'])->name('dashboard.export');
 
     // Profil Saya
     Route::get('/profil', [ProfileController::class, 'index'])->name('profile.index');
     Route::put('/profil', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profil/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 
     // SAHAYU AI Assistant
     Route::get('/assistant', [AiReportController::class, 'index'])->name('ai.index');
@@ -47,11 +49,13 @@ Route::middleware('auth')->group(function () {
 
     // Customer CRM Routes
     Route::get('/pelanggan', [CustomerController::class, 'index'])->name('customers.index');
+    Route::get('/pelanggan/export', [CustomerController::class, 'exportExcel'])->name('customers.export');
     Route::post('/pelanggan', [CustomerController::class, 'store'])->name('customers.store');
     Route::put('/pelanggan/{customer}', [CustomerController::class, 'update'])->name('customers.update');
 
     // Bahan Baku
     Route::get('/bahan-baku', [MaterialController::class, 'index'])->name('materials.index');
+    Route::get('/bahan-baku/export', [MaterialController::class, 'exportExcel'])->name('materials.export');
     Route::get('/bahan-baku/export-pdf', [MaterialController::class, 'exportPdf'])->name('materials.export-pdf');
     Route::get('/bahan-baku/export-sheets', [MaterialController::class, 'exportGoogleSheets'])->name('materials.export-sheets');
     Route::post('/bahan-baku/kategori', [MaterialController::class, 'storeCategory'])->name('materials.categories.store');
@@ -63,6 +67,7 @@ Route::middleware('auth')->group(function () {
 
     // Produksi
     Route::get('/produksi', [ProductionController::class, 'index'])->name('productions.index');
+    Route::get('/produksi/export', [ProductionController::class, 'exportExcel'])->name('productions.export');
     Route::get('/produksi/export-pdf', [ProductionController::class, 'exportPdf'])->name('productions.export-pdf');
     Route::get('/produksi/export-sheets', [ProductionController::class, 'exportGoogleSheets'])->name('productions.export-sheets');
 
@@ -81,11 +86,13 @@ Route::middleware('auth')->group(function () {
 
     // Biaya Operasional (Overhead)
     Route::get('/overhead', [OverheadCostController::class, 'index'])->name('overhead.index');
+    Route::get('/overhead/export', [OverheadCostController::class, 'exportExcel'])->name('overhead.export');
     Route::post('/overhead', [OverheadCostController::class, 'store'])->name('overhead.store');
     Route::delete('/overhead/{overheadCost}', [OverheadCostController::class, 'destroy'])->name('overhead.destroy');
 
     // Pengeluaran Operasional (Petty Cash/Kas Keluar)
     Route::get('/pengeluaran', [ExpenseController::class, 'index'])->name('expenses.index');
+    Route::get('/pengeluaran/export', [ExpenseController::class, 'exportExcel'])->name('expenses.export');
     Route::post('/pengeluaran', [ExpenseController::class, 'store'])->name('expenses.store');
     Route::delete('/pengeluaran/{expense}', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
 

@@ -75,7 +75,7 @@
                             id="btn-export-transaksi" 
                             class="px-5 py-3.5 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 font-bold text-xs rounded-xl transition-all flex items-center gap-2">
                         <span class="material-symbols-outlined text-[16px]">download</span>
-                        <span>Ekspor Excel/CSV</span>
+                        <span>Ekspor Excel (.xlsx)</span>
                     </button>
 
                     <!-- Advanced Filter Button -->

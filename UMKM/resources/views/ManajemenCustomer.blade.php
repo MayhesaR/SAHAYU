@@ -102,11 +102,40 @@
             />
 
             <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300">
-                <div class="px-6 py-5 bg-surface-container-low border-b border-gray-100 flex items-center justify-between">
-                    <h3 class="text-lg font-bold text-teal-900 flex items-center">
-                        <span class="material-symbols-outlined mr-2 text-teal-600 flex-shrink-0">group</span> Database CRM Customer
-                    </h3>
-                    <span class="text-[10px] font-bold text-slate-400 bg-white px-3 py-1 rounded-full border border-outline-variant/5">{{ $customers->total() }} customer terdaftar</span>
+                <div class="px-6 py-5 bg-surface-container-low border-b border-gray-100 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div class="flex items-center justify-between w-full sm:w-auto">
+                        <h3 class="text-lg font-bold text-teal-900 flex items-center">
+                            <span class="material-symbols-outlined mr-2 text-teal-600 flex-shrink-0">group</span> Database CRM Customer
+                        </h3>
+                    </div>
+                    
+                    <div class="flex flex-wrap items-center gap-3">
+                        <span class="text-[10px] font-bold text-slate-400 bg-white px-3 py-1.5 rounded-xl border border-outline-variant/5">{{ $customers->total() }} customer terdaftar</span>
+                        
+                        <!-- Status Filter Dropdown -->
+                        <form action="{{ route('customers.index') }}" method="GET" class="flex items-center gap-2">
+                            @if(request('search'))
+                                <input type="hidden" name="search" value="{{ request('search') }}" />
+                            @endif
+                            @if(request('sort_by'))
+                                <input type="hidden" name="sort_by" value="{{ request('sort_by') }}" />
+                            @endif
+                            <select name="status" 
+                                    onchange="this.form.submit()" 
+                                    class="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 outline-none focus:border-teal-600 transition-all">
+                                <option value="all" {{ request('status') === 'all' ? 'selected' : '' }}>Semua Status</option>
+                                <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Status: Aktif</option>
+                                <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Status: Inaktif</option>
+                            </select>
+                        </form>
+
+                        <!-- Export Excel Button -->
+                        <a href="{{ route('customers.export', request()->all()) }}" 
+                           class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-extrabold transition-all flex items-center gap-1.5 shadow-sm">
+                            <span class="material-symbols-outlined text-[16px]">download</span>
+                            <span>Ekspor Excel</span>
+                        </a>
+                    </div>
                 </div>
                 
                 <div class="w-full overflow-x-auto border border-gray-100 rounded-lg mb-4">

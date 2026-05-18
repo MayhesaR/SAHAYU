@@ -27,6 +27,14 @@
                     Terapkan
                 </button>
             </form>
+
+            <!-- Export Excel Button -->
+            <a href="{{ route('overhead.export', request()->all()) }}" 
+               class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/30 hover:scale-[1.02] active:scale-95 transition-all">
+                <span class="material-symbols-outlined text-base flex-shrink-0">download</span>
+                <span>Ekspor Excel</span>
+            </a>
+
             @if(auth()->user()->isAdmin())
             <button class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-[#005050] text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-teal-900/30 hover:bg-[#006a6a] hover:scale-[1.02] active:scale-95 transition-all" id="open-overhead-form">
                 <span class="material-symbols-outlined text-base flex-shrink-0">add_circle</span>

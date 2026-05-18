@@ -169,6 +169,60 @@
                 <p class="text-xs text-slate-400">Daftar transaksi pengeluaran operasional terdaftar.</p>
             </div>
 
+            <!-- Filter, Sort & Export Toolbar -->
+            <div class="px-8 py-4 bg-slate-50/70 border-b border-slate-100 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <form action="{{ route('expenses.index') }}" method="GET" class="flex flex-wrap items-center gap-3 flex-1">
+                    <!-- Date Range -->
+                    <div class="flex items-center gap-2">
+                        <input type="date" 
+                               name="start_date" 
+                               value="{{ request('start_date') }}" 
+                               class="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 outline-none focus:border-rose-500 transition-all" />
+                        <span class="text-xs text-slate-400 font-bold">s/d</span>
+                        <input type="date" 
+                               name="end_date" 
+                               value="{{ request('end_date') }}" 
+                               class="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 outline-none focus:border-rose-500 transition-all" />
+                    </div>
+
+                    <!-- Category Filter -->
+                    <select name="category" 
+                            class="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 outline-none focus:border-rose-500 transition-all">
+                        <option value="all" {{ request('category') === 'all' ? 'selected' : '' }}>Semua Kategori</option>
+                        <option value="Listrik/Air" {{ request('category') === 'Listrik/Air' ? 'selected' : '' }}>Listrik/Air</option>
+                        <option value="Transportasi" {{ request('category') === 'Transportasi' ? 'selected' : '' }}>Transportasi</option>
+                        <option value="Perlengkapan" {{ request('category') === 'Perlengkapan' ? 'selected' : '' }}>Perlengkapan</option>
+                        <option value="Gaji/Honor" {{ request('category') === 'Gaji/Honor' ? 'selected' : '' }}>Gaji/Honor</option>
+                        <option value="Lain-lain" {{ request('category') === 'Lain-lain' ? 'selected' : '' }}>Lain-lain</option>
+                    </select>
+
+                    <!-- Sort Filter -->
+                    <select name="sort_by" 
+                            class="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 outline-none focus:border-rose-500 transition-all">
+                        <option value="newest" {{ request('sort_by') === 'newest' ? 'selected' : '' }}>Terbaru</option>
+                        <option value="highest" {{ request('sort_by') === 'highest' ? 'selected' : '' }}>Nominal Terbesar</option>
+                    </select>
+
+                    <button type="submit" 
+                            class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm">
+                        Cari
+                    </button>
+                    @if(request('start_date') || request('end_date') || (request('category') && request('category') !== 'all') || request('sort_by') !== 'newest')
+                        <a href="{{ route('expenses.index') }}" 
+                           class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-xl text-xs font-bold transition-all">
+                            Reset
+                        </a>
+                    @endif
+                </form>
+
+                <!-- Excel Export -->
+                <a href="{{ route('expenses.export', request()->all()) }}" 
+                   class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm">
+                    <span class="material-symbols-outlined text-[16px]">download</span>
+                    <span>Ekspor Excel</span>
+                </a>
+            </div>
+
             <!-- Table Body -->
             <div class="overflow-x-auto min-w-full">
                 <table class="w-full text-left border-collapse">

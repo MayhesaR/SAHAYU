@@ -461,49 +461,123 @@ class TransactionHistoryController extends Controller
             });
         }
 
-        // 10. Generate CSV Stream Download
-        $headers = [
-            "Content-type"        => "text/csv; charset=UTF-8",
-            "Content-Disposition" => "attachment; filename=riwayat-transaksi-" . now()->format('Y-m-d') . ".csv",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
-        ];
+        // 10. Generate native XLSX Spreadsheet
+        try {
+            $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+            $sheet->setTitle('Riwayat Transaksi');
+            $sheet->setShowGridlines(true);
 
-        $callback = function() use($merged) {
-            $file = fopen('php://output', 'w');
+            // Title & Metadata Header
+            $sheet->setCellValue('A1', 'LAPORAN RIWAYAT TRANSAKSI DAN OPERASIONAL');
+            $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14)->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FF1E3A8A'));
 
-            // Header CSV (BOM untuk dukungan UTF-8 di Excel)
-            fputs($file, "\xEF\xBB\xBF");
-            
-            // Header columns
-            fputcsv($file, [
-                'Tanggal & Waktu',
-                'Nomor Nota / ID',
-                'Kategori Transaksi',
-                'Identitas (Nama Pelanggan / Deskripsi Objek)',
-                'Rincian Konten',
-                'Uang Masuk (+ Rp)',
-                'Uang Keluar (- Rp)',
-                'Status Pembayaran'
-            ], ';');
+            $companyName = auth()->user()->company->name ?? 'SAHAYU Bakery';
+            $sheet->setCellValue('A2', 'UMKM: ' . $companyName);
+            $sheet->getStyle('A2')->getFont()->setBold(true)->setSize(10)->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FF475569'));
 
+            $periodStr = 'Semua Periode';
+            if ($startDate && $endDate) {
+                $periodStr = \Carbon\Carbon::parse($startDate)->translatedFormat('d F Y') . ' s/d ' . \Carbon\Carbon::parse($endDate)->translatedFormat('d F Y');
+            } elseif ($startDate) {
+                $periodStr = 'Mulai ' . \Carbon\Carbon::parse($startDate)->translatedFormat('d F Y');
+            } elseif ($endDate) {
+                $periodStr = 'Sampai ' . \Carbon\Carbon::parse($endDate)->translatedFormat('d F Y');
+            }
+            $sheet->setCellValue('A3', 'Periode Laporan: ' . $periodStr);
+            $sheet->getStyle('A3')->getFont()->setItalic(true)->setSize(9)->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FF64748B'));
+
+            $sheet->setCellValue('A4', 'Dicetak Oleh: ' . auth()->user()->name . ' | Waktu: ' . now()->translatedFormat('d F Y, H:i'));
+            $sheet->getStyle('A4')->getFont()->setSize(8)->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color('FF94A3B8'));
+
+            // Table headers
+            $sheet->setCellValue('A6', 'Tanggal & Waktu');
+            $sheet->setCellValue('B6', 'Nomor Nota / ID');
+            $sheet->setCellValue('C6', 'Kategori Transaksi');
+            $sheet->setCellValue('D6', 'Identitas (Nama / Objek)');
+            $sheet->setCellValue('E6', 'Rincian Konten');
+            $sheet->setCellValue('F6', 'Uang Masuk (+ Rp)');
+            $sheet->setCellValue('G6', 'Uang Keluar (- Rp)');
+            $sheet->setCellValue('H6', 'Status Pembayaran');
+
+            $headerStyle = [
+                'font' => [
+                    'bold' => true,
+                    'color' => ['argb' => \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_WHITE],
+                ],
+                'fill' => [
+                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                    'startColor' => ['argb' => 'FF1E3A8A'],
+                ],
+                'alignment' => [
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                ],
+            ];
+            $sheet->getStyle('A6:H6')->applyFromArray($headerStyle);
+
+            $rowNum = 7;
             foreach ($merged as $row) {
-                fputcsv($file, [
-                    $row['tanggal'],
-                    $row['nota_id'],
-                    $row['kategori'],
-                    $row['identitas'],
-                    $row['rincian'],
-                    $row['uang_masuk'],
-                    $row['uang_keluar'],
-                    $row['status']
-                ], ';');
+                $sheet->setCellValue('A' . $rowNum, $row['tanggal']);
+                $sheet->setCellValue('B' . $rowNum, $row['nota_id']);
+                $sheet->setCellValue('C' . $rowNum, $row['kategori']);
+                $sheet->setCellValue('D' . $rowNum, $row['identitas']);
+                $sheet->setCellValue('E' . $rowNum, $row['rincian']);
+                $sheet->setCellValue('F' . $rowNum, (float)$row['uang_masuk']);
+                $sheet->setCellValue('G' . $rowNum, (float)$row['uang_keluar']);
+                $sheet->setCellValue('H' . $rowNum, $row['status']);
+                $rowNum++;
             }
 
-            fclose($file);
-        };
+            $lastRow = $rowNum - 1;
 
-        return response()->stream($callback, 200, $headers);
+            $borderStyle = [
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                        'color' => ['argb' => 'FFE2E8F0'],
+                    ],
+                ],
+            ];
+
+            if ($lastRow >= 7) {
+                // Summary row
+                $sheet->setCellValue('D' . $rowNum, 'TOTAL');
+                $sheet->setCellValue('F' . $rowNum, '=SUM(F7:F' . $lastRow . ')');
+                $sheet->setCellValue('G' . $rowNum, '=SUM(G7:G' . $lastRow . ')');
+
+                $sheet->getStyle('D' . $rowNum . ':H' . $rowNum)->getFont()->setBold(true);
+                $sheet->getStyle('D' . $rowNum . ':H' . $rowNum)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFF1F5F9');
+
+                $sheet->getStyle('F7:G' . $rowNum)->getNumberFormat()->setFormatCode('Rp #,##0');
+                $sheet->getStyle('F7:G' . $rowNum)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+                $sheet->getStyle('A6:H' . $rowNum)->applyFromArray($borderStyle);
+            } else {
+                $sheet->setCellValue('A7', 'Belum ada data transaksi pada filter terpilih.');
+                $sheet->mergeCells('A7:H7');
+                $sheet->getStyle('A7')->getFont()->setItalic(true);
+                $sheet->getStyle('A6:H7')->applyFromArray($borderStyle);
+            }
+
+            for ($col = 'A'; $col <= 'H'; $col++) {
+                $sheet->getColumnDimension($col)->setAutoSize(true);
+            }
+
+            $safeFilename = 'Riwayat_Transaksi_' . now()->format('Y-m-d');
+            $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+            
+            $response = new \Symfony\Component\HttpFoundation\StreamedResponse(function() use ($writer) {
+                $writer->save('php://output');
+            });
+
+            $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            $response->headers->set('Content-Disposition', 'attachment;filename="' . $safeFilename . '.xlsx"');
+            $response->headers->set('Cache-Control', 'max-age=0');
+
+            return $response;
+
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Riwayat XLSX Export Error: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['export' => 'Gagal export XLSX: ' . $e->getMessage()]);
+        }
     }
 }
