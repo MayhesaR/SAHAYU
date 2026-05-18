@@ -3,7 +3,7 @@
 @section('page_title', 'Piutang / Kasbon Pelanggan')
 
 @section('content')
-<div class="px-4 py-8 sm:px-8 max-w-7xl mx-auto space-y-8" 
+<div class="px-4 py-6 md:py-8 sm:px-8 max-w-7xl mx-auto space-y-4 md:space-y-8" 
      x-data="{
         isPaymentModalOpen: false,
         activeDebt: { id: '', customer_name: '', total_amount: 0, remaining_amount: 0, route: '' },
@@ -43,68 +43,65 @@
     @endif
 
     <!-- Header & Action section -->
-    <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+    <div class="flex flex-col gap-3 md:gap-6 sm:flex-row sm:items-center sm:justify-between">
         <div class="space-y-1">
-            <h1 class="text-3xl font-black text-slate-800 tracking-tight font-manrope">
+            <h1 class="text-2xl md:text-3xl font-black text-slate-800 tracking-tight font-manrope">
                 Piutang & Kasbon Pelanggan
             </h1>
-            <p class="text-slate-500 font-medium text-sm flex items-center gap-2">
-                <span class="material-symbols-outlined text-sm">menu_book</span>
+            <p class="text-slate-500 font-medium text-xs md:text-sm flex items-center gap-2">
+                <span class="material-symbols-outlined text-xs md:text-sm">menu_book</span>
                 Manajemen CRM tagihan, piutang tempo, dan angsuran cicilan pelanggan.
             </p>
         </div>
         <div class="flex items-center gap-3">
             <a href="{{ route('sales.index') }}" 
-               class="px-5 py-3 bg-emerald-600 text-white font-black text-xs rounded-xl shadow-md hover:bg-emerald-700 transition-all flex items-center gap-2">
+               class="w-full sm:w-auto px-5 py-2.5 md:py-3 bg-emerald-600 text-white font-black text-xs rounded-xl shadow-md hover:bg-emerald-700 transition-all flex items-center justify-center gap-2">
                 <span class="material-symbols-outlined text-[16px]">add_shopping_cart</span>
                 <span>Kasir POS Baru</span>
             </a>
         </div>
     </div>
 
-    <!-- Statistics Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Unified Ultra-Compact Stats Ribbon (Micro-Cards) -->
+    <div class="grid grid-cols-3 gap-2 md:gap-4">
         <!-- Stat 1: Total Outstanding -->
-        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-xl relative overflow-hidden group">
-            <div class="w-10 h-10 bg-amber-50 text-amber-700 rounded-xl flex items-center justify-center mb-4">
-                <span class="material-symbols-outlined text-xl">account_balance_wallet</span>
+        <div class="bg-white p-2 md:p-3.5 rounded-2xl border border-slate-100 shadow-sm md:shadow-md flex items-center gap-2 overflow-hidden group">
+            <div class="w-8 h-8 md:w-10 md:h-10 bg-amber-50 text-amber-700 rounded-xl flex items-center justify-center flex-shrink-0">
+                <span class="material-symbols-outlined text-base md:text-lg">account_balance_wallet</span>
             </div>
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Sisa Piutang Aktif</p>
-            <h3 class="text-3xl font-black text-slate-800 mt-1">Rp {{ number_format($totalOutstanding, 0, ',', '.') }}</h3>
-            <p class="text-[10px] text-slate-400 font-bold mt-4 flex items-center gap-1.5">
-                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping"></span>
-                <span>Tagihan kumulatif belum terbayar</span>
-            </p>
+            <div class="min-w-0">
+                <p class="text-[8px] md:text-[10px] font-black text-slate-400 uppercase tracking-wider truncate">Total Piutang</p>
+                <h4 class="text-xs md:text-base lg:text-lg font-black text-slate-800 mt-0.5 tracking-tight truncate">Rp {{ number_format($totalOutstanding, 0, ',', '.') }}</h4>
+            </div>
         </div>
 
         <!-- Stat 2: Overdue Count -->
-        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-xl relative overflow-hidden group {{ $overdueCount > 0 ? 'border-rose-100 bg-rose-50/10' : '' }}">
-            <div class="w-10 h-10 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center mb-4">
-                <span class="material-symbols-outlined text-xl font-bold">event_busy</span>
+        <div class="bg-white p-2 md:p-3.5 rounded-2xl border border-slate-100 shadow-sm md:shadow-md flex items-center gap-2 overflow-hidden group {{ $overdueCount > 0 ? 'border-rose-100 bg-rose-50/10' : '' }}">
+            <div class="w-8 h-8 md:w-10 md:h-10 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                <span class="material-symbols-outlined text-base md:text-lg font-bold">event_busy</span>
             </div>
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest {{ $overdueCount > 0 ? 'text-rose-600' : '' }}">Lewati Jatuh Tempo</p>
-            <h3 class="text-3xl font-black {{ $overdueCount > 0 ? 'text-rose-600' : 'text-slate-800' }} mt-1">{{ $overdueCount }} Pelanggan</h3>
-            <p class="text-[10px] {{ $overdueCount > 0 ? 'text-rose-500' : 'text-slate-400' }} font-bold mt-4 flex items-center gap-1">
-                <span class="material-symbols-outlined text-[12px]">schedule</span>
-                <span>Membutuhkan follow-up segera</span>
-            </p>
+            <div class="min-w-0">
+                <p class="text-[8px] md:text-[10px] font-black text-slate-400 uppercase tracking-wider truncate {{ $overdueCount > 0 ? 'text-rose-600' : '' }}">Jatuh Tempo</p>
+                <h4 class="text-xs md:text-base lg:text-lg font-black {{ $overdueCount > 0 ? 'text-rose-600' : 'text-slate-800' }} mt-0.5 tracking-tight truncate">{{ $overdueCount }} Debitur</h4>
+            </div>
         </div>
 
         <!-- Stat 3: Maximum Plafon -->
-        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-xl relative overflow-hidden group">
-            <div class="w-10 h-10 bg-teal-50 text-teal-700 rounded-xl flex items-center justify-center mb-4">
-                <span class="material-symbols-outlined text-xl">contacts</span>
+        <div class="bg-white p-2 md:p-3.5 rounded-2xl border border-slate-100 shadow-sm md:shadow-md flex items-center gap-2 overflow-hidden group">
+            <div class="w-8 h-8 md:w-10 md:h-10 bg-teal-50 text-teal-700 rounded-xl flex items-center justify-center flex-shrink-0">
+                <span class="material-symbols-outlined text-base md:text-lg">contacts</span>
             </div>
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Batas Limit Kredit</p>
-            <h3 class="text-3xl font-black text-slate-800 mt-1">Rp 5.000.000</h3>
-            <p class="text-[10px] text-slate-400 font-bold mt-4">Plafon acuan operasional kasbon</p>
+            <div class="min-w-0">
+                <p class="text-[8px] md:text-[10px] font-black text-slate-400 uppercase tracking-wider truncate">Limit Kredit</p>
+                <h4 class="text-xs md:text-base lg:text-lg font-black text-slate-800 mt-0.5 tracking-tight truncate">Rp 5.000.000</h4>
+            </div>
         </div>
     </div>
 
     <!-- Live CRM Search & Filters Panel (Easy-to-tap UI) -->
-    <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-xl space-y-4">
+    <div class="bg-white p-4 md:p-6 rounded-2xl md:rounded-3xl border border-slate-100 shadow-md md:shadow-xl space-y-4">
         <h3 class="text-xs font-black uppercase tracking-widest text-slate-400">Penyaringan & Penelusuran Cepat</h3>
-        <form action="{{ route('debts.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <form action="{{ route('debts.index') }}" method="GET" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
             
             <!-- Customer Dropdown -->
             <div class="space-y-1.5">
@@ -130,19 +127,26 @@
                 </select>
             </div>
 
-            <!-- Due Date Picker -->
+            <!-- Start Due Date -->
             <div class="space-y-1.5">
-                <label class="text-[10px] font-black uppercase text-slate-400">Jatuh Tempo Pada</label>
-                <input type="date" name="due_date" value="{{ request()->query('due_date') }}"
+                <label class="text-[10px] font-black uppercase text-slate-400">Jatuh Tempo Dari</label>
+                <input type="date" name="start_due_date" value="{{ request()->query('start_due_date') }}"
+                       class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:border-emerald-600" />
+            </div>
+
+            <!-- End Due Date -->
+            <div class="space-y-1.5">
+                <label class="text-[10px] font-black uppercase text-slate-400">Jatuh Tempo Hingga</label>
+                <input type="date" name="end_due_date" value="{{ request()->query('end_due_date') }}"
                        class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:border-emerald-600" />
             </div>
 
             <!-- Form Actions -->
-            <div class="flex items-end gap-2">
-                <button type="submit" class="flex-1 py-2 px-4 bg-slate-800 text-white font-black text-xs rounded-xl hover:bg-slate-900 transition-all flex items-center justify-center gap-1.5 shadow-sm">
+            <div class="flex items-end gap-2 sm:col-span-2 md:col-span-1">
+                <button type="submit" class="flex-1 py-2 px-3 bg-slate-800 text-white font-black text-xs rounded-xl hover:bg-slate-900 transition-all flex items-center justify-center gap-1.5 shadow-sm">
                     <span class="material-symbols-outlined text-[14px]">filter_list</span> Saring
                 </button>
-                <a href="{{ route('debts.index') }}" class="flex-1 py-2 px-4 bg-slate-100 text-slate-600 font-black text-xs rounded-xl hover:bg-slate-200 border border-slate-200 transition-all flex items-center justify-center gap-1.5 shadow-sm">
+                <a href="{{ route('debts.index') }}" class="flex-1 py-2 px-3 bg-slate-100 text-slate-600 font-black text-xs rounded-xl hover:bg-slate-200 border border-slate-200 transition-all flex items-center justify-center gap-1.5 shadow-sm">
                     Reset
                 </a>
             </div>
@@ -150,199 +154,229 @@
     </div>
 
     <!-- Active Debts Ledger Table -->
-    <div class="bg-white rounded-[2rem] border border-slate-100 shadow-xl overflow-hidden">
-        <div class="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+    <div class="bg-white rounded-[1.5rem] md:rounded-[2rem] border border-slate-100 shadow-md md:shadow-xl overflow-hidden">
+        <div class="px-4 py-4 md:px-8 md:py-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
             <div>
-                <h4 class="text-base font-black text-slate-800 font-manrope">Buku Besar Ledger Piutang</h4>
-                <p class="text-xs text-slate-400 mt-0.5">Daftar terperinci rincian angsuran kasbon pelanggan.</p>
+                <h4 class="text-sm md:text-base font-black text-slate-800 font-manrope">Buku Besar Ledger Piutang</h4>
+                <p class="text-[10px] md:text-xs text-slate-400 mt-0.5">Daftar terperinci rincian angsuran kasbon pelanggan.</p>
             </div>
-            <span class="text-[10px] font-black text-slate-400 bg-white px-3 py-1.5 rounded-full border border-slate-100">
-                {{ $debts->total() }} akun terdaftar
+            <span class="text-[9px] md:text-[10px] font-black text-slate-400 bg-white px-2.5 py-1 md:px-3 md:py-1.5 rounded-full border border-slate-100">
+                {{ $debts->total() }} pelanggan terdaftar
             </span>
         </div>
 
-        <div class="w-full overflow-x-auto">
+        <!-- Desktop Debtor Table (Hidden on Mobile) -->
+        <div class="w-full overflow-x-auto hidden md:block">
             <table class="w-full text-xs text-left border-collapse whitespace-nowrap">
                 <thead>
                     <tr class="bg-slate-50 border-b border-slate-100">
                         <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Pelanggan</th>
-                        <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Jatuh Tempo</th>
-                        <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Limit Plafon</th>
-                        <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Sisa Tagihan</th>
+                        <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Jumlah Nota</th>
+                        <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Total Kasbon</th>
+                        <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Sisa Piutang</th>
                         <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Progres Repayment</th>
                         <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Status</th>
                         <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 text-sm" x-data="{ openLogs: null }">
-                    @forelse ($debts as $d)
+                <tbody class="divide-y divide-slate-100 text-sm" x-data="{ openGroup: null }">
+                    @forelse ($debts as $customerDebts)
                         @php
-                            $total = (float) $d->total_amount;
-                            $rem = (float) $d->remaining_amount;
-                            $paid = $total - $rem;
-                            $percent = $total > 0 ? round(($paid / $total) * 100) : 0;
+                            $firstDebt = $customerDebts->first();
+                            $customer = $firstDebt->customer;
+                            $customerId = $firstDebt->customer_id ?? 0;
+                            $totalRemaining = $customerDebts->sum('remaining_amount');
+                            $totalAmount = $customerDebts->sum('total_amount');
+                            $totalPaid = $totalAmount - $totalRemaining;
+                            $percent = $totalAmount > 0 ? round(($totalPaid / $totalAmount) * 100) : 0;
                             
-                            // Check if overdue
-                            $isOverdue = \Carbon\Carbon::parse($d->due_date)->isPast() && $d->status !== 'paid';
+                            $overdueCount = $customerDebts->filter(function($d) {
+                                return \Carbon\Carbon::parse($d->due_date)->isPast() && $d->status !== 'paid';
+                            })->count();
+
+                            $customerName = $customer->name ?? 'Umum';
+                            $customerPhone = $customer->phone ?? 'Tidak ada kontak';
+                            $customerAddress = $customer->address ?? 'Alamat belum diinput';
+                            $customerInitials = strtoupper(substr($customerName, 0, 2));
                         @endphp
                         
-                        <!-- Main row -->
+                        <!-- Primary Customer Row -->
                         <tr class="hover:bg-slate-50/40 transition-colors group">
-                            
                             <!-- Debtor Name -->
                             <td class="px-8 py-6">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 bg-slate-100 text-slate-700 rounded-full flex items-center justify-center font-black text-sm">
-                                        {{ substr($d->customer->name ?? 'P', 0, 1) }}
+                                    <div class="w-10 h-10 rounded-xl bg-teal-50 border border-teal-100 text-teal-700 font-black text-sm flex items-center justify-center shadow-sm">
+                                        {{ $customerInitials }}
                                     </div>
                                     <div>
-                                        <p class="font-black text-slate-800">{{ $d->customer->name ?? 'Umum' }}</p>
-                                        <p class="text-[10px] font-bold text-slate-400 mt-0.5">{{ $d->customer->phone ?? 'Tidak ada kontak' }}</p>
+                                        <p class="font-black text-slate-800">{{ $customerName }}</p>
+                                        <p class="text-[10px] font-bold text-slate-400 mt-0.5">{{ $customerPhone }}</p>
                                     </div>
                                 </div>
                             </td>
 
-                            <!-- Due date -->
-                            <td class="px-6 py-6 font-bold">
-                                <div>
-                                    <p class="{{ $isOverdue ? 'text-rose-600 font-black' : 'text-slate-600' }}">
-                                        {{ \Carbon\Carbon::parse($d->due_date)->translatedFormat('d M Y') }}
-                                    </p>
-                                    @php
-                                        $dueDate = \Carbon\Carbon::parse($d->due_date)->startOfDay();
-                                        $today = \Carbon\Carbon::now()->startOfDay();
-                                        $diffInDays = $today->diffInDays($dueDate, false);
-                                        $diffInDays = (int) round($diffInDays);
-                                        $absDiff = abs($diffInDays);
-                                    @endphp
-                                    <p class="text-[9px] font-black uppercase tracking-wider mt-0.5 {{ $diffInDays < 0 ? 'text-rose-500' : 'text-slate-400' }}">
-                                        @if($diffInDays < 0)
-                                            Terlewat {{ $absDiff }} hari
-                                        @elseif($diffInDays === 0)
-                                            Jatuh tempo hari ini
-                                        @else
-                                            Sisa {{ $absDiff }} hari lagi
-                                        @endif
-                                    </p>
-                                </div>
-                            </td>
-
-                            <!-- Plafon / Total amount -->
+                            <!-- Total invoices count -->
                             <td class="px-6 py-6 font-bold text-slate-600">
-                                Rp {{ number_format($d->total_amount, 0, ',', '.') }}
+                                {{ $customerDebts->count() }} Nota
                             </td>
 
-                            <!-- Remaining amount -->
-                            <td class="px-6 py-6 font-black text-slate-900">
-                                Rp {{ number_format($d->remaining_amount, 0, ',', '.') }}
+                            <!-- Total Initial Debt Plafon -->
+                            <td class="px-6 py-6 font-bold text-slate-500">
+                                Rp {{ number_format($totalAmount, 0, ',', '.') }}
                             </td>
 
-                            <!-- repayment progress bar -->
+                            <!-- Total remaining sisa piutang -->
                             <td class="px-6 py-6">
-                                <div class="w-32 md:w-40 space-y-1.5">
-                                    <div class="flex justify-between items-center text-[10px] font-bold text-slate-500">
-                                        <span>Terbayar: {{ $percent }}%</span>
-                                        <span>Rp {{ number_format($paid, 0, ',', '.') }}</span>
+                                <span class="font-extrabold text-sm {{ $overdueCount > 0 ? 'text-rose-600' : 'text-slate-800' }}">
+                                    Rp {{ number_format($totalRemaining, 0, ',', '.') }}
+                                </span>
+                                @if($overdueCount > 0)
+                                    <span class="block text-[9px] text-rose-500 font-bold mt-0.5">({{ $overdueCount }} Overdue)</span>
+                                @endif
+                            </td>
+
+                            <!-- Repayment Progress -->
+                            <td class="px-6 py-6">
+                                <div class="flex flex-col gap-1 w-28">
+                                    <div class="flex justify-between items-center text-[9px] font-bold text-slate-500">
+                                        <span>{{ $percent }}%</span>
+                                        <span>Rp {{ number_format($totalPaid, 0, ',', '.') }}</span>
                                     </div>
-                                    <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden border border-slate-200/20">
-                                        <div class="h-full rounded-full transition-all duration-500 {{ $d->status === 'paid' ? 'bg-emerald-600' : 'bg-amber-500' }}" 
+                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden border border-slate-200/20">
+                                        <div class="h-full rounded-full transition-all duration-500 bg-emerald-600" 
                                              style="width: {{ $percent }}%"></div>
                                     </div>
                                 </div>
                             </td>
 
-                            <!-- Status Badge -->
+                            <!-- Status -->
                             <td class="px-6 py-6">
-                                @if($d->status === 'paid')
-                                    <span class="px-2.5 py-1 bg-emerald-50 text-emerald-800 text-[10px] font-black uppercase tracking-wider rounded-xl border border-emerald-100">
-                                        Lunas
-                                    </span>
-                                @elseif($d->status === 'partial')
-                                    <span class="px-2.5 py-1 bg-blue-50 text-blue-800 text-[10px] font-black uppercase tracking-wider rounded-xl border border-blue-100">
-                                        Dicicil
-                                    </span>
+                                @if($totalRemaining <= 0)
+                                    <span class="px-2.5 py-1 bg-emerald-50 text-emerald-800 rounded-lg border border-emerald-100 font-extrabold text-[10px] uppercase tracking-wider">Lunas</span>
                                 @else
-                                    <span class="px-2.5 py-1 bg-rose-50 text-rose-800 text-[10px] font-black uppercase tracking-wider rounded-xl border border-rose-100">
-                                        Belum Bayar
-                                    </span>
+                                    <span class="px-2.5 py-1 bg-amber-50 text-amber-800 rounded-lg border border-amber-100 font-extrabold text-[10px] uppercase tracking-wider">Aktif</span>
                                 @endif
                             </td>
 
-                            <!-- Actions -->
+                            <!-- Action -->
                             <td class="px-8 py-6 text-right">
-                                <div class="flex items-center justify-end gap-2">
-                                    <!-- Log History toggle -->
-                                    <button @click="openLogs = (openLogs === {{ $d->id }} ? null : {{ $d->id }})" 
-                                            type="button" 
-                                            class="p-2 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-all" 
-                                            title="Histori Angsuran">
-                                        <span class="material-symbols-outlined text-lg">history</span>
-                                    </button>
-
-                                    <!-- Pay button -->
-                                    @if($d->status !== 'paid')
-                                        <button @click="openPaymentModal(
-                                                    '{{ $d->id }}', 
-                                                    '{{ addslashes($d->customer->name ?? '') }}', 
-                                                    '{{ $d->total_amount }}', 
-                                                    '{{ $d->remaining_amount }}', 
-                                                    '{{ route('debts.pay', $d) }}'
-                                                )"
-                                                type="button"
-                                                class="px-3.5 py-2 bg-amber-500 hover:bg-amber-600 text-white font-black text-xs rounded-xl shadow-sm transition-all flex items-center gap-1 active:scale-95">
-                                            <span class="material-symbols-outlined text-[14px]">price_check</span>
-                                            <span>Bayar Cicilan</span>
-                                        </button>
-                                    @else
-                                        <button disabled 
-                                                class="px-3.5 py-2 bg-slate-100 text-slate-400 text-xs font-black rounded-xl border border-slate-200/20 flex items-center gap-1 cursor-not-allowed">
-                                            <span class="material-symbols-outlined text-[14px]">check</span>
-                                            <span>Selesai</span>
-                                        </button>
-                                    @endif
-                                </div>
+                                <button @click="openGroup = (openGroup === {{ $customerId }} ? null : {{ $customerId }})" 
+                                        type="button" 
+                                        class="px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white font-black text-xs rounded-xl shadow-sm transition-all inline-flex items-center gap-1 active:scale-95">
+                                    <span class="material-symbols-outlined text-[16px]" x-text="openGroup === {{ $customerId }} ? 'visibility_off' : 'visibility'">visibility</span>
+                                    <span x-text="openGroup === {{ $customerId }} ? 'Tutup Nota' : 'Lihat Rincian'">Lihat Rincian</span>
+                                </button>
                             </td>
                         </tr>
 
-                        <!-- Expandable Installment Payments Log -->
-                        <tr x-show="openLogs === {{ $d->id }}" x-cloak class="bg-slate-50/50">
-                            <td colspan="7" class="px-8 py-4 border-t border-slate-100">
-                                <div class="bg-white p-6 rounded-2xl border border-slate-100 space-y-4 shadow-inner max-w-3xl">
-                                    <div class="flex justify-between items-center">
-                                        <h5 class="text-xs font-black uppercase tracking-widest text-slate-500">Histori Pembayaran Cicilan</h5>
-                                        <span class="text-[9px] font-bold text-slate-400">Total Pinjaman: Rp {{ number_format($d->total_amount, 0, ',', '.') }}</span>
+                        <!-- Sub-list (Detailed Invoices Breakdown) - Expandable Row -->
+                        <tr x-show="openGroup === {{ $customerId }}" x-cloak class="bg-slate-50/50">
+                            <td colspan="7" class="px-8 py-5 border-t border-b border-slate-100">
+                                <div class="bg-white p-6 rounded-2xl border border-slate-100 space-y-4 shadow-sm max-w-5xl">
+                                    <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+                                        <h5 class="text-xs font-black uppercase tracking-widest text-slate-500">Daftar Nota Penjualan Unpaid/Partial</h5>
+                                        <span class="text-[10px] font-bold text-slate-400">Total Tagihan Akumulatif: Rp {{ number_format($totalRemaining, 0, ',', '.') }}</span>
                                     </div>
 
-                                    @if($d->payments->isEmpty())
-                                        <p class="text-xs font-semibold text-slate-400 py-2">Belum ada angsuran cicilan yang tercatat untuk akun utang ini.</p>
-                                    @else
-                                        <div class="relative pl-6 space-y-4 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-100">
-                                            @foreach($d->payments as $p)
-                                                <div class="relative flex justify-between items-center text-xs">
-                                                    <!-- Dot marker -->
-                                                    <span class="absolute -left-[21px] top-1.5 w-2 h-2 rounded-full bg-amber-500 border-2 border-white shadow-sm"></span>
-                                                    
-                                                    <div class="space-y-0.5">
-                                                        <p class="font-black text-slate-800">Pembayaran Angsuran</p>
-                                                        <p class="text-[10px] text-slate-400 font-medium">
-                                                            Tanggal: {{ \Carbon\Carbon::parse($p->payment_date)->translatedFormat('d F Y') }} 
-                                                            via <span class="uppercase font-bold text-slate-600">{{ $p->payment_method }}</span>
-                                                        </p>
-                                                    </div>
-                                                    <span class="font-mono font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg">
-                                                        + Rp {{ number_format($p->amount_paid, 0, ',', '.') }}
-                                                    </span>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    @endif
+                                    <!-- Sub-table for individual invoices -->
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full text-left text-xs border-collapse">
+                                            <thead>
+                                                <tr class="text-[9px] uppercase tracking-wider text-slate-400 border-b border-slate-100 font-black">
+                                                    <th class="py-2.5">Tanggal Transaksi</th>
+                                                    <th class="py-2.5">Nomor Nota</th>
+                                                    <th class="py-2.5">Daftar Produk</th>
+                                                    <th class="py-2.5">Utang Awal</th>
+                                                    <th class="py-2.5">Sisa Utang</th>
+                                                    <th class="py-2.5">Jatuh Tempo</th>
+                                                    <th class="py-2.5 text-right">Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="divide-y divide-slate-100">
+                                                @foreach($customerDebts as $d)
+                                                    @php
+                                                        $dueDate = \Carbon\Carbon::parse($d->due_date)->startOfDay();
+                                                        $today = \Carbon\Carbon::now()->startOfDay();
+                                                        $diffInDays = $today->diffInDays($dueDate, false);
+                                                        $diffInDays = (int) round($diffInDays);
+                                                        $absDiff = abs($diffInDays);
+                                                        $isOverdueInvoice = $dueDate->isPast() && $d->status !== 'paid';
+
+                                                        // Extract product names
+                                                        $productNames = [];
+                                                        if ($d->sale && $d->sale->items) {
+                                                            foreach ($d->sale->items as $item) {
+                                                                if ($item->product) {
+                                                                    $productNames[] = $item->product->name . ' (' . $item->quantity . 'x)';
+                                                                }
+                                                            }
+                                                        }
+                                                        $productDescription = !empty($productNames) ? implode(', ', $productNames) : 'Transaksi Kasir POS';
+                                                    @endphp
+                                                    <tr class="hover:bg-slate-50/30 transition-colors">
+                                                        <td class="py-3 font-semibold text-slate-600">
+                                                            {{ \Carbon\Carbon::parse($d->created_at)->translatedFormat('d M Y H:i') }}
+                                                        </td>
+                                                        <td class="py-3 font-bold text-slate-700 font-mono">
+                                                            #{{ str_pad($d->sale_id ?? $d->id, 5, '0', STR_PAD_LEFT) }}
+                                                        </td>
+                                                        <td class="py-3 text-slate-400 font-medium max-w-xs truncate" title="{{ $productDescription }}">
+                                                            {{ $productDescription }}
+                                                        </td>
+                                                        <td class="py-3 font-bold text-slate-600">
+                                                            Rp {{ number_format($d->total_amount, 0, ',', '.') }}
+                                                        </td>
+                                                        <td class="py-3">
+                                                            <span class="font-extrabold {{ $isOverdueInvoice ? 'text-rose-600' : 'text-slate-800' }}">
+                                                                Rp {{ number_format($d->remaining_amount, 0, ',', '.') }}
+                                                            </span>
+                                                        </td>
+                                                        <td class="py-3">
+                                                            <div class="flex flex-col">
+                                                                <span class="font-bold text-[10px] {{ $isOverdueInvoice ? 'text-rose-500' : 'text-slate-500' }}">
+                                                                    {{ $dueDate->translatedFormat('d M Y') }}
+                                                                </span>
+                                                                <span class="text-[9px] font-bold mt-0.5 {{ $isOverdueInvoice ? 'text-rose-500' : 'text-slate-400' }}">
+                                                                    @if($isOverdueInvoice)
+                                                                        Terlewat {{ $absDiff }} hari
+                                                                    @elseif($diffInDays === 0)
+                                                                        Hari ini
+                                                                    @else
+                                                                        {{ $absDiff }} hari lagi
+                                                                    @endif
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                        <td class="py-3 text-right">
+                                                            @if($d->status !== 'paid')
+                                                                <button @click="openPaymentModal(
+                                                                            '{{ $d->id }}', 
+                                                                            '{{ addslashes($d->customer->name ?? '') }}', 
+                                                                            '{{ $d->total_amount }}', 
+                                                                            '{{ $d->remaining_amount }}', 
+                                                                            '{{ route('debts.pay', $d) }}'
+                                                                        )"
+                                                                        type="button"
+                                                                        class="px-2.5 py-1.5 bg-amber-500 hover:bg-amber-600 text-white font-black text-[10px] rounded-lg shadow-sm transition-all inline-flex items-center gap-1 active:scale-95">
+                                                                    <span class="material-symbols-outlined text-xs">price_check</span>
+                                                                    <span>Bayar</span>
+                                                                </button>
+                                                            @else
+                                                                <span class="text-[9px] font-black text-emerald-600 uppercase tracking-widest bg-emerald-50 px-2 py-1 rounded">Lunas</span>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-8 py-6 text-sm text-slate-400 font-semibold text-center">
-                                Belum ada data catatan piutang / kasbon yang terdaftar untuk penyaringan ini.
+                            <td colspan="7" class="px-8 py-6 text-sm text-slate-400 font-semibold text-center whitespace-normal">
+                                Belum ada data catatan piutang / kasbon yang terdaftar.
                             </td>
                         </tr>
                     @endforelse
@@ -350,11 +384,166 @@
             </table>
         </div>
 
+        <!-- Mobile Debtor List (Hidden on Desktop) - Clean scannable Contact List style -->
+        <div class="block md:hidden divide-y divide-slate-100 bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden" x-data="{ openGroup: null }">
+            @forelse ($debts as $customerDebts)
+                @php
+                    $firstDebt = $customerDebts->first();
+                    $customer = $firstDebt->customer;
+                    $customerId = $firstDebt->customer_id ?? 0;
+                    $totalRemaining = $customerDebts->sum('remaining_amount');
+                    $totalAmount = $customerDebts->sum('total_amount');
+                    $totalPaid = $totalAmount - $totalRemaining;
+                    $percent = $totalAmount > 0 ? round(($totalPaid / $totalAmount) * 100) : 0;
+                    
+                    $overdueCount = $customerDebts->filter(function($d) {
+                        return \Carbon\Carbon::parse($d->due_date)->isPast() && $d->status !== 'paid';
+                    })->count();
+
+                    $customerName = $customer->name ?? 'Umum';
+                    $customerPhone = $customer->phone ?? 'Tidak ada kontak';
+                    $customerInitials = strtoupper(substr($customerName, 0, 1));
+                @endphp
+                
+                <div class="p-3.5 hover:bg-slate-50/40 transition-colors space-y-2.5">
+                    <div class="flex items-center justify-between gap-3">
+                        <!-- Left: Contact Info (Avatar + Name & Phone) -->
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 text-slate-700 font-black text-sm flex items-center justify-center flex-shrink-0">
+                                {{ $customerInitials }}
+                            </div>
+                            <div class="min-w-0">
+                                <h4 class="font-black text-slate-800 text-sm truncate">{{ $customerName }}</h4>
+                                <p class="text-[10px] font-bold text-slate-400 truncate mt-0.5">{{ $customerPhone }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Right: Debt Amount & Overdue Badge -->
+                        <div class="text-right flex-shrink-0">
+                            <h4 class="text-sm font-black text-slate-900">Rp {{ number_format($totalRemaining, 0, ',', '.') }}</h4>
+                            <p class="text-[9px] font-bold mt-0.5 {{ $overdueCount > 0 ? 'text-rose-500 font-black' : 'text-slate-400' }}">
+                                @if($overdueCount > 0)
+                                    {{ $overdueCount }} Overdue
+                                @else
+                                    {{ $customerDebts->count() }} Nota Aktif
+                                @endif
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Repayment Progress Line & Status Badges -->
+                    <div class="flex items-center justify-between gap-4 text-[9px] font-bold text-slate-500 pt-1 border-t border-slate-100/60">
+                        <div class="flex items-center gap-2">
+                            <span>Status:</span>
+                            @if($totalRemaining <= 0)
+                                <span class="text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded uppercase tracking-wider text-[8px] font-black">Lunas</span>
+                            @else
+                                <span class="text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded uppercase tracking-wider text-[8px] font-black">Aktif</span>
+                            @endif
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span>Terbayar: <strong class="text-slate-700">{{ $percent }}%</strong></span>
+                            <div class="w-12 bg-slate-100 rounded-full h-1 overflow-hidden">
+                                <div class="h-full rounded-full bg-emerald-600" style="width: {{ $percent }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions Panel: Toggle "Lihat Rincian Nota" -->
+                    <div class="flex items-center justify-between pt-1">
+                        <button @click="openGroup = (openGroup === {{ $customerId }} ? null : {{ $customerId }})" 
+                                type="button" 
+                                class="p-1.5 -ml-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-all flex items-center gap-1 text-[10px] font-black">
+                            <span class="material-symbols-outlined text-base" x-text="openGroup === {{ $customerId }} ? 'visibility_off' : 'visibility'">visibility</span>
+                            <span x-text="openGroup === {{ $customerId }} ? 'Tutup Nota' : '👁️ Lihat Rincian Nota'">👁️ Lihat Rincian Nota</span>
+                        </button>
+                    </div>
+
+                    <!-- Expandable Sub-list for Invoices (Mobile) -->
+                    <div x-show="openGroup === {{ $customerId }}" x-cloak class="pt-1.5 space-y-2">
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 space-y-3">
+                            <div class="text-[8px] uppercase tracking-wider text-slate-400 font-bold border-b border-slate-200/50 pb-1 flex justify-between">
+                                <span>Rincian Nota Penjualan</span>
+                                <span>{{ $customerDebts->count() }} Transaksi</span>
+                            </div>
+
+                            <div class="space-y-3 divide-y divide-slate-200/50">
+                                @foreach($customerDebts as $d)
+                                    @php
+                                        $dueDate = \Carbon\Carbon::parse($d->due_date)->startOfDay();
+                                        $today = \Carbon\Carbon::now()->startOfDay();
+                                        $diffInDays = $today->diffInDays($dueDate, false);
+                                        $diffInDays = (int) round($diffInDays);
+                                        $absDiff = abs($diffInDays);
+                                        $isOverdueInvoice = $dueDate->isPast() && $d->status !== 'paid';
+
+                                        // Extract product names
+                                        $productNames = [];
+                                        if ($d->sale && $d->sale->items) {
+                                            foreach ($d->sale->items as $item) {
+                                                if ($item->product) {
+                                                    $productNames[] = $item->product->name . ' (' . $item->quantity . 'x)';
+                                                }
+                                            }
+                                        }
+                                        $productDescription = !empty($productNames) ? implode(', ', $productNames) : 'Transaksi Kasir POS';
+                                    @endphp
+                                    <div class="pt-2.5 first:pt-0 space-y-1 text-[10px]">
+                                        <div class="flex justify-between items-start font-bold">
+                                            <span class="text-slate-800">Nota #{{ str_pad($d->sale_id ?? $d->id, 5, '0', STR_PAD_LEFT) }}</span>
+                                            <span class="{{ $isOverdueInvoice ? 'text-rose-600' : 'text-slate-800' }}">Sisa: Rp {{ number_format($d->remaining_amount, 0, ',', '.') }}</span>
+                                        </div>
+                                        <div class="text-slate-400 font-semibold text-[9px]">
+                                            {{ \Carbon\Carbon::parse($d->created_at)->translatedFormat('d M Y H:i') }}
+                                        </div>
+                                        <div class="text-slate-500 font-medium leading-relaxed font-manrope">
+                                            <span class="text-slate-400 font-bold">Keterangan:</span> {{ $productDescription }}
+                                        </div>
+                                        <div class="flex justify-between items-center pt-1 text-[9px] font-bold">
+                                            <div class="flex flex-col">
+                                                <span class="text-slate-400">Jatuh Tempo:</span>
+                                                <span class="{{ $isOverdueInvoice ? 'text-rose-500 font-black' : 'text-slate-500' }}">
+                                                    {{ $dueDate->translatedFormat('d M Y') }} ({{ $isOverdueInvoice ? 'Overdue ' . $absDiff . ' hari' : $absDiff . ' hari lagi' }})
+                                                </span>
+                                            </div>
+                                            <div>
+                                                @if($d->status !== 'paid')
+                                                    <button @click="openPaymentModal(
+                                                                '{{ $d->id }}', 
+                                                                '{{ addslashes($d->customer->name ?? '') }}', 
+                                                                '{{ $d->total_amount }}', 
+                                                                '{{ $d->remaining_amount }}', 
+                                                                '{{ route('debts.pay', $d) }}'
+                                                            )"
+                                                            type="button"
+                                                            class="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white font-black rounded-lg shadow-sm transition-all flex items-center gap-1 active:scale-95">
+                                                        <span class="material-symbols-outlined text-xs">price_check</span>
+                                                        <span>Bayar</span>
+                                                    </button>
+                                                @else
+                                                    <span class="text-[8px] font-black text-emerald-600 uppercase tracking-widest bg-emerald-50 px-2 py-0.5 rounded">Lunas</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div class="p-6 text-sm text-slate-400 font-semibold text-center">
+                    Belum ada data catatan piutang / kasbon yang terdaftar.
+                </div>
+            @endforelse
+        </div>
+
         <!-- Pagination -->
-        <div class="px-8 py-4 bg-slate-50 border-t border-slate-100">
+        <div class="px-4 py-3 md:px-8 md:py-4 bg-slate-50 border-t border-slate-100">
             {{ $debts->appends(request()->query())->links() }}
         </div>
     </div>
+
 
     <!-- PAYMENT INTERACTIVE MODAL (Bayar Cicilan via AlpineJS) -->
     <div x-show="isPaymentModalOpen" 

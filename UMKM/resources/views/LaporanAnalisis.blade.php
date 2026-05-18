@@ -44,13 +44,26 @@
                     </div>
                     @endif
 
-                    <div class="relative w-full sm:w-auto">
+                    <!-- Month Picker -->
+                    <div class="relative w-full sm:w-auto" title="Filter Bulan">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none z-10 text-slate-400">
                             <span class="material-symbols-outlined text-sm">calendar_month</span>
                         </span>
                         <input type="month"
                                name="specific_month"
                                value="{{ $specificMonth }}"
+                               onchange="this.form.submit()"
+                               class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 bg-surface-container-highest text-sm font-semibold text-teal-900 transition-all cursor-pointer" />
+                    </div>
+
+                    <!-- Daily Date Picker -->
+                    <div class="relative w-full sm:w-auto" title="Filter Tanggal Spesifik">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none z-10 text-slate-400">
+                            <span class="material-symbols-outlined text-sm">calendar_today</span>
+                        </span>
+                        <input type="date"
+                               name="filter_date"
+                               value="{{ $filterDate }}"
                                onchange="this.form.submit()"
                                class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 bg-surface-container-highest text-sm font-semibold text-teal-900 transition-all cursor-pointer" />
                     </div>
@@ -71,7 +84,14 @@
                 <span class="material-symbols-outlined text-sm text-teal-600 hidden sm:inline">date_range</span>
                 <span class="text-xs sm:text-sm font-bold text-teal-800 break-words">Menampilkan Laporan: {{ $periodLabel }}</span>
             </div>
-            @if($activePeriod !== 'bulanan')
+            
+            @if($filterDate)
+            <a href="{{ route('reports.index') }}"
+               class="flex items-center gap-1.5 px-3 py-2 bg-rose-50 text-rose-600 border border-rose-200 rounded-lg text-xs font-bold hover:bg-rose-100 transition-all">
+                <span class="material-symbols-outlined text-sm">close</span>
+                Hapus Filter Harian
+            </a>
+            @elseif($activePeriod !== 'bulanan')
             <a href="{{ route('reports.index') }}"
                class="flex items-center gap-1.5 px-3 py-2 bg-slate-100 text-slate-600 rounded-lg text-xs font-bold hover:bg-slate-200 transition-all">
                 <span class="material-symbols-outlined text-sm">restart_alt</span>
@@ -84,19 +104,55 @@
     <!-- Bento Grid - Key Metrics -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
         <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 border-l-4 border-l-primary">
-            <span class="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest block mb-4">Total Pendapatan</span>
+            <span class="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 mb-1">
+                <span>Total Pendapatan</span>
+                <span class="relative inline-block group/tooltip">
+                    <button type="button" class="text-slate-400 hover:text-slate-600 transition-colors focus:outline-none flex items-center">
+                        <span class="material-symbols-outlined text-[14px]">info</span>
+                    </button>
+                    <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-900 text-white text-[10px] rounded-lg shadow-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 transition-opacity duration-200 z-50 text-center font-medium font-sans normal-case tracking-normal">
+                        Nilai murni omzet penjualan barang khusus hari ini (Tunai + Nota Utang Baru). Tidak mencakup uang tagihan/cicilan masa lalu.
+                        <span class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></span>
+                    </span>
+                </span>
+            </span>
+            <span class="text-[10px] text-slate-400 font-medium block mb-3">Penjualan Riil (Tunai + Piutang)</span>
             <div class="flex items-baseline gap-2">
                 <span class="text-2xl font-black text-on-surface">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</span>
             </div>
         </div>
         <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
-            <span class="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest block mb-4">Laba Bersih</span>
+            <span class="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 mb-1">
+                <span>Laba Bersih</span>
+                <span class="relative inline-block group/tooltip">
+                    <button type="button" class="text-slate-400 hover:text-slate-600 transition-colors focus:outline-none flex items-center">
+                        <span class="material-symbols-outlined text-[14px]">info</span>
+                    </button>
+                    <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-900 text-white text-[10px] rounded-lg shadow-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 transition-opacity duration-200 z-50 text-center font-medium font-sans normal-case tracking-normal">
+                        Performa keuntungan bisnis riil hari ini (Total Pendapatan Omzet - Total Modal HPP & Operasional).
+                        <span class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></span>
+                    </span>
+                </span>
+            </span>
+            <span class="text-[10px] text-slate-400 font-medium block mb-3">Margin Akrual Bisnis</span>
             <div class="flex items-baseline gap-2">
                 <span class="text-2xl font-black text-on-surface">Rp {{ number_format($netProfit, 0, ',', '.') }}</span>
             </div>
         </div>
         <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
-            <span class="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest block mb-4">Total Pengeluaran</span>
+            <span class="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 mb-1">
+                <span>Total Pengeluaran</span>
+                <span class="relative inline-block group/tooltip">
+                    <button type="button" class="text-slate-400 hover:text-slate-600 transition-colors focus:outline-none flex items-center">
+                        <span class="material-symbols-outlined text-[14px]">info</span>
+                    </button>
+                    <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-900 text-white text-[10px] rounded-lg shadow-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 transition-opacity duration-200 z-50 text-center font-medium font-sans normal-case tracking-normal">
+                        Nilai total Modal (HPP) dari barang yang laku terjual hari ini + Biaya Operasional harian.
+                        <span class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></span>
+                    </span>
+                </span>
+            </span>
+            <span class="text-[10px] text-slate-400 font-medium block mb-3">HPP Terjual + Operasional</span>
             <div class="flex items-baseline gap-2">
                 <span class="text-2xl font-black text-on-surface">Rp {{ number_format($totalExpense, 0, ',', '.') }}</span>
             </div>

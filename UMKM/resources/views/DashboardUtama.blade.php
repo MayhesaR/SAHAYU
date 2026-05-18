@@ -110,7 +110,18 @@
                     <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-4">
                         <span class="material-symbols-outlined text-xl">payments</span>
                     </div>
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pemasukan (Omzet)</p>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
+                        <span>Arus Kas Masuk Tunai</span>
+                        <span class="relative inline-block group/tooltip">
+                            <button type="button" class="text-slate-400 hover:text-slate-600 transition-colors focus:outline-none flex items-center">
+                                <span class="material-symbols-outlined text-[14px]">info</span>
+                            </button>
+                            <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-900 text-white text-[10px] rounded-lg shadow-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 transition-opacity duration-200 z-50 text-center font-medium font-sans normal-case tracking-normal">
+                                Total uang tunai fisik yang benar-benar masuk ke laci kasir hari ini (Hasil Jualan Tunai + Pembayaran Cicilan Utang masa lalu).
+                                <span class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></span>
+                            </span>
+                        </span>
+                    </p>
                     <h3 class="text-2xl font-black text-slate-900 mt-1">Rp {{ number_format($totalSales, 0, ',', '.') }}</h3>
                     <div class="mt-4 flex items-center gap-2">
                         <span class="flex items-center gap-0.5 text-xs font-black {{ $salesGrowth >= 0 ? 'text-emerald-500' : 'text-rose-500' }}">
@@ -128,7 +139,18 @@
                     <div class="w-10 h-10 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center mb-4">
                         <span class="material-symbols-outlined text-xl">shopping_cart</span>
                     </div>
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pengeluaran (Biaya)</p>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
+                        <span>Arus Kas Keluar Tunai</span>
+                        <span class="relative inline-block group/tooltip">
+                            <button type="button" class="text-slate-400 hover:text-slate-600 transition-colors focus:outline-none flex items-center">
+                                <span class="material-symbols-outlined text-[14px]">info</span>
+                            </button>
+                            <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-900 text-white text-[10px] rounded-lg shadow-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 transition-opacity duration-200 z-50 text-center font-medium font-sans normal-case tracking-normal">
+                                Total uang tunai fisik yang keluar dari laci hari ini (Biaya Operasional harian + Belanja Stok Bahan Baku).
+                                <span class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></span>
+                            </span>
+                        </span>
+                    </p>
                     <h3 class="text-2xl font-black text-slate-900 mt-1">Rp {{ number_format($totalExpenses, 0, ',', '.') }}</h3>
                     <div class="mt-4 flex items-center gap-2">
                         <span class="flex items-center gap-0.5 text-xs font-black {{ $expenseGrowth <= 0 ? 'text-emerald-500' : 'text-rose-500' }}">
@@ -149,7 +171,18 @@
                     <div class="w-10 h-10 bg-teal-50 text-teal-600 rounded-xl flex items-center justify-center mb-4">
                         <span class="material-symbols-outlined text-xl">account_balance_wallet</span>
                     </div>
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Keuntungan (Profit)</p>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
+                        <span>Sisa Arus Kas (Net)</span>
+                        <span class="relative inline-block group/tooltip">
+                            <button type="button" class="text-slate-400 hover:text-slate-600 transition-colors focus:outline-none flex items-center">
+                                <span class="material-symbols-outlined text-[14px]">info</span>
+                            </button>
+                            <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-900 text-white text-[10px] rounded-lg shadow-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 transition-opacity duration-200 z-50 text-center font-medium font-sans normal-case tracking-normal">
+                                Sisa saldo uang tunai fisik di laci kasir hari ini (Arus Kas Masuk Tunai - Arus Kas Keluar Tunai).
+                                <span class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></span>
+                            </span>
+                        </span>
+                    </p>
                     <h3 class="text-2xl font-black {{ $profit >= 0 ? 'text-slate-900' : 'text-rose-600' }} mt-1">Rp {{ number_format($profit, 0, ',', '.') }}</h3>
                     <div class="mt-4 flex items-center gap-2">
                         <span class="flex items-center gap-0.5 text-xs font-black {{ $profit >= 0 ? 'text-emerald-500' : 'text-rose-500' }}">
@@ -169,7 +202,18 @@
                     <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-4">
                         <span class="material-symbols-outlined text-xl">payments</span>
                     </div>
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Penjualan</p>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
+                        <span>Arus Kas Masuk Tunai</span>
+                        <span class="relative inline-block group/tooltip">
+                            <button type="button" class="text-slate-400 hover:text-slate-600 transition-colors focus:outline-none flex items-center">
+                                <span class="material-symbols-outlined text-[14px]">info</span>
+                            </button>
+                            <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-900 text-white text-[10px] rounded-lg shadow-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 transition-opacity duration-200 z-50 text-center font-medium font-sans normal-case tracking-normal">
+                                Total uang tunai fisik yang benar-benar masuk ke laci kasir hari ini (Hasil Jualan Tunai + Pembayaran Cicilan Utang masa lalu).
+                                <span class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></span>
+                            </span>
+                        </span>
+                    </p>
                     <h3 class="text-2xl font-black text-slate-900 mt-1">Rp {{ number_format($totalSales, 0, ',', '.') }}</h3>
                     <div class="mt-4 flex items-center gap-2">
                         <span class="flex items-center gap-0.5 text-xs font-black {{ $salesGrowth >= 0 ? 'text-emerald-500' : 'text-rose-500' }}">
@@ -187,7 +231,18 @@
                     <div class="w-10 h-10 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center mb-4">
                         <span class="material-symbols-outlined text-xl">shopping_cart</span>
                     </div>
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Pengeluaran</p>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
+                        <span>Arus Kas Keluar Tunai</span>
+                        <span class="relative inline-block group/tooltip">
+                            <button type="button" class="text-slate-400 hover:text-slate-600 transition-colors focus:outline-none flex items-center">
+                                <span class="material-symbols-outlined text-[14px]">info</span>
+                            </button>
+                            <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-900 text-white text-[10px] rounded-lg shadow-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 transition-opacity duration-200 z-50 text-center font-medium font-sans normal-case tracking-normal">
+                                Total uang tunai fisik yang keluar dari laci hari ini (Biaya Operasional harian + Belanja Stok Bahan Baku).
+                                <span class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></span>
+                            </span>
+                        </span>
+                    </p>
                     <h3 class="text-2xl font-black text-slate-900 mt-1">Rp {{ number_format($totalExpenses, 0, ',', '.') }}</h3>
                     <div class="mt-4 flex items-center gap-2">
                         <span class="flex items-center gap-0.5 text-xs font-black {{ $expenseGrowth <= 0 ? 'text-emerald-500' : 'text-rose-500' }}">
@@ -393,7 +448,7 @@
                 labels: @json($chartLabels),
                 datasets: [
                     {
-                        label: 'Pendapatan',
+                        label: 'Arus Kas Masuk',
                         data: @json($chartSales),
                         borderColor: '#10b981',
                         backgroundColor: '{{ $chartType == "bar" ? "#10b981" : "rgba(16, 185, 129, 0.1)" }}',
@@ -409,7 +464,7 @@
                         maxBarThickness: 40,
                     },
                     {
-                        label: 'Pengeluaran',
+                        label: 'Arus Kas Keluar',
                         data: @json($chartExpenses),
                         borderColor: '#f43f5e',
                         backgroundColor: '{{ $chartType == "bar" ? "#f43f5e" : "rgba(244, 63, 94, 0.1)" }}',

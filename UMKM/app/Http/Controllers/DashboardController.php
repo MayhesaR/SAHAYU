@@ -15,59 +15,59 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        $targetDateString = $request->query('date');
-        $isTimeTravel = !empty($targetDateString);
+        $targetDateString = $request->input('date', Carbon::today()->toDateString());
+        $isTimeTravel = $request->filled('date');
 
+        $filter = $request->query('range');
+        if (!$filter) {
+            $filter = auth()->check() && auth()->user()->isStaff() ? '1' : '30';
+        }
         if ($isTimeTravel) {
-            $now = Carbon::parse($targetDateString);
-            $filter = '1'; // Force daily view
-        } else {
-            $now = Carbon::now();
-            $filter = $request->query('range');
-            if (!$filter) {
-                $filter = auth()->check() && auth()->user()->isStaff() ? '1' : '30';
-            }
+            $filter = '1';
         }
 
         $companyId = auth()->user()->company_id;
-        
-        // Define date range
-        $days = (int) $filter;
-        $startDate = $now->copy()->subDays($days)->startOfDay();
+
         if ($filter === '1') {
-            $startDate = $now->copy()->startOfDay();
+            $startDate = Carbon::parse($targetDateString)->startOfDay();
+            $endDate = Carbon::parse($targetDateString)->endOfDay();
+            $now = Carbon::parse($targetDateString);
+            
+            $prevStartDate = $startDate->copy()->subDay()->startOfDay();
+            $prevEndDate = $startDate->copy()->subDay()->endOfDay();
+        } else {
+            $days = (int) $filter;
+            $now = Carbon::now();
+            $startDate = $now->copy()->subDays($days)->startOfDay();
+            $endDate = $now->copy()->endOfDay();
+            
+            $prevStartDate = $now->copy()->subDays($days * 2)->startOfDay();
+            $prevEndDate = $now->copy()->subDays($days)->endOfDay();
         }
-        $endDate = $now->copy()->endOfDay();
-        
-        $prevStartDate = $now->copy()->subDays($days * 2)->startOfDay();
-        if ($filter === '1') {
-            $prevStartDate = $now->copy()->subDays(1)->startOfDay();
-        }
-        $prevEndDate = $now->copy()->subDays($days)->endOfDay();
 
         // 1. Sales Statistics (Strict Cash Basis: Cash Sales + Debt/Installment Payments)
         $cashSalesThisPeriod = Sale::where('company_id', $companyId)
-            ->whereIn('payment_method', ['cash', 'transfer', 'qris'])
+            ->whereIn(DB::raw('LOWER(payment_method)'), ['cash', 'transfer', 'qris'])
             ->whereBetween('created_at', [$startDate, $endDate])
             ->sum('total');
 
         $debtPaymentsThisPeriod = \App\Models\DebtPayment::whereHas('debt', function ($q) use ($companyId) {
                 $q->where('company_id', $companyId);
             })
-            ->whereBetween('payment_date', [$startDate->toDateString(), $endDate->toDateString()])
+            ->whereBetween('created_at', [$startDate, $endDate])
             ->sum('amount_paid');
 
         $salesThisPeriod = $cashSalesThisPeriod + $debtPaymentsThisPeriod;
 
         $cashSalesPrevPeriod = Sale::where('company_id', $companyId)
-            ->whereIn('payment_method', ['cash', 'transfer', 'qris'])
+            ->whereIn(DB::raw('LOWER(payment_method)'), ['cash', 'transfer', 'qris'])
             ->whereBetween('created_at', [$prevStartDate, $prevEndDate])
             ->sum('total');
 
         $debtPaymentsPrevPeriod = \App\Models\DebtPayment::whereHas('debt', function ($q) use ($companyId) {
                 $q->where('company_id', $companyId);
             })
-            ->whereBetween('payment_date', [$prevStartDate->toDateString(), $prevEndDate->toDateString()])
+            ->whereBetween('created_at', [$prevStartDate, $prevEndDate])
             ->sum('amount_paid');
 
         $salesPrevPeriod = $cashSalesPrevPeriod + $debtPaymentsPrevPeriod;
@@ -75,17 +75,17 @@ class DashboardController extends Controller
         $salesGrowth = $salesPrevPeriod > 0 ? (($salesThisPeriod - $salesPrevPeriod) / $salesPrevPeriod) * 100 : ($salesThisPeriod > 0 ? 100 : 0);
 
         // 2. Expense Statistics (Strict Cash Basis: Petty Cash Expenses + Raw Material Purchases)
-        $opExpensesThis = \App\Models\Expense::where('company_id', $companyId)->whereBetween('expense_date', [$startDate->toDateString(), $endDate->toDateString()])->sum('amount');
-        $purchasesThis = \App\Models\Purchase::where('company_id', $companyId)->whereBetween('purchase_date', [$startDate->toDateString(), $endDate->toDateString()])->sum('total_amount');
+        $opExpensesThis = \App\Models\Expense::where('company_id', $companyId)->whereBetween('created_at', [$startDate, $endDate])->sum('amount');
+        $purchasesThis = \App\Models\Purchase::where('company_id', $companyId)->whereBetween('created_at', [$startDate, $endDate])->sum('total_amount');
         $expensesThisPeriod = $opExpensesThis + $purchasesThis;
 
-        $opExpensesPrev = \App\Models\Expense::where('company_id', $companyId)->whereBetween('expense_date', [$prevStartDate->toDateString(), $prevEndDate->toDateString()])->sum('amount');
-        $purchasesPrev = \App\Models\Purchase::where('company_id', $companyId)->whereBetween('purchase_date', [$prevStartDate->toDateString(), $prevEndDate->toDateString()])->sum('total_amount');
+        $opExpensesPrev = \App\Models\Expense::where('company_id', $companyId)->whereBetween('created_at', [$prevStartDate, $prevEndDate])->sum('amount');
+        $purchasesPrev = \App\Models\Purchase::where('company_id', $companyId)->whereBetween('created_at', [$prevStartDate, $prevEndDate])->sum('total_amount');
         $expensesPrevPeriod = $opExpensesPrev + $purchasesPrev;
         $expenseGrowth = $expensesPrevPeriod > 0 ? (($expensesThisPeriod - $expensesPrevPeriod) / $expensesPrevPeriod) * 100 : ($expensesThisPeriod > 0 ? 100 : 0);
 
         // 3. Production & Stock Alerts
-        $prodThisPeriod = Production::where('company_id', $companyId)->whereBetween('production_date', [$startDate, $endDate])->sum('quantity');
+        $prodThisPeriod = Production::where('company_id', $companyId)->whereBetween('created_at', [$startDate, $endDate])->sum('quantity');
         $lowStockMaterials = Material::where('company_id', $companyId)
             ->whereColumn('stock', '<=', 'minimum_stock')
             ->get();
@@ -145,25 +145,25 @@ class DashboardController extends Controller
         if ($filter == '1') {
             // Hourly grouping for Today (Cash Inflow = Cash Sales + Installment Payments)
             $salesTrend = Sale::where('company_id', $companyId)
-                ->whereIn('payment_method', ['cash', 'transfer', 'qris'])
-                ->whereDate('created_at', $now->toDateString())
+                ->whereIn(DB::raw('LOWER(payment_method)'), ['cash', 'transfer', 'qris'])
+                ->whereBetween('created_at', [$startDate, $endDate])
                 ->selectRaw('HOUR(created_at) as hour, SUM(total) as total')
                 ->groupBy('hour')->get()->keyBy('hour');
 
             $paymentTrend = \App\Models\DebtPayment::whereHas('debt', function ($q) use ($companyId) {
                     $q->where('company_id', $companyId);
                 })
-                ->where('payment_date', $now->toDateString())
+                ->whereBetween('created_at', [$startDate, $endDate])
                 ->selectRaw('HOUR(created_at) as hour, SUM(amount_paid) as total')
                 ->groupBy('hour')->get()->keyBy('hour');
                 
             $expTrend = \App\Models\Expense::where('company_id', $companyId)
-                ->where('expense_date', $now->toDateString())
+                ->whereBetween('created_at', [$startDate, $endDate])
                 ->selectRaw('HOUR(created_at) as hour, SUM(amount) as total')
                 ->groupBy('hour')->get()->keyBy('hour');
 
             $purTrend = \App\Models\Purchase::where('company_id', $companyId)
-                ->where('purchase_date', $now->toDateString())
+                ->whereBetween('created_at', [$startDate, $endDate])
                 ->selectRaw('HOUR(created_at) as hour, SUM(total_amount) as total')
                 ->groupBy('hour')->get()->keyBy('hour');
 
@@ -175,7 +175,7 @@ class DashboardController extends Controller
         } else {
             // Daily grouping for Weekly/Monthly (Cash Inflow = Cash Sales + Installment Payments)
             $salesTrend = Sale::where('company_id', $companyId)
-                ->whereIn('payment_method', ['cash', 'transfer', 'qris'])
+                ->whereIn(DB::raw('LOWER(payment_method)'), ['cash', 'transfer', 'qris'])
                 ->whereBetween('created_at', [$startDate, $endDate])
                 ->selectRaw('DATE(created_at) as date, SUM(total) as total')
                 ->groupBy('date')->get()->keyBy('date');
@@ -183,18 +183,18 @@ class DashboardController extends Controller
             $paymentTrend = \App\Models\DebtPayment::whereHas('debt', function ($q) use ($companyId) {
                     $q->where('company_id', $companyId);
                 })
-                ->whereBetween('payment_date', [$startDate->toDateString(), $endDate->toDateString()])
-                ->selectRaw('payment_date as date, SUM(amount_paid) as total')
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->selectRaw('DATE(created_at) as date, SUM(amount_paid) as total')
                 ->groupBy('date')->get()->keyBy('date');
 
             $expTrend = \App\Models\Expense::where('company_id', $companyId)
-                ->whereBetween('expense_date', [$startDate->toDateString(), $endDate->toDateString()])
-                ->selectRaw('expense_date as date, SUM(amount) as total')
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->selectRaw('DATE(created_at) as date, SUM(amount) as total')
                 ->groupBy('date')->get()->keyBy('date');
 
             $purTrend = \App\Models\Purchase::where('company_id', $companyId)
-                ->whereBetween('purchase_date', [$startDate->toDateString(), $endDate->toDateString()])
-                ->selectRaw('purchase_date as date, SUM(total_amount) as total')
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->selectRaw('DATE(created_at) as date, SUM(total_amount) as total')
                 ->groupBy('date')->get()->keyBy('date');
 
             for ($i = $days; $i >= 0; $i--) {
@@ -205,10 +205,69 @@ class DashboardController extends Controller
             }
         }
 
-        // 6. Cost Distribution
-        $costDistribution = Production::where('company_id', $companyId)->whereBetween('production_date', [$startDate, $endDate])
-            ->selectRaw('SUM(material_cost_snapshot) as material, SUM(labor_cost) as labor, SUM(overhead_cost_snapshot) as overhead')
-            ->first();
+        // 6. Dynamic Sales-Driven HPP & Cost Distribution
+        $saleItemsForCogs = DB::table('sale_items')
+            ->join('sales', 'sales.id', '=', 'sale_items.sale_id')
+            ->join('products', 'products.id', '=', 'sale_items.product_id')
+            ->leftJoin(DB::raw("(SELECT product_id, 
+                                       AVG(unit_hpp_snapshot) as avg_hpp,
+                                       AVG(material_cost_snapshot / quantity) as avg_mat,
+                                       AVG(labor_cost / quantity) as avg_lab,
+                                       AVG(overhead_cost_snapshot / quantity) as avg_over
+                                FROM productions 
+                                WHERE status = 'done' AND company_id = {$companyId} 
+                                GROUP BY product_id) as p_hpp"), 'p_hpp.product_id', '=', 'products.id')
+            ->whereBetween('sales.created_at', [$startDate, $endDate])
+            ->where('sales.company_id', $companyId)
+            ->where('sale_items.company_id', $companyId)
+            ->select(
+                'sale_items.quantity',
+                'products.selling_price',
+                'p_hpp.avg_hpp',
+                'p_hpp.avg_mat',
+                'p_hpp.avg_lab',
+                'p_hpp.avg_over'
+            )
+            ->get();
+
+        $totalCogs = 0;
+        $totalMaterialCost = 0;
+        $totalLaborCost = 0;
+        $totalOverheadCost = 0;
+
+        foreach ($saleItemsForCogs as $item) {
+            $qty = (float) $item->quantity;
+            $baseHpp = (float) ($item->avg_hpp ?: ($item->selling_price * 0.6));
+            $itemHpp = $baseHpp * $qty;
+            $totalCogs += $itemHpp;
+
+            if ($item->avg_hpp > 0) {
+                $totalComp = (float)$item->avg_mat + (float)$item->avg_lab + (float)$item->avg_over;
+                if ($totalComp > 0) {
+                    $matRatio = (float)$item->avg_mat / $totalComp;
+                    $labRatio = (float)$item->avg_lab / $totalComp;
+                    $overRatio = (float)$item->avg_over / $totalComp;
+                } else {
+                    $matRatio = 0.70;
+                    $labRatio = 0.20;
+                    $overRatio = 0.10;
+                }
+            } else {
+                $matRatio = 0.70;
+                $labRatio = 0.20;
+                $overRatio = 0.10;
+            }
+
+            $totalMaterialCost += $itemHpp * $matRatio;
+            $totalLaborCost += $itemHpp * $labRatio;
+            $totalOverheadCost += $itemHpp * $overRatio;
+        }
+
+        $costDist = [
+            'material' => (float) $totalMaterialCost,
+            'labor' => (float) $totalLaborCost,
+            'overhead' => (float) $totalOverheadCost,
+        ];
 
         return view('DashboardUtama', [
             'companyName' => auth()->user()->company->name ?? 'UMKM Anda',
@@ -224,11 +283,7 @@ class DashboardController extends Controller
             'chartSales' => $chartSales,
             'chartExpenses' => $chartExpenses,
             'chartType' => $chartType,
-            'costDist' => [
-                'material' => (float) ($costDistribution->material ?? 0),
-                'labor' => (float) ($costDistribution->labor ?? 0),
-                'overhead' => (float) ($costDistribution->overhead ?? 0),
-            ],
+            'costDist' => $costDist,
             'aiInsight' => $this->generateAiInsight($salesThisPeriod, $expensesThisPeriod, $lowStock, $salesGrowth),
             'currentFilter' => $filter,
             'recentActivities' => $recentActivities,

@@ -35,4 +35,20 @@ class Product extends Model
     {
         return $this->hasMany(ProductStockMovement::class)->latest('transaction_date')->latest('id');
     }
+
+    public function getPriceAttribute()
+    {
+        return $this->selling_price;
+    }
+
+    public function getBaseHppAttribute()
+    {
+        $companyId = auth()->user()->company_id ?? $this->company_id;
+        $avg = Production::where('product_id', $this->id)
+            ->where('status', 'done')
+            ->where('company_id', $companyId)
+            ->avg('unit_hpp_snapshot');
+            
+        return $avg ? (float) $avg : 0.0;
+    }
 }

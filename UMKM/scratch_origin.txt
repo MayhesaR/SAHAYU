@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Http\Controllers;
 
@@ -7,8 +7,6 @@ use App\Models\OverheadCost;
 use App\Models\Sale;
 use App\Models\SaleItem;
 use App\Models\Production;
-use App\Models\Expense;
-use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -18,61 +16,41 @@ class ReportController extends Controller
     {
         $request = request();
         $driver = DB::connection()->getDriverName();
-        $companyId = auth()->user()->company_id;
 
         // ═══ Resolve Date Range from filters ═══
-        if ($request->filled('filter_date')) {
-            $date = $request->input('filter_date', Carbon::today()->toDateString());
-            $startDate = Carbon::parse($date)->startOfDay();
-            $endDate = Carbon::parse($date)->endOfDay();
-            $periodLabel = $startDate->translatedFormat('d F Y');
-            $activePeriod = 'harian';
-            $specificMonth = $startDate->format('Y-m');
-            $weekNumber = 1;
-        } else {
-            [$startDate, $endDate, $periodLabel, $activePeriod, $specificMonth, $weekNumber] = $this->resolveDateRange($request);
-        }
+        [$startDate, $endDate, $periodLabel, $activePeriod, $specificMonth] = $this->resolveDateRange($request);
 
-        // 1. ISOLATE OPERATIONAL EXPENSES (Outside Loop)
-        $operationalExpenses = Expense::whereBetween('created_at', [$startDate, $endDate])->sum('amount');
+        // 1. Revenue (scoped)
+        $totalRevenue = Sale::whereBetween('created_at', [$startDate, $endDate])->sum('total');
 
-        // 2. FETCH SALES FOR THE DAY
-        $sales = Sale::with('items.product')->whereBetween('created_at', [$startDate, $endDate])->get();
+        // 2. COGS (Cost of Goods Sold / HPP) — scoped to sales within the date range
+        $companyId = auth()->user()->company_id;
+        $totalCogs = DB::table('sale_items')
+            ->join('sales', 'sales.id', '=', 'sale_items.sale_id')
+            ->join('products', 'products.id', '=', 'sale_items.product_id')
+            ->leftJoin(DB::raw("(SELECT product_id, AVG(unit_hpp_snapshot) as avg_hpp FROM productions WHERE status = 'done' AND company_id = {$companyId} GROUP BY product_id) as p_hpp"), 'p_hpp.product_id', '=', 'products.id')
+            ->whereBetween('sales.created_at', [$startDate, $endDate])
+            ->where('sales.company_id', $companyId)
+            ->select(DB::raw('SUM(sale_items.quantity * COALESCE(p_hpp.avg_hpp, products.selling_price * 0.6)) as total_cogs'))
+            ->value('total_cogs') ?? 0;
 
-        // 3. CALCULATE REVENUE (Accrual)
-        $totalPendapatan = $sales->sum('total_amount');
+        // 3. Operational Expenses (Overhead) — scoped
+        $totalOverheadExpense = OverheadCost::whereBetween('transaction_date', [
+            $startDate->toDateString(),
+            $endDate->toDateString(),
+        ])->sum('cost');
 
-        // 4. CALCULATE HPP (Loop ONLY for HPP)
-        $totalHPP = 0;
-        foreach ($sales as $sale) {
-            foreach ($sale->items as $item) {
-                // Fallback to 60% of price if base_hpp is 0 or null
-                $base_hpp = $item->product->base_hpp > 0 ? $item->product->base_hpp : ($item->product->price * 0.6);
-                $totalHPP += ($item->quantity * $base_hpp);
-            }
-        }
+        // Total Expense = HPP + Overhead
+        $totalExpense = $totalCogs + $totalOverheadExpense;
 
-        // 5. FINAL AGGREGATION (Outside Loop)
-        $totalPengeluaran = $totalHPP + $operationalExpenses;
-        $labaBersih = $totalPendapatan - $totalPengeluaran;
-        $marginLaba = ($totalPendapatan > 0) ? ($labaBersih / $totalPendapatan) * 100 : 0;
-
-        // Map variables back to view parameters & breakdown data
-        $totalRevenue = $totalPendapatan;
-        $totalExpense = $totalPengeluaran;
-        $netProfit = $labaBersih;
-        $profitMargin = $marginLaba;
-
-        $totalMaterialCost = $totalHPP * 0.70;
-        $totalLaborCost = $totalHPP * 0.20;
-        $totalOverheadCost = $totalHPP * 0.10;
+        // 4. Net Profit
+        $netProfit = $totalRevenue - $totalExpense;
+        $profitMargin = $totalRevenue > 0 ? ($netProfit / $totalRevenue) * 100 : 0;
 
         // 5. Popular Products (scoped)
         $popularProducts = SaleItem::query()
             ->join('sales', 'sales.id', '=', 'sale_items.sale_id')
             ->join('products', 'products.id', '=', 'sale_items.product_id')
-            ->where('sale_items.company_id', $companyId)
-            ->where('sales.company_id', $companyId)
             ->whereBetween('sales.created_at', [$startDate, $endDate])
             ->select('products.name', DB::raw('SUM(sale_items.quantity) as total_qty'), DB::raw('SUM(sale_items.quantity * sale_items.price) as total_revenue'))
             ->groupBy('products.id', 'products.name')
@@ -81,9 +59,8 @@ class ReportController extends Controller
             ->get();
 
         // 6. Yield / Waste KPI (Reject Rate)
-        $prodStats = Production::where('company_id', $companyId)
-            ->where('status', 'done')
-            ->whereBetween('created_at', [$startDate, $endDate])
+        $prodStats = Production::where('status', 'done')
+            ->whereBetween('production_date', [$startDate->toDateString(), $endDate->toDateString()])
             ->selectRaw('SUM(good_quantity) as total_good, SUM(reject_quantity) as total_reject')
             ->first();
         
@@ -91,10 +68,15 @@ class ReportController extends Controller
         $rejectRate = $totalProduced > 0 ? (($prodStats->total_reject ?? 0) / $totalProduced) * 100 : 0;
 
         // 7. Expense Breakdown (HPP Breakdown)
+        $expenseBreakdownQuery = Production::where('status', 'done')
+            ->whereBetween('production_date', [$startDate->toDateString(), $endDate->toDateString()])
+            ->selectRaw('SUM(material_cost_snapshot) as total_material, SUM(labor_cost) as total_labor, SUM(overhead_cost_snapshot) as total_overhead')
+            ->first();
+            
         $expenseBreakdown = [
-            'Bahan Baku' => $totalMaterialCost,
-            'Tenaga Kerja' => $totalLaborCost,
-            'Overhead' => $totalOverheadCost,
+            'Bahan Baku' => $expenseBreakdownQuery->total_material ?? 0,
+            'Tenaga Kerja' => $expenseBreakdownQuery->total_labor ?? 0,
+            'Overhead' => $expenseBreakdownQuery->total_overhead ?? 0,
         ];
 
         // 8. Dynamic Chart & Trend Data based on view_mode
@@ -109,9 +91,7 @@ class ReportController extends Controller
                 $monthStart = $anchorDate->copy()->month($i)->startOfMonth();
                 $monthEnd = $monthStart->copy()->endOfMonth();
                 
-                $realization = (float) Sale::where('company_id', $companyId)
-                    ->whereBetween('created_at', [$monthStart, $monthEnd])
-                    ->sum('total');
+                $realization = (float) Sale::whereBetween('created_at', [$monthStart, $monthEnd])->sum('total');
                 
                 $hpp = DB::table('sale_items')
                     ->join('sales', 'sales.id', '=', 'sale_items.sale_id')
@@ -119,7 +99,6 @@ class ReportController extends Controller
                     ->leftJoin(DB::raw("(SELECT product_id, AVG(unit_hpp_snapshot) as avg_hpp FROM productions WHERE status = 'done' AND company_id = {$companyId} GROUP BY product_id) as p_hpp"), 'p_hpp.product_id', '=', 'products.id')
                     ->whereBetween('sales.created_at', [$monthStart, $monthEnd])
                     ->where('sales.company_id', $companyId)
-                    ->where('sale_items.company_id', $companyId)
                     ->select(DB::raw('SUM(sale_items.quantity * COALESCE(p_hpp.avg_hpp, products.selling_price * 0.6)) as total_cogs'))
                     ->value('total_cogs') ?? 0;
 
@@ -159,9 +138,7 @@ class ReportController extends Controller
                         $weekEnd = $anchorDate->copy()->addDays($endDay - 1)->endOfDay();
                     }
 
-                    $realization = (float) Sale::where('company_id', $companyId)
-                        ->whereBetween('created_at', [$weekStart, $weekEnd])
-                        ->sum('total');
+                    $realization = (float) Sale::whereBetween('created_at', [$weekStart, $weekEnd])->sum('total');
                     
                     // Calculate HPP specifically for this weekly bucket
                     $hpp = DB::table('sale_items')
@@ -170,7 +147,6 @@ class ReportController extends Controller
                         ->leftJoin(DB::raw("(SELECT product_id, AVG(unit_hpp_snapshot) as avg_hpp FROM productions WHERE status = 'done' AND company_id = {$companyId} GROUP BY product_id) as p_hpp"), 'p_hpp.product_id', '=', 'products.id')
                         ->whereBetween('sales.created_at', [$weekStart, $weekEnd])
                         ->where('sales.company_id', $companyId)
-                        ->where('sale_items.company_id', $companyId)
                         ->select(DB::raw('SUM(sale_items.quantity * COALESCE(p_hpp.avg_hpp, products.selling_price * 0.6)) as total_cogs'))
                         ->value('total_cogs') ?? 0;
                 }
@@ -198,9 +174,7 @@ class ReportController extends Controller
                 $dayStart = $currentDate->copy()->startOfDay();
                 $dayEnd = $currentDate->copy()->endOfDay();
                 
-                $realization = (float) Sale::where('company_id', $companyId)
-                    ->whereBetween('created_at', [$dayStart, $dayEnd])
-                    ->sum('total');
+                $realization = (float) Sale::whereBetween('created_at', [$dayStart, $dayEnd])->sum('total');
                 
                 $hpp = DB::table('sale_items')
                     ->join('sales', 'sales.id', '=', 'sale_items.sale_id')
@@ -208,7 +182,6 @@ class ReportController extends Controller
                     ->leftJoin(DB::raw("(SELECT product_id, AVG(unit_hpp_snapshot) as avg_hpp FROM productions WHERE status = 'done' AND company_id = {$companyId} GROUP BY product_id) as p_hpp"), 'p_hpp.product_id', '=', 'products.id')
                     ->whereBetween('sales.created_at', [$dayStart, $dayEnd])
                     ->where('sales.company_id', $companyId)
-                    ->where('sale_items.company_id', $companyId)
                     ->select(DB::raw('SUM(sale_items.quantity * COALESCE(p_hpp.avg_hpp, products.selling_price * 0.6)) as total_cogs'))
                     ->value('total_cogs') ?? 0;
 
@@ -228,41 +201,6 @@ class ReportController extends Controller
                 $prevRealization = $realization;
                 $currentDate->addDay();
             }
-        } elseif ($activePeriod === 'harian') {
-            $prevRealization = 0;
-            // 4-hour buckets for harian trend (00:00, 04:00, 08:00, 12:00, 16:00, 20:00)
-            for ($hour = 0; $hour < 24; $hour += 4) {
-                $bucketStart = $startDate->copy()->hour($hour)->minute(0)->second(0);
-                $bucketEnd = $bucketStart->copy()->addHours(4)->subSecond();
-
-                $realization = (float) Sale::where('company_id', $companyId)
-                    ->whereBetween('created_at', [$bucketStart, $bucketEnd])
-                    ->sum('total');
-
-                $hpp = DB::table('sale_items')
-                    ->join('sales', 'sales.id', '=', 'sale_items.sale_id')
-                    ->join('products', 'products.id', '=', 'sale_items.product_id')
-                    ->leftJoin(DB::raw("(SELECT product_id, AVG(unit_hpp_snapshot) as avg_hpp FROM productions WHERE status = 'done' AND company_id = {$companyId} GROUP BY product_id) as p_hpp"), 'p_hpp.product_id', '=', 'products.id')
-                    ->whereBetween('sales.created_at', [$bucketStart, $bucketEnd])
-                    ->where('sales.company_id', $companyId)
-                    ->where('sale_items.company_id', $companyId)
-                    ->select(DB::raw('SUM(sale_items.quantity * COALESCE(p_hpp.avg_hpp, products.selling_price * 0.6)) as total_cogs'))
-                    ->value('total_cogs') ?? 0;
-
-                $target = 500000 / 6; // Benchmark daily target partitioned
-                $growth = $prevRealization > 0 ? (($realization - $prevRealization) / $prevRealization) * 100 : 0;
-
-                $trendData[] = [
-                    'label' => sprintf('%02d:00 - %02d:00', $hour, $hour + 4),
-                    'target' => $target,
-                    'realization' => $realization,
-                    'hpp' => (float)$hpp,
-                    'growth' => $growth,
-                    'status' => $realization >= $target ? 'Exceeded' : ($realization >= $target * 0.8 ? 'Near Target' : 'Under Target'),
-                ];
-
-                $prevRealization = $realization;
-            }
         }
 
         return view('LaporanAnalisis', [
@@ -279,7 +217,6 @@ class ReportController extends Controller
             'activePeriod' => $activePeriod,
             'specificMonth' => $specificMonth,
             'weekNumber' => request('week_number', 1),
-            'filterDate' => request('filter_date'),
         ]);
     }
 

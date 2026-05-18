@@ -19,7 +19,7 @@ class DebtController extends Controller
     {
         $companyId = auth()->user()->company_id;
 
-        $query = Debt::with(['customer', 'payments', 'sale'])
+        $query = Debt::with(['customer', 'payments', 'sale.items.product'])
             ->where('company_id', $companyId);
 
         // Filter by Customer
@@ -32,9 +32,14 @@ class DebtController extends Controller
             $query->where('status', $request->query('status'));
         }
 
-        // Filter by Due Date
-        if ($request->filled('due_date')) {
-            $query->whereDate('due_date', $request->query('due_date'));
+        // Filter by Start Due Date
+        if ($request->filled('start_due_date')) {
+            $query->whereDate('due_date', '>=', $request->query('start_due_date'));
+        }
+
+        // Filter by End Due Date
+        if ($request->filled('end_due_date')) {
+            $query->whereDate('due_date', '<=', $request->query('end_due_date'));
         }
 
         // Sorting options
@@ -47,7 +52,25 @@ class DebtController extends Controller
             $query->latest();
         }
 
-        $debts = $query->paginate(15);
+        // Fetch all matching debts
+        $debtsCollection = $query->get();
+
+        // Group by Customer ID
+        $groupedDebts = $debtsCollection->groupBy('customer_id');
+
+        // Paginate the grouped collection manually
+        $currentPage = \Illuminate\Pagination\LengthAwarePaginator::resolveCurrentPage();
+        $perPage = 15;
+        $currentPageItems = $groupedDebts->slice(($currentPage - 1) * $perPage, $perPage)->values();
+        
+        $debts = new \Illuminate\Pagination\LengthAwarePaginator(
+            $currentPageItems,
+            $groupedDebts->count(),
+            $perPage,
+            $currentPage,
+            ['path' => \Illuminate\Pagination\LengthAwarePaginator::resolveCurrentPath()]
+        );
+
         $customers = Customer::where('company_id', $companyId)->orderBy('name')->get();
 
         // Aggregate statistics for dashboard summary cards

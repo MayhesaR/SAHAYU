@@ -70,6 +70,14 @@
                 </div>
                 
                 <div class="flex items-center gap-3">
+                    <!-- Export Button -->
+                    <button type="button" 
+                            id="btn-export-transaksi" 
+                            class="px-5 py-3.5 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 font-bold text-xs rounded-xl transition-all flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[16px]">download</span>
+                        <span>Ekspor Excel/CSV</span>
+                    </button>
+
                     <!-- Advanced Filter Button -->
                     <button type="button" 
                             @click="showAdvanced = !showAdvanced" 
@@ -305,9 +313,35 @@
         @endif
     </div>
 </div>
-
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
     body { font-family: 'Manrope', sans-serif; }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const btnExport = document.getElementById('btn-export-transaksi');
+        if (btnExport) {
+            btnExport.addEventListener('click', function() {
+                // Get active form filter values
+                const searchInput = document.querySelector('input[name="search"]');
+                const typeSelect = document.querySelector('select[name="type"]');
+                const sortBySelect = document.querySelector('select[name="sort_by"]');
+                const startDateInput = document.querySelector('input[name="start_date"]');
+                const endDateInput = document.querySelector('input[name="end_date"]');
+
+                const params = new URLSearchParams();
+                if (searchInput && searchInput.value) params.append('search', searchInput.value);
+                if (typeSelect && typeSelect.value) params.append('type', typeSelect.value);
+                if (sortBySelect && sortBySelect.value) params.append('sort_by', sortBySelect.value);
+                if (startDateInput && startDateInput.value) params.append('start_date', startDateInput.value);
+                if (endDateInput && endDateInput.value) params.append('end_date', endDateInput.value);
+
+                // Redirect to the downloadable CSV stream route
+                const exportUrl = "{{ route('history.export') }}?" + params.toString();
+                window.location.href = exportUrl;
+            });
+        }
+    });
+</script>
 @endsection

@@ -41,6 +41,7 @@ Route::middleware('auth')->group(function () {
 
     // Riwayat Transaksi & Catatan Utang
     Route::get('/history-transaksi', [TransactionHistoryController::class, 'index'])->name('history.index');
+    Route::get('/history-transaksi/export', [TransactionHistoryController::class, 'export'])->name('history.export');
     Route::get('/catatan-utang', [DebtController::class, 'index'])->name('debts.index');
     Route::post('/catatan-utang/{debt}/bayar', [DebtController::class, 'payInstallment'])->name('debts.pay');
 
