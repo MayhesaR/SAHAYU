@@ -340,7 +340,7 @@
                                 <span class="material-symbols-outlined text-xl">hourglass_empty</span>
                             </div>
                             <p class="text-xs font-bold text-stone-800 dark:text-white">Belum ada aktivitas</p>
-                            <p class="text-[10px] text-stone-400 dark:text-white mt-1">Aktivitas baru akan muncul di sini.</p>
+                            <p class="text-[10px] text-stone-400 dark:text-white mt-1">Aktivitas baru akan muncul di sini</p>
                         </div>
                     @endforelse
                 </div>
