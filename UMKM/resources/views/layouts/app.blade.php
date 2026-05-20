@@ -1,9 +1,16 @@
 <!DOCTYPE html>
-<html lang="id" class="overflow-x-hidden max-w-full">
+<html lang="id" class="overflow-x-hidden max-w-full" x-data="{ darkMode: localStorage.getItem('theme') === 'dark' }" :class="{ 'dark': darkMode }" x-init="$watch('darkMode', val => localStorage.setItem('theme', val ? 'dark' : 'light'))">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>@yield('title', 'ArchitectLedger')</title>
+    <script>
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
     <!-- AlpineJS for responsive sidebar toggling -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
@@ -25,6 +32,14 @@
                 radial-gradient(at 100% 0%, rgba(11, 110, 79, 0.02) 0px, transparent 50%),
                 #fafbfa !important;
             background-attachment: fixed !important;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        html.dark body {
+            background: 
+                radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.03) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.01) 0px, transparent 50%),
+                #09090b !important;
         }
         
         h1, h2, h3, h4, h5, h6 { font-family: 'Manrope', sans-serif; }
@@ -38,6 +53,14 @@
             border: 1px solid rgba(255, 255, 255, 0.5) !important;
             box-shadow: 0 10px 30px -10px rgba(4, 120, 87, 0.04), 
                         inset 0 1px 1px rgba(255, 255, 255, 0.8) !important;
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        html.dark .glass-card {
+            background: rgba(24, 24, 27, 0.75) !important;
+            border: 1px solid rgba(63, 63, 70, 0.4) !important;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), 
+                        inset 0 1px 1px rgba(255, 255, 255, 0.03) !important;
         }
         
         .glass-card-dark {
@@ -95,7 +118,7 @@
     </style>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-stone-50 text-stone-800 antialiased selection:bg-emerald-500/20 selection:text-emerald-900 overflow-x-hidden max-w-full" x-data="{ sidebarOpen: false }">
+<body class="bg-stone-50 dark:bg-zinc-800 text-stone-800 dark:text-white antialiased selection:bg-emerald-500/20 selection:text-emerald-900 dark:selection:text-emerald-200 overflow-x-hidden max-w-full" x-data="{ sidebarOpen: false }">
 
     <!-- Mobile sidebar backdrop -->
     <div x-show="sidebarOpen" 

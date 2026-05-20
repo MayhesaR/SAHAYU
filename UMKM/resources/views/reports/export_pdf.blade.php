@@ -157,15 +157,21 @@
     </style>
 </head>
 <body>
-    <div class="header-container">
-        <h1 class="shop-name">{{ auth()->user()->company->name ?? 'SAHAYU UMKM' }}</h1>
-        <div class="report-title">Laporan Performa Bisnis (Accrual Basis)</div>
-        <div class="report-period">Periode Laporan: {{ $periodLabel }}</div>
+    <div class="header-container" style="min-height: 55px; width: 100%;">
+        @if(auth()->user()->company && auth()->user()->company->logo)
+            <img src="{{ public_path('storage/' . auth()->user()->company->logo) }}" style="float: left; max-height: 48px; max-width: 120px; margin-right: 15px; margin-bottom: 8px;">
+        @endif
+        <div style="float: left;">
+            <h1 class="shop-name">{{ auth()->user()->company->name ?? 'SAHAYU UMKM' }}</h1>
+            <div class="report-title">Laporan Performa Bisnis (Accrual Basis)</div>
+            <div class="report-period">Periode Laporan: {{ $periodLabel }}</div>
+        </div>
         
         <div class="print-date">
             Dicetak oleh: {{ auth()->user()->name }}<br>
             Waktu Cetak: {{ \Carbon\Carbon::now()->translatedFormat('d F Y, H:i') }}
         </div>
+        <div style="clear: both;"></div>
     </div>
 
     <!-- SECTION 1 (Ringkasan Finansial) -->
@@ -288,10 +294,7 @@
                     {{ $row['growth'] >= 0 ? '+' : '' }}{{ number_format($row['growth'], 1) }}%
                 </td>
                 <td class="text-center">
-                    <span class="badge {{
-                        $row['status'] === 'Exceeded' ? 'badge-success' :
-                        ($row['status'] === 'Near Target' ? 'badge-warning' : 'badge-danger')
-                    }}">
+                    <span class="badge {{ $row['status'] === 'Exceeded' ? 'badge-success' : ($row['status'] 'Near Target' 'badge-warning' 'badge-danger') }}">
                         {{ $row['status'] }}
                     </span>
                 </td>

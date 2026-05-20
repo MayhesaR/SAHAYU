@@ -15,27 +15,27 @@
 </div>
 </div>
 @if (session('success'))
-<div class="mb-6 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-100 px-4 py-3 text-sm font-medium">
+<div class="mb-6 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-100 px-4 py-3 text-sm font-medium">
 {{ session('success') }}
 </div>
 @endif
 @unless ($hasProductionData)
-<div class="mb-6 rounded-xl bg-amber-50 text-amber-800 border border-amber-100 px-4 py-3 text-sm font-medium">
+<div class="mb-6 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-800 border border-amber-100 px-4 py-3 text-sm font-medium">
 Belum ada data produksi selesai untuk filter yang dipilih. Ubah produk atau periode untuk melihat perhitungan HPP.
 </div>
 @endunless
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-<div class="rounded-xl bg-white p-4 border border-slate-100">
-<div class="text-xs uppercase tracking-wider text-slate-500">Batch Selesai</div>
-<div class="text-2xl font-extrabold text-slate-800 mt-1">{{ number_format($doneBatches, 0, ',', '.') }}</div>
+<div class="rounded-xl bg-white dark:bg-zinc-900 p-4 border border-slate-100 dark:border-zinc-800/60">
+<div class="text-xs uppercase tracking-wider text-slate-500 dark:text-white">Batch Selesai</div>
+<div class="text-2xl font-extrabold text-slate-800 dark:text-white mt-1">{{ number_format($doneBatches, 0, ',', '.') }}</div>
 </div>
-<div class="rounded-xl bg-white p-4 border border-slate-100">
-<div class="text-xs uppercase tracking-wider text-slate-500">Unit Diproduksi</div>
-<div class="text-2xl font-extrabold text-slate-800 mt-1">{{ number_format($producedUnits, 0, ',', '.') }}</div>
+<div class="rounded-xl bg-white dark:bg-zinc-900 p-4 border border-slate-100 dark:border-zinc-800/60">
+<div class="text-xs uppercase tracking-wider text-slate-500 dark:text-white">Unit Diproduksi</div>
+<div class="text-2xl font-extrabold text-slate-800 dark:text-white mt-1">{{ number_format($producedUnits, 0, ',', '.') }}</div>
 </div>
-<div class="rounded-xl bg-white p-4 border border-slate-100">
-<div class="text-xs uppercase tracking-wider text-slate-500">Reject Rate</div>
-<div class="text-2xl font-extrabold text-slate-800 mt-1">{{ number_format($rejectRate, 2, ',', '.') }}%</div>
+<div class="rounded-xl bg-white dark:bg-zinc-900 p-4 border border-slate-100 dark:border-zinc-800/60">
+<div class="text-xs uppercase tracking-wider text-slate-500 dark:text-white">Reject Rate</div>
+<div class="text-2xl font-extrabold text-slate-800 dark:text-white mt-1">{{ number_format($rejectRate, 2, ',', '.') }}%</div>
 </div>
 </div>
 <!-- Bento Grid Layout -->
@@ -48,8 +48,8 @@ Belum ada data produksi selesai untuk filter yang dipilih. Ubah produk atau peri
 <div class="flex justify-center mb-8">
 <!-- Custom CSS Pie Chart Placeholder -->
 <div class="relative w-48 h-48 rounded-full flex items-center justify-center" style="background: conic-gradient(#0b6e4f 0% {{ $materialStopPercent }}%, #4a6363 {{ $materialStopPercent }}% {{ $laborStopPercent }}%, #70371a {{ $laborStopPercent }}% 100%);">
-<div class="absolute inset-4 bg-white rounded-full flex flex-col items-center justify-center">
-<span class="text-xs font-bold text-slate-400">Total HPP</span>
+<div class="absolute inset-4 bg-white dark:bg-zinc-900 rounded-full flex flex-col items-center justify-center">
+<span class="text-xs font-bold text-slate-400 dark:text-white">Total HPP</span>
 <span class="text-2xl font-black text-primary">Rp {{ number_format($hppPerUnit, 0, ',', '.') }}</span>
 </div>
 </div>
@@ -147,21 +147,21 @@ Belum ada data produksi selesai untuk filter yang dipilih. Ubah produk atau peri
 <label class="text-xs font-bold text-on-surface-variant uppercase tracking-tighter">Volume Batch</label>
 <div class="relative">
 <input name="volume_batch" class="w-full bg-surface-container-lowest border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 text-on-surface font-semibold" type="number" value="{{ $volumeBatch }}"/>
-<span class="absolute right-4 top-3 text-slate-400 text-xs">Pcs</span>
+<span class="absolute right-4 top-3 text-slate-400 dark:text-white text-xs">Pcs</span>
 </div>
 </div>
 <div class="space-y-2">
 <label class="text-xs font-bold text-on-surface-variant uppercase tracking-tighter">Waste Factor</label>
 <div class="relative">
 <input name="waste_factor" class="w-full bg-surface-container-lowest border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 text-on-surface font-semibold" type="number" value="{{ $wasteFactor }}"/>
-<span class="absolute right-4 top-3 text-slate-400 text-xs">%</span>
+<span class="absolute right-4 top-3 text-slate-400 dark:text-white text-xs">%</span>
 </div>
 </div>
 <div class="space-y-2">
 <label class="text-xs font-bold text-on-surface-variant uppercase tracking-tighter">Durasi Produksi</label>
 <div class="relative">
 <input name="duration_hours" class="w-full bg-surface-container-lowest border-none rounded-lg py-3 px-4 focus:ring-2 focus:ring-primary/20 text-on-surface font-semibold" type="number" value="{{ $durationHours }}"/>
-<span class="absolute right-4 top-3 text-slate-400 text-xs">Jam</span>
+<span class="absolute right-4 top-3 text-slate-400 dark:text-white text-xs">Jam</span>
 </div>
 </div>
 </div>
@@ -184,17 +184,17 @@ Belum ada data produksi selesai untuk filter yang dipilih. Ubah produk atau peri
 <span class="material-symbols-outlined text-primary flex-shrink-0" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
 <h4 class="font-bold text-sm">Bahan Baku (Raw Materials)</h4>
 </div>
-<div class="w-full overflow-x-auto overflow-y-hidden border border-gray-100 rounded-lg mb-4" style="-webkit-overflow-scrolling: touch; display: block; clear: both; touch-action: pan-x pan-y;">
+<div class="w-full overflow-x-auto overflow-y-hidden border border-gray-100 dark:border-zinc-800/50 rounded-lg mb-4" style="-webkit-overflow-scrolling: touch; display: block; clear: both; touch-action: pan-x pan-y;">
 <table class="w-full text-left min-w-[800px]">
-<thead class="bg-slate-50/50">
+<thead class="bg-slate-50/50 dark:bg-zinc-800/30 dark:bg-transparent">
 <tr>
-<th class="px-2 py-3 text-[11px] whitespace-nowrap text-slate-400 uppercase tracking-wider font-bold">Item</th>
-<th class="px-2 py-3 text-[11px] whitespace-nowrap text-slate-400 uppercase tracking-wider font-bold">Kuantitas</th>
-<th class="px-2 py-3 text-[11px] whitespace-nowrap text-slate-400 uppercase tracking-wider font-bold">Harga Satuan</th>
-<th class="px-2 py-3 text-[11px] whitespace-nowrap text-slate-400 uppercase tracking-wider font-bold text-right">Subtotal</th>
+<th class="px-2 py-3 text-[11px] whitespace-nowrap text-slate-400 dark:text-white uppercase tracking-wider font-bold">Item</th>
+<th class="px-2 py-3 text-[11px] whitespace-nowrap text-slate-400 dark:text-white uppercase tracking-wider font-bold">Kuantitas</th>
+<th class="px-2 py-3 text-[11px] whitespace-nowrap text-slate-400 dark:text-white uppercase tracking-wider font-bold">Harga Satuan</th>
+<th class="px-2 py-3 text-[11px] whitespace-nowrap text-slate-400 dark:text-white uppercase tracking-wider font-bold text-right">Subtotal</th>
 </tr>
 </thead>
-<tbody class="divide-y divide-slate-50">
+<tbody class="divide-y divide-slate-50 dark:divide-zinc-800/40">
 @forelse ($materialBreakdown as $item)
 <tr class="hover:bg-primary/5 transition-colors group">
 <td class="px-2 py-3 text-[11px] whitespace-nowrap font-medium">{{ $item->name }}</td>
@@ -217,17 +217,17 @@ Belum ada data produksi selesai untuk filter yang dipilih. Ubah produk atau peri
 <span class="material-symbols-outlined text-secondary flex-shrink-0" style="font-variation-settings: 'FILL' 1;">groups</span>
 <h4 class="font-bold text-sm">Operasional &amp; Tenaga Kerja</h4>
 </div>
-<div class="w-full overflow-x-auto overflow-y-hidden border border-gray-100 rounded-lg mb-4" style="-webkit-overflow-scrolling: touch; display: block; clear: both; touch-action: pan-x pan-y;">
+<div class="w-full overflow-x-auto overflow-y-hidden border border-gray-100 dark:border-zinc-800/50 rounded-lg mb-4" style="-webkit-overflow-scrolling: touch; display: block; clear: both; touch-action: pan-x pan-y;">
 <table class="w-full text-left min-w-[800px]">
-<thead class="bg-slate-50/50">
+<thead class="bg-slate-50/50 dark:bg-zinc-800/30 dark:bg-transparent">
 <tr>
-<th class="px-2 py-3 text-[11px] whitespace-nowrap text-slate-400 uppercase tracking-wider font-bold">Kategori</th>
-<th class="px-2 py-3 text-[11px] whitespace-nowrap text-slate-400 uppercase tracking-wider font-bold">Keterangan</th>
-<th class="px-2 py-3 text-[11px] whitespace-nowrap text-slate-400 uppercase tracking-wider font-bold">Rate</th>
-<th class="px-2 py-3 text-[11px] whitespace-nowrap text-slate-400 uppercase tracking-wider font-bold text-right">Subtotal</th>
+<th class="px-2 py-3 text-[11px] whitespace-nowrap text-slate-400 dark:text-white uppercase tracking-wider font-bold">Kategori</th>
+<th class="px-2 py-3 text-[11px] whitespace-nowrap text-slate-400 dark:text-white uppercase tracking-wider font-bold">Keterangan</th>
+<th class="px-2 py-3 text-[11px] whitespace-nowrap text-slate-400 dark:text-white uppercase tracking-wider font-bold">Rate</th>
+<th class="px-2 py-3 text-[11px] whitespace-nowrap text-slate-400 dark:text-white uppercase tracking-wider font-bold text-right">Subtotal</th>
 </tr>
 </thead>
-<tbody class="divide-y divide-slate-50">
+<tbody class="divide-y divide-slate-50 dark:divide-zinc-800/40">
 @forelse ($overheadItems as $cost)
 <tr class="hover:bg-secondary/5 transition-colors">
 <td class="px-2 py-3 text-[11px] whitespace-nowrap font-medium">{{ $cost->name }}</td>
@@ -251,8 +251,8 @@ Belum ada data produksi selesai untuk filter yang dipilih. Ubah produk atau peri
 </div>
 </div>
 <!-- Final Total Section -->
-<div class="p-8 bg-slate-50 flex flex-col items-end gap-2">
-<div class="text-xs font-bold text-slate-400 uppercase">Estimasi Akhir HPP per Unit</div>
+<div class="p-8 bg-slate-50 dark:bg-zinc-800 flex flex-col items-end gap-2">
+<div class="text-xs font-bold text-slate-400 dark:text-white uppercase">Estimasi Akhir HPP per Unit</div>
 <div class="text-4xl font-black text-primary">Rp {{ number_format($simulatedHppPerUnit, 0, ',', '.') }}</div>
 <div class="text-[10px] text-tertiary font-bold bg-tertiary/10 px-2 py-1 rounded">Total HPP Batch: Rp {{ number_format($totalHpp, 0, ',', '.') }}</div>
 </div>

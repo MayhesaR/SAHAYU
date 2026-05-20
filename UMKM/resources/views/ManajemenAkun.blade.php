@@ -7,19 +7,19 @@
 
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div class="w-full">
-                <h2 class="text-lg sm:text-xl lg:text-2xl font-extrabold text-emerald-900 tracking-tight break-words">Manajemen Pengguna</h2>
+                <h2 class="text-lg sm:text-xl lg:text-2xl font-extrabold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250 tracking-tight break-words">Manajemen Pengguna</h2>
                 <p class="text-on-surface-variant font-body mt-1 max-w-xl text-sm sm:text-base">Kelola akun pegawai dan staf yang dapat mengakses sistem ini.</p>
             </div>
         </div>
 
         @if (session('success'))
-        <div class="rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-100 px-4 py-3 text-sm font-medium">
+        <div class="rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-100 px-4 py-3 text-sm font-medium">
             {{ session('success') }}
         </div>
         @endif
 
         @if ($errors->any())
-        <div class="rounded-xl bg-red-50 text-red-800 border border-red-100 px-4 py-3 text-sm font-medium space-y-1">
+        <div class="rounded-xl bg-red-50 dark:bg-red-950/40 text-red-800 dark:text-red-300 border border-red-100 px-4 py-3 text-sm font-medium space-y-1">
             @foreach ($errors->all() as $error)
                 <div>{{ $error }}</div>
             @endforeach
@@ -27,8 +27,8 @@
         @endif
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            <section class="lg:col-span-4 bg-surface-container-lowest rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300">
-                <div class="px-6 py-5 bg-surface-container-low border-b border-gray-100">
+            <section class="lg:col-span-4 bg-surface-container-lowest rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800/50 overflow-hidden hover:shadow-md transition-all duration-300">
+                <div class="px-6 py-5 bg-surface-container-low border-b border-gray-100 dark:border-zinc-800/50">
                     <h3 class="text-lg font-bold text-primary flex items-center">
                         <span class="material-symbols-outlined mr-2 text-primary flex-shrink-0">person_add</span> Tambah Pengguna
                     </h3>
@@ -67,22 +67,22 @@
                     </button>
                 </form>
                 @else
-                <div class="p-6 text-center text-slate-500">
+                <div class="p-6 text-center text-slate-500 dark:text-white">
                     <p class="text-sm font-semibold">Hanya admin yang dapat menambah pengguna baru.</p>
                 </div>
                 @endif
             </section>
 
-            <section class="lg:col-span-8 bg-surface-container-lowest rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300">
-                <div class="px-6 py-5 bg-surface-container-low border-b border-gray-100 flex items-center justify-between">
-                    <h3 class="text-lg font-bold text-emerald-900 flex items-center">
-                        <span class="material-symbols-outlined mr-2 text-emerald-600 flex-shrink-0">group</span> Daftar Pengguna
+            <section class="lg:col-span-8 bg-surface-container-lowest rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800/50 overflow-hidden hover:shadow-md transition-all duration-300">
+                <div class="px-6 py-5 bg-surface-container-low border-b border-gray-100 dark:border-zinc-800/50 flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250 flex items-center">
+                        <span class="material-symbols-outlined mr-2 text-emerald-600 dark:text-emerald-400 flex-shrink-0">group</span> Daftar Pengguna
                     </h3>
-                    <span class="text-xs font-semibold text-slate-500 uppercase tracking-widest">{{ $users->count() }} Akun</span>
+                    <span class="text-xs font-semibold text-slate-500 dark:text-white uppercase tracking-widest">{{ $users->count() }} Akun</span>
                 </div>
-                <div class="w-full overflow-x-auto overflow-y-hidden border border-gray-100 rounded-lg mb-4" style="-webkit-overflow-scrolling: touch; display: block; clear: both; touch-action: pan-x pan-y;">
+                <div class="w-full overflow-x-auto overflow-y-hidden border border-gray-100 dark:border-zinc-800/50 rounded-lg mb-4" style="-webkit-overflow-scrolling: touch; display: block; clear: both; touch-action: pan-x pan-y;">
                     <table class="min-w-[800px] w-full text-xs text-left whitespace-nowrap">
-                        <thead class="bg-slate-50 text-left text-slate-500 uppercase text-xs tracking-widest">
+                        <thead class="bg-slate-50 dark:bg-zinc-800 text-left text-slate-500 dark:text-white uppercase text-xs tracking-widest">
                             <tr>
                                 <th class="px-6 py-4">Nama Lengkap</th>
                                 <th class="px-6 py-4">Email</th>
@@ -92,14 +92,14 @@
                         </thead>
                         <tbody>
                             @foreach ($users as $u)
-                            <tr class="border-t border-slate-100 hover:bg-slate-50/70 transition-colors">
-                                <td class="px-6 py-4 font-semibold text-emerald-900">{{ $u->name }}</td>
-                                <td class="px-6 py-4 text-slate-700">{{ $u->email }}</td>
+                            <tr class="border-t border-slate-100 dark:border-zinc-800/60 hover:bg-slate-50/70 dark:hover:bg-zinc-800/70 transition-colors">
+                                <td class="px-6 py-4 font-semibold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250">{{ $u->name }}</td>
+                                <td class="px-6 py-4 text-slate-700 dark:text-zinc-50 dark:text-white">{{ $u->email }}</td>
                                 <td class="px-6 py-4">
                                     @if($u->isAdmin())
-                                        <span class="px-3 py-1 bg-amber-50 text-amber-700 text-xs font-bold rounded-full">ADMIN</span>
+                                        <span class="px-3 py-1 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 text-xs font-bold rounded-full">ADMIN</span>
                                     @else
-                                        <span class="px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full">STAFF</span>
+                                        <span class="px-3 py-1 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 text-xs font-bold rounded-full">STAFF</span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4">
@@ -108,13 +108,13 @@
                                         <form action="{{ route('accounts.destroy', $u) }}" method="POST" onsubmit="return confirm('Hapus akun ini secara permanen?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button class="px-4 py-2 rounded-lg text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 transition-colors flex items-center gap-1" type="submit">
+                                            <button class="px-4 py-2 rounded-lg text-xs font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/40 hover:bg-red-100 transition-colors flex items-center gap-1" type="submit">
                                                 <span class="material-symbols-outlined text-sm">delete</span>
                                                 <span>Hapus</span>
                                             </button>
                                         </form>
                                         @else
-                                        <span class="px-4 py-2 text-xs font-semibold text-slate-400">Anda</span>
+                                        <span class="px-4 py-2 text-xs font-semibold text-slate-400 dark:text-white">Anda</span>
                                         @endif
                                     </div>
                                 </td>

@@ -35,37 +35,37 @@
                     @if($activePeriod === 'mingguan')
                     <div class="relative w-full sm:w-auto">
                         <select name="week_number" onchange="this.form.submit()"
-                                class="w-full pl-3 pr-8 py-2 bg-surface-container-highest border-none rounded-lg text-sm font-semibold text-emerald-900 focus:ring-2 focus:ring-emerald-500/20 transition-all cursor-pointer appearance-none">
+                                class="w-full pl-3 pr-8 py-2 bg-surface-container-highest border-none rounded-lg text-sm font-semibold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250 focus:ring-2 focus:ring-emerald-500/20 transition-all cursor-pointer appearance-none">
                             @for($i = 1; $i <= 5; $i++)
                                 <option value="{{ $i }}" {{ $weekNumber == $i ? 'selected' : '' }}>Minggu {{ $i }}</option>
                             @endfor
                         </select>
-                        <span class="material-symbols-outlined text-sm text-slate-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">expand_more</span>
+                        <span class="material-symbols-outlined text-sm text-slate-400 dark:text-white absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">expand_more</span>
                     </div>
                     @endif
 
                     <!-- Month Picker -->
                     <div class="relative w-full sm:w-auto" title="Filter Bulan">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none z-10 text-slate-400">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none z-10 text-slate-400 dark:text-white">
                             <span class="material-symbols-outlined text-sm">calendar_month</span>
                         </span>
                         <input type="month"
                                name="specific_month"
                                value="{{ $specificMonth }}"
                                onchange="this.form.submit()"
-                               class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500 bg-surface-container-highest text-sm font-semibold text-emerald-900 transition-all cursor-pointer" />
+                               class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-zinc-700 rounded-md focus:ring-emerald-500 focus:border-emerald-500 bg-surface-container-highest text-sm font-semibold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250 transition-all cursor-pointer" />
                     </div>
 
                     <!-- Daily Date Picker -->
                     <div class="relative w-full sm:w-auto" title="Filter Tanggal Spesifik">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none z-10 text-slate-400">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none z-10 text-slate-400 dark:text-white">
                             <span class="material-symbols-outlined text-sm">calendar_today</span>
                         </span>
                         <input type="date"
                                name="filter_date"
                                value="{{ $filterDate }}"
                                onchange="this.form.submit()"
-                               class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500 bg-surface-container-highest text-sm font-semibold text-emerald-900 transition-all cursor-pointer" />
+                               class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-zinc-700 rounded-md focus:ring-emerald-500 focus:border-emerald-500 bg-surface-container-highest text-sm font-semibold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250 transition-all cursor-pointer" />
                     </div>
                     
                     <button type="submit"
@@ -80,20 +80,20 @@
 
         {{-- Active Period Label --}}
         <div class="flex flex-wrap items-center gap-3">
-            <div class="flex items-center gap-2 px-3 sm:px-4 py-2 bg-emerald-50 rounded-lg border border-emerald-200">
-                <span class="material-symbols-outlined text-sm text-emerald-600 hidden sm:inline">date_range</span>
-                <span class="text-xs sm:text-sm font-bold text-emerald-800 break-words">Menampilkan Laporan: {{ $periodLabel }}</span>
+            <div class="flex items-center gap-2 px-3 sm:px-4 py-2 bg-emerald-50 dark:bg-emerald-950/40 rounded-lg border border-emerald-200">
+                <span class="material-symbols-outlined text-sm text-emerald-600 dark:text-emerald-400 hidden sm:inline">date_range</span>
+                <span class="text-xs sm:text-sm font-bold text-emerald-800 dark:text-emerald-300 break-words">Menampilkan Laporan: {{ $periodLabel }}</span>
             </div>
             
             @if($filterDate)
             <a href="{{ route('reports.index') }}"
-               class="flex items-center gap-1.5 px-3 py-2 bg-rose-50 text-rose-600 border border-rose-200 rounded-lg text-xs font-bold hover:bg-rose-100 transition-all">
+               class="flex items-center gap-1.5 px-3 py-2 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-200 rounded-lg text-xs font-bold hover:bg-rose-100 transition-all">
                 <span class="material-symbols-outlined text-sm">close</span>
                 Hapus Filter Harian
             </a>
             @elseif($activePeriod !== 'bulanan')
             <a href="{{ route('reports.index') }}"
-               class="flex items-center gap-1.5 px-3 py-2 bg-slate-100 text-slate-600 rounded-lg text-xs font-bold hover:bg-slate-200 transition-all">
+               class="flex items-center gap-1.5 px-3 py-2 bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-white rounded-lg text-xs font-bold hover:bg-slate-200 dark:hover:bg-zinc-800 transition-all">
                 <span class="material-symbols-outlined text-sm">restart_alt</span>
                 Reset ke Bulan Ini
             </a>
@@ -103,67 +103,67 @@
 
     <!-- Bento Grid - Key Metrics -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
-        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 border-l-4 border-l-primary">
+        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800/50 hover:shadow-md transition-all duration-300 border-l-4 border-l-primary">
             <span class="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 mb-1">
                 <span>Nilai Barang Terjual</span>
                 <span class="relative inline-block group/tooltip">
-                    <button type="button" class="text-slate-400 hover:text-slate-600 transition-colors focus:outline-none flex items-center">
+                    <button type="button" class="text-slate-400 dark:text-white hover:text-slate-600 dark:hover:text-zinc-300 dark:hover:text-white transition-colors focus:outline-none flex items-center">
                         <span class="material-symbols-outlined text-[14px]">info</span>
                     </button>
-                    <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-900 text-white text-[10px] rounded-lg shadow-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 transition-opacity duration-200 z-50 text-center font-medium font-sans normal-case tracking-normal">
+                    <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-900 dark:bg-zinc-800 text-white text-[10px] rounded-lg shadow-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 transition-opacity duration-200 z-50 text-center font-medium font-sans normal-case tracking-normal">
                         Total omzet dari barang yang laku pada periode terpilih, baik tunai maupun utang. Tidak mencakup uang tagihan/cicilan masa lalu. Catatan: Angka ini adalah nilai performa barang, BUKAN jumlah uang fisik di laci kasir. Untuk melihat mutasi uang fisik, silakan cek menu Dashboard.
                         <span class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></span>
                     </span>
                 </span>
             </span>
-            <span class="text-[10px] text-slate-400 font-medium block mb-3">Total omzet dari barang yang laku pada periode terpilih, baik tunai maupun utang</span>
+            <span class="text-[10px] text-slate-400 dark:text-white font-medium block mb-3">Total omzet dari barang yang laku pada periode terpilih, baik tunai maupun utang</span>
             <div class="flex items-baseline gap-2">
                 <span class="text-2xl font-black text-on-surface">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</span>
             </div>
         </div>
-        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
+        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800/50 hover:shadow-md transition-all duration-300">
             <span class="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 mb-1">
                 <span>Margin Laba Penjualan</span>
                 <span class="relative inline-block group/tooltip">
-                    <button type="button" class="text-slate-400 hover:text-slate-600 transition-colors focus:outline-none flex items-center">
+                    <button type="button" class="text-slate-400 dark:text-white hover:text-slate-600 dark:hover:text-zinc-300 dark:hover:text-white transition-colors focus:outline-none flex items-center">
                         <span class="material-symbols-outlined text-[14px]">info</span>
                     </button>
-                    <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-900 text-white text-[10px] rounded-lg shadow-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 transition-opacity duration-200 z-50 text-center font-medium font-sans normal-case tracking-normal">
+                    <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-900 dark:bg-zinc-800 text-white text-[10px] rounded-lg shadow-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 transition-opacity duration-200 z-50 text-center font-medium font-sans normal-case tracking-normal">
                         Perkiraan keuntungan bersih dari performa bisnis pada periode terpilih. Catatan: Angka ini adalah nilai performa barang, BUKAN jumlah uang fisik di laci kasir. Untuk melihat mutasi uang fisik, silakan cek menu Dashboard.
                         <span class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></span>
                     </span>
                 </span>
             </span>
-            <span class="text-[10px] text-slate-400 font-medium block mb-3">Perkiraan keuntungan bersih dari performa hari ini</span>
+            <span class="text-[10px] text-slate-400 dark:text-white font-medium block mb-3">Perkiraan keuntungan bersih dari performa hari ini</span>
             <div class="flex items-baseline gap-2">
                 <span class="text-2xl font-black text-on-surface">Rp {{ number_format($netProfit, 0, ',', '.') }}</span>
             </div>
         </div>
-        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
+        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800/50 hover:shadow-md transition-all duration-300">
             <span class="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 mb-1">
                 <span>Total Modal (HPP) & Operasional</span>
                 <span class="relative inline-block group/tooltip">
-                    <button type="button" class="text-slate-400 hover:text-slate-600 transition-colors focus:outline-none flex items-center">
+                    <button type="button" class="text-slate-400 dark:text-white hover:text-slate-600 dark:hover:text-zinc-300 dark:hover:text-white transition-colors focus:outline-none flex items-center">
                         <span class="material-symbols-outlined text-[14px]">info</span>
                     </button>
-                    <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-900 text-white text-[10px] rounded-lg shadow-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 transition-opacity duration-200 z-50 text-center font-medium font-sans normal-case tracking-normal">
+                    <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-900 dark:bg-zinc-800 text-white text-[10px] rounded-lg shadow-lg opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 transition-opacity duration-200 z-50 text-center font-medium font-sans normal-case tracking-normal">
                         Nilai modal dari barang yang laku ditambah total biaya operasional selama periode terpilih. Catatan: Angka ini adalah nilai performa barang, BUKAN jumlah uang fisik di laci kasir. Untuk melihat mutasi uang fisik, silakan cek menu Dashboard.
                         <span class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></span>
                     </span>
                 </span>
             </span>
-            <span class="text-[10px] text-slate-400 font-medium block mb-3">Nilai modal dari barang yang laku ditambah biaya operasional harian</span>
+            <span class="text-[10px] text-slate-400 dark:text-white font-medium block mb-3">Nilai modal dari barang yang laku ditambah biaya operasional harian</span>
             <div class="flex items-baseline gap-2">
                 <span class="text-2xl font-black text-on-surface">Rp {{ number_format($totalExpense, 0, ',', '.') }}</span>
             </div>
         </div>
-        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
+        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800/50 hover:shadow-md transition-all duration-300">
             <span class="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest block mb-4">Margin Laba</span>
             <div class="flex items-baseline gap-2">
                 <span class="text-2xl font-black text-on-surface">{{ number_format($profitMargin, 1) }}%</span>
             </div>
         </div>
-        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 {{ $rejectRate > 5 ? 'border-l-4 border-l-error' : '' }}">
+        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800/50 hover:shadow-md transition-all duration-300 {{ $rejectRate > 5 ? 'border-l-4 border-l-error' : '' }}">
             <span class="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest block mb-4">Reject Rate</span>
             <div class="flex items-baseline gap-2">
                 <span class="text-2xl font-black {{ $rejectRate > 5 ? 'text-error' : 'text-on-surface' }}">{{ number_format($rejectRate, 1) }}%</span>
@@ -177,12 +177,12 @@
     <!-- Analysis Charts Section -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
         <!-- Growth Chart -->
-        <div class="lg:col-span-2 bg-surface-container-lowest p-8 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
+        <div class="lg:col-span-2 bg-surface-container-lowest p-8 rounded-xl border border-gray-100 dark:border-zinc-800/50 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
                 <h3 class="text-xl font-bold text-on-surface">Tren Penjualan vs Modal Keluar ({{ ucfirst($activePeriod) }})</h3>
                 <div class="flex items-center gap-2">
                     <span class="w-3 h-3 rounded-full bg-primary flex-shrink-0"></span>
-                    <span class="text-[10px] font-bold text-slate-400 uppercase">Penjualan (Rp)</span>
+                    <span class="text-[10px] font-bold text-slate-400 dark:text-white uppercase">Penjualan (Rp)</span>
                 </div>
             </div>
 
@@ -194,7 +194,7 @@
         <!-- Right Column (Expense & Products) -->
         <div class="space-y-8">
             <!-- Expense Breakdown Chart -->
-            <div class="bg-surface-container-lowest p-8 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300">
+            <div class="bg-surface-container-lowest p-8 rounded-xl border border-gray-100 dark:border-zinc-800/50 shadow-sm hover:shadow-md transition-all duration-300">
                 <h3 class="text-xl font-bold text-on-surface mb-6">Rincian Biaya (HPP)</h3>
                 <div class="relative w-full h-[300px] md:h-[450px]">
                     <canvas id="expenseChart"></canvas>
@@ -202,7 +202,7 @@
             </div>
 
             <!-- Popular Products -->
-            <div class="bg-surface-container-lowest p-8 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300">
+            <div class="bg-surface-container-lowest p-8 rounded-xl border border-gray-100 dark:border-zinc-800/50 shadow-sm hover:shadow-md transition-all duration-300">
                 <h3 class="text-xl font-bold text-on-surface mb-8">Produk Terpopuler</h3>
                 <div class="space-y-6">
                     @forelse ($popularProducts as $product)
@@ -216,7 +216,7 @@
                                 <p class="text-[10px] text-on-surface-variant truncate">{{ number_format($product->total_qty, 0, ',', '.') }} Unit Terjual</p>
                             </div>
                         </div>
-                        <span class="text-xs font-black text-emerald-700 flex-shrink-0">Rp {{ number_format($product->total_revenue, 0, ',', '.') }}</span>
+                        <span class="text-xs font-black text-emerald-700 dark:text-emerald-400 flex-shrink-0">Rp {{ number_format($product->total_revenue, 0, ',', '.') }}</span>
                     </div>
                     @empty
                     <p class="text-sm text-on-surface-variant">Belum ada data produk terpopuler.</p>
@@ -233,14 +233,14 @@
     </div>
 
     <!-- Detailed Table Section -->
-    <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-gray-100 overflow-hidden w-full">
+    <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800/50 overflow-hidden w-full">
         <div class="px-4 sm:px-8 py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between bg-surface-container-high/50 border-b border-outline-variant/5 gap-4">
             <h3 class="text-lg font-bold text-on-surface">Rincian Performa ({{ ucfirst($activePeriod) }})</h3>
             <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                 <a href="{{ route('reports.export-pdf', ['view_mode' => $activePeriod, 'specific_month' => $specificMonth, 'week_number' => $weekNumber, 'filter_date' => $filterDate]) }}" target="_blank" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-surface-container-highest text-on-surface rounded-lg text-sm font-semibold hover:bg-surface-dim transition-all border border-outline-variant/20" title="Ekspor ke PDF">
                     <span class="material-symbols-outlined text-sm flex-shrink-0">picture_as_pdf</span> PDF
                 </a>
-                <a href="{{ route('reports.export-sheets', ['view_mode' => $activePeriod, 'specific_month' => $specificMonth, 'week_number' => $weekNumber, 'filter_date' => $filterDate]) }}" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-700 rounded-lg text-sm font-semibold hover:bg-emerald-100 transition-all border border-emerald-200" title="Unduh Excel (XLSX)">
+                <a href="{{ route('reports.export-sheets', ['view_mode' => $activePeriod, 'specific_month' => $specificMonth, 'week_number' => $weekNumber, 'filter_date' => $filterDate]) }}" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 rounded-lg text-sm font-semibold hover:bg-emerald-100 transition-all border border-emerald-200" title="Unduh Excel (XLSX)">
                     <span class="material-symbols-outlined text-sm flex-shrink-0">table</span> Spreadsheet
                 </a>
                 <a href="{{ route('reports.export-csv', ['view_mode' => $activePeriod, 'specific_month' => $specificMonth, 'week_number' => $weekNumber, 'filter_date' => $filterDate]) }}" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm shadow-sm transition-all" 
@@ -250,7 +250,7 @@
                 </a>
             </div>
         </div>
-        <div class="w-full overflow-x-auto overflow-y-hidden border border-gray-100 rounded-lg mb-4" style="-webkit-overflow-scrolling: touch; display: block; clear: both; touch-action: pan-x pan-y;">
+        <div class="w-full overflow-x-auto overflow-y-hidden border border-gray-100 dark:border-zinc-800/50 rounded-lg mb-4" style="-webkit-overflow-scrolling: touch; display: block; clear: both; touch-action: pan-x pan-y;">
             <table class="min-w-[800px] w-full text-left whitespace-nowrap">
                 <thead class="sticky top-0 z-10">
                     <tr class="bg-surface-container-high text-on-surface-variant text-[11px] md:text-xs font-bold uppercase tracking-widest whitespace-nowrap">
@@ -266,15 +266,12 @@
                     <tr class="{{ $index % 2 === 1 ? 'bg-surface-container-low/30' : '' }} hover:bg-primary/5 transition-colors group border-b border-outline-variant/5 whitespace-nowrap">
                         <td class="px-2 sm:px-8 py-3 sm:py-4 font-semibold">{{ $row['label'] }}</td>
                         <td class="px-2 sm:px-8 py-3 sm:py-4">Rp {{ number_format($row['target'], 0, ',', '.') }}</td>
-                        <td class="px-2 sm:px-8 py-3 sm:py-4 font-bold text-emerald-800">Rp {{ number_format($row['realization'], 0, ',', '.') }}</td>
-                        <td class="px-2 sm:px-8 py-3 sm:py-4 {{ $row['growth'] < 0 ? 'text-error' : 'text-emerald-600' }} font-bold">
+                        <td class="px-2 sm:px-8 py-3 sm:py-4 font-bold text-emerald-800 dark:text-emerald-300">Rp {{ number_format($row['realization'], 0, ',', '.') }}</td>
+                        <td class="px-2 sm:px-8 py-3 sm:py-4 {{ $row['growth'] < 0 ? 'text-error' : 'text-emerald-600 dark:text-emerald-400' }} font-bold">
                             {{ $row['growth'] >= 0 ? '+' : '' }}{{ number_format($row['growth'], 1) }}%
                         </td>
                         <td class="px-2 sm:px-8 py-3 sm:py-4">
-                            <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest {{
-                                $row['status'] === 'Exceeded' ? 'bg-emerald-50 text-emerald-700' :
-                                ($row['status'] === 'Near Target' ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700')
-                            }}">
+                            <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest {{ $row['status'] === 'Exceeded' ? 'bg-emerald-50 text-emerald-700' : ($row['status'] 'Near Target' 'bg-amber-50 text-amber-700' 'bg-red-50 text-red-700') }}">
                                 {{ $row['status'] }}
                             </span>
                         </td>
@@ -350,7 +347,7 @@
         } else {
             // Show placeholder if no data
             const container = document.getElementById('expenseChart').parentElement;
-            container.innerHTML = '<div class="flex items-center justify-center h-full text-sm text-slate-400">Belum ada data biaya.</div>';
+            container.innerHTML = '<div class="flex items-center justify-center h-full text-sm text-slate-400 dark:text-white">Belum ada data biaya.</div>';
         }
 
         // ============================================

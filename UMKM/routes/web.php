@@ -18,6 +18,7 @@ use App\Http\Controllers\TransactionHistoryController;
 use App\Http\Controllers\DebtController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\SettingsController;
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class, 'login'])->middleware('guest');
@@ -113,6 +114,7 @@ Route::middleware('auth')->group(function () {
         // Produk Jadi (Admin CRUD)
         Route::post('/products', [ProductController::class, 'store'])->name('products.store');
         Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
+        Route::post('/products/{product}/add-stock', [ProductController::class, 'addStock'])->name('products.add-stock');
         Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
 
         // Customer Delete (Admin Only)
@@ -133,4 +135,10 @@ Route::middleware('auth')->group(function () {
         Route::put('/akun/{user}', [AccountController::class, 'update'])->name('accounts.update');
         Route::delete('/akun/{user}', [AccountController::class, 'destroy'])->name('accounts.destroy');
     });
+
+    // Settings
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
+    Route::post('/settings/company', [SettingsController::class, 'updateCompany'])->name('settings.company');
+    Route::post('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.password');
+    Route::post('/settings/printer', [SettingsController::class, 'updatePrinter'])->name('settings.printer');
 });

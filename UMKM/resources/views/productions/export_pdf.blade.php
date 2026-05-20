@@ -14,9 +14,15 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>UMKM PANCASILA</h1>
-        <p>Riwayat Batch Produksi</p>
+    <div class="header" style="text-align: left; min-height: 55px;">
+        @if(auth()->user()->company && auth()->user()->company->logo)
+            <img src="{{ public_path('storage/' . auth()->user()->company->logo) }}" style="float: left; max-height: 48px; max-width: 120px; margin-right: 15px; margin-bottom: 5px;">
+        @endif
+        <div style="float: left;">
+            <h1 style="margin: 0; color: #0f766e; font-size: 20px; text-transform: uppercase;">{{ auth()->user()->company->name ?? 'SAHAYU UMKM' }}</h1>
+            <p style="margin: 3px 0 0; color: #666; font-size: 11px;">Riwayat Batch Produksi</p>
+        </div>
+        <div style="clear: both;"></div>
     </div>
 
     <table>

@@ -232,8 +232,8 @@ class CustomerController extends Controller
 
     public function destroy(Customer $customer): RedirectResponse
     {
-        if (auth()->user()->role !== 'admin') {
-            abort(403, 'Hanya Admin yang diizinkan untuk menghapus data pelanggan.');
+        if (!in_array(auth()->user()->role, ['admin', 'staff'])) {
+            abort(403, 'Hanya Admin dan Staff yang diizinkan untuk menghapus data pelanggan.');
         }
 
         // Scope Check

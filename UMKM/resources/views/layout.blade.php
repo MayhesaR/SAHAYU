@@ -4,10 +4,10 @@
     <title>SAHAYU</title>
     @vite('resources/css/app.css')
 </head>
-<body class="flex bg-gray-100">
+<body class="flex bg-gray-100 dark:bg-zinc-800">
 
     <!-- Sidebar -->
-    <aside class="w-64 bg-white shadow-lg h-screen">
+    <aside class="w-64 bg-white dark:bg-zinc-900 shadow-lg h-screen">
         <div class="p-4 font-bold">SAHAYU</div>
         <nav class="space-y-2">
             <a href="{{ route('dashboard') }}" class="block p-2">Dashboard</a>

@@ -27,7 +27,7 @@ class ProductController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        if (auth()->user()->role !== 'admin') {
+        if (!in_array(auth()->user()->role, ['admin', 'staff'])) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -64,7 +64,7 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product): RedirectResponse
     {
-        if (auth()->user()->role !== 'admin') {
+        if (!in_array(auth()->user()->role, ['admin', 'staff'])) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -102,9 +102,24 @@ class ProductController extends Controller
         return redirect()->route('products.index')->with('success', 'Produk berhasil diperbarui.');
     }
 
+    public function addStock(Request $request, Product $product): RedirectResponse
+    {
+        if (!in_array(auth()->user()->role, ['admin', 'staff'])) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $validated = $request->validate([
+            'amount' => ['required', 'integer', 'min:1'],
+        ]);
+
+        $product->increment('stock', $validated['amount']);
+
+        return redirect()->route('products.index')->with('success', "Stok produk {$product->name} berhasil ditambah sebanyak {$validated['amount']} pcs.");
+    }
+
     public function destroy(Product $product): RedirectResponse
     {
-        if (auth()->user()->role !== 'admin') {
+        if (!in_array(auth()->user()->role, ['admin', 'staff'])) {
             abort(403, 'Unauthorized action.');
         }
 

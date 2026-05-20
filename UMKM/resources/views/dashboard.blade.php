@@ -3,17 +3,17 @@
 @section('content')
 
 <div class="grid grid-cols-3 gap-4 mb-6">
-    <div class="bg-white p-4 rounded shadow">
+    <div class="bg-white dark:bg-zinc-900 p-4 rounded shadow">
         <h4>Total Penjualan</h4>
         <p class="text-xl font-bold">Rp {{ number_format($totalSales) }}</p>
     </div>
 
-    <div class="bg-white p-4 rounded shadow">
+    <div class="bg-white dark:bg-zinc-900 p-4 rounded shadow">
         <h4>Total Produksi</h4>
         <p class="text-xl font-bold">{{ $totalProduction }} Unit</p>
     </div>
 
-    <div class="bg-white p-4 rounded shadow">
+    <div class="bg-white dark:bg-zinc-900 p-4 rounded shadow">
         <h4>Stok Aman</h4>
         <p class="text-xl font-bold">{{ $lowStock }} Warning</p>
     </div>

@@ -112,7 +112,7 @@
                     </div>
                 </div>
                 <div class="pt-4">
-                    <button class="w-full bg-[#0b6e4f] text-white py-4 px-6 rounded-xl font-black tracking-wide shadow-lg shadow-emerald-900/30 hover:bg-[#09523b] hover:shadow-xl active:scale-[0.98] transition-all flex items-center justify-center space-x-2" type="submit">
+                    <button class="w-full bg-[#0b6e4f] dark:bg-emerald-600 text-white py-4 px-6 rounded-xl font-black tracking-wide shadow-lg shadow-emerald-900/30 hover:bg-[#09523b] hover:shadow-xl active:scale-[0.98] transition-all flex items-center justify-center space-x-2" type="submit">
                         <span>Register Now</span>
                         <span class="material-symbols-outlined text-lg">app_registration</span>
                     </button>

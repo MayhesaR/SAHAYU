@@ -53,30 +53,30 @@
     <!-- Top Statistics Dashboard Row -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <!-- Stats Card 1: Omset Hari Ini -->
-        <div class="p-4 bg-white border border-stone-200/60 rounded-[1.25rem] shadow-sm flex items-center justify-between">
+        <div class="p-4 bg-white border border-stone-200/60 dark:border-zinc-800/80 rounded-[1.25rem] shadow-sm flex items-center justify-between">
             <div class="space-y-1">
-                <p class="text-[10px] font-bold uppercase tracking-wider text-stone-400">Omset Hari Ini</p>
-                <p class="text-lg font-extrabold text-stone-850">Rp {{ number_format($todayRevenue, 0, ',', '.') }}</p>
+                <p class="text-[10px] font-bold uppercase tracking-wider text-stone-400 dark:text-zinc-300">Omset Hari Ini</p>
+                <p class="text-lg font-extrabold text-stone-850 dark:text-white">Rp {{ number_format($todayRevenue, 0, ',', '.') }}</p>
             </div>
-            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-[#0b6e4f] flex items-center justify-center">
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-[#0b6e4f] dark:text-emerald-400 flex items-center justify-center">
                 <span class="material-symbols-outlined text-xl">payments</span>
             </div>
         </div>
         <!-- Stats Card 2: Total Terjual -->
-        <div class="p-4 bg-white border border-stone-200/60 rounded-[1.25rem] shadow-sm flex items-center justify-between">
+        <div class="p-4 bg-white border border-stone-200/60 dark:border-zinc-800/80 rounded-[1.25rem] shadow-sm flex items-center justify-between">
             <div class="space-y-1">
-                <p class="text-[10px] font-bold uppercase tracking-wider text-stone-400">Total Terjual</p>
-                <p class="text-lg font-extrabold text-stone-850">{{ number_format($todayUnits, 0, ',', '.') }} Pcs</p>
+                <p class="text-[10px] font-bold uppercase tracking-wider text-stone-400 dark:text-zinc-300">Total Terjual</p>
+                <p class="text-lg font-extrabold text-stone-850 dark:text-white">{{ number_format($todayUnits, 0, ',', '.') }} Pcs</p>
             </div>
-            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-[#0b6e4f] flex items-center justify-center">
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-[#0b6e4f] dark:text-emerald-400 flex items-center justify-center">
                 <span class="material-symbols-outlined text-xl">shopping_bag</span>
             </div>
         </div>
         <!-- Stats Card 3: Total Transaksi -->
-        <div class="p-4 bg-white border border-stone-200/60 rounded-[1.25rem] shadow-sm flex items-center justify-between">
+        <div class="p-4 bg-white border border-stone-200/60 dark:border-zinc-800/80 rounded-[1.25rem] shadow-sm flex items-center justify-between">
             <div class="space-y-1">
-                <p class="text-[10px] font-bold uppercase tracking-wider text-stone-400">Total Transaksi</p>
-                <p class="text-lg font-extrabold text-stone-850">{{ number_format($todayTransactions, 0, ',', '.') }} Nota</p>
+                <p class="text-[10px] font-bold uppercase tracking-wider text-stone-400 dark:text-zinc-300">Total Transaksi</p>
+                <p class="text-lg font-extrabold text-stone-850 dark:text-white">{{ number_format($todayTransactions, 0, ',', '.') }} Nota</p>
             </div>
             <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center">
                 <span class="material-symbols-outlined text-xl">assignment</span>
@@ -88,18 +88,18 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         <!-- LEFT: Product list and selection panel (7 Columns) -->
-        <div class="lg:col-span-7 bg-white p-5 md:p-6 rounded-[1.5rem] shadow-sm border border-stone-200/60 space-y-5">
+        <div class="lg:col-span-7 bg-white p-5 md:p-6 rounded-[1.5rem] shadow-sm border border-stone-200/60 dark:border-zinc-800/80 space-y-5">
             
             <!-- Header Section -->
-            <div class="flex justify-between items-center pb-4 border-b border-stone-200/60">
+            <div class="flex justify-between items-center pb-4 border-b border-stone-200/60 dark:border-zinc-800/80">
                 <div>
-                    <h2 class="text-lg font-bold text-stone-850 tracking-tight">Kasir SAHAYU</h2>
-                    <p class="text-xs font-semibold uppercase tracking-wider text-stone-400 mt-0.5">Registrasi Penjualan & Tagihan</p>
+                    <h2 class="text-lg font-bold text-stone-850 dark:text-white tracking-tight">Kasir SAHAYU</h2>
+                    <p class="text-xs font-semibold uppercase tracking-wider text-stone-400 dark:text-zinc-300 mt-0.5">Registrasi Penjualan & Tagihan</p>
                 </div>
                 <div>
                     <button @click="isNewCustomerModalOpen = true" 
                             type="button" 
-                            class="px-4 py-2 bg-emerald-50 text-[#0b6e4f] border border-emerald-100 hover:bg-[#0b6e4f]/10 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-sm cursor-pointer">
+                            class="px-4 py-2 bg-emerald-50 text-[#0b6e4f] dark:text-emerald-400 border border-emerald-100 hover:bg-[#0b6e4f]/10 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-sm cursor-pointer">
                         <span class="material-symbols-outlined text-[16px]">person_add</span>
                         <span>Pelanggan Baru</span>
                     </button>
@@ -116,8 +116,8 @@
                 <!-- 1. Product Grid & Filters -->
                 <div class="space-y-3">
                     <div class="flex justify-between items-center">
-                        <label class="block text-[10px] font-bold uppercase tracking-widest text-stone-400">Pilih Produk Jadi (Sentuh Kartu)</label>
-                        <span x-show="selectedProductId" class="text-[9px] font-black uppercase tracking-wider text-[#0b6e4f] bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100" x-cloak x-transition>
+                        <label class="block text-[10px] font-bold uppercase tracking-widest text-stone-400 dark:text-zinc-300">Pilih Produk Jadi (Sentuh Kartu)</label>
+                        <span x-show="selectedProductId" class="text-[9px] font-black uppercase tracking-wider text-[#0b6e4f] dark:text-emerald-400 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100" x-cloak x-transition>
                             Terpilih
                         </span>
                     </div>
@@ -128,14 +128,14 @@
                         <div class="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full sm:max-w-[65%] custom-scrollbar scroll-smooth whitespace-nowrap">
                             <button type="button" 
                                     @click="selectedCategory = 'all'"
-                                    :class="selectedCategory === 'all' ? 'bg-[#0b6e4f] text-white border-[#0b6e4f] shadow-sm' : 'bg-stone-50 text-stone-500 hover:bg-stone-100/50 border-stone-200/60'"
+                                    :class="selectedCategory === 'all' ? 'bg-[#0b6e4f] dark:bg-emerald-600 text-white border-[#0b6e4f] dark:border-emerald-500 shadow-sm' : 'bg-stone-50 dark:bg-zinc-800 text-stone-500 dark:text-zinc-100 hover:bg-stone-100/50 dark:hover:bg-zinc-800/50 border-stone-200/60 dark:border-zinc-800/80'"
                                     class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all border select-none cursor-pointer">
                                 Semua
                             </button>
                             @foreach($categories as $cat)
                                 <button type="button" 
                                         @click="selectedCategory = '{{ $cat->id }}'"
-                                        :class="selectedCategory === '{{ $cat->id }}' ? 'bg-[#0b6e4f] text-white border-[#0b6e4f] shadow-sm' : 'bg-stone-50 text-stone-500 hover:bg-stone-100/50 border-stone-200/60'"
+                                        :class="selectedCategory === '{{ $cat->id }}' ? 'bg-[#0b6e4f] dark:bg-emerald-600 text-white border-[#0b6e4f] dark:border-emerald-500 shadow-sm' : 'bg-stone-50 dark:bg-zinc-800 text-stone-500 dark:text-zinc-100 hover:bg-stone-100/50 dark:hover:bg-zinc-800/50 border-stone-200/60 dark:border-zinc-800/80'"
                                         class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all border select-none cursor-pointer">
                                     {{ $cat->name }}
                                 </button>
@@ -144,13 +144,13 @@
                         
                         <!-- Mini Search Box inside POS -->
                         <div class="relative w-full sm:w-[32%]">
-                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-stone-400">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-stone-400 dark:text-zinc-300">
                                 <span class="material-symbols-outlined text-[16px]">search</span>
                             </span>
                             <input type="text" 
                                    x-model="searchQuery" 
                                    placeholder="Cari produk..." 
-                                   class="w-full pl-9 pr-3 py-1.5 bg-stone-50 border border-stone-200/60 rounded-xl text-xs font-semibold focus:bg-white focus:border-[#0b6e4f] focus:ring-4 focus:ring-[#0b6e4f]/10 transition-all outline-none text-stone-850 placeholder-stone-400" />
+                                   class="w-full pl-9 pr-3 py-1.5 bg-stone-50 dark:bg-zinc-800 border border-stone-200/60 dark:border-zinc-800/80 rounded-xl text-xs font-semibold focus:bg-white focus:border-[#0b6e4f] dark:focus:border-emerald-500 focus:ring-4 focus:ring-[#0b6e4f]/10 dark:focus:ring-emerald-500/10 transition-all outline-none text-stone-850 dark:text-white placeholder-stone-400" />
                         </div>
                     </div>
 
@@ -166,15 +166,15 @@
                                 @endif
                                 x-show="(selectedCategory === 'all' || selectedCategory === '{{ $product->category_id }}') && '{{ strtolower($product->name) }}'.includes(searchQuery.toLowerCase())"
                                 :class="{
-                                    'border-[#0b6e4f] bg-emerald-50/10 ring-2 ring-[#0b6e4f]/20': selectedProductId == '{{ $product->id }}',
-                                    'border-stone-200/60 bg-white hover:border-stone-300 hover:shadow-sm': selectedProductId != '{{ $product->id }}' && !{{ $isOutOfStock ? 'true' : 'false' }},
-                                    'opacity-40 grayscale bg-stone-50 cursor-not-allowed': {{ $isOutOfStock ? 'true' : 'false' }}
+                                    'border-[#0b6e4f] dark:border-emerald-500 bg-emerald-50/10 ring-2 ring-[#0b6e4f]/20 dark:ring-emerald-500/10': selectedProductId == '{{ $product->id }}',
+                                    'border-stone-200/60 dark:border-zinc-800/80 bg-white hover:border-stone-300 hover:shadow-sm': selectedProductId != '{{ $product->id }}' && !{{ $isOutOfStock ? 'true' : 'false' }},
+                                    'opacity-40 grayscale bg-stone-50 dark:bg-zinc-800 cursor-not-allowed': {{ $isOutOfStock ? 'true' : 'false' }}
                                 }"
                                 class="relative rounded-xl border p-2.5 flex flex-col justify-between h-36 cursor-pointer transition-all duration-300 overflow-hidden select-none">
                                 
                                 <!-- Selection indicator dot/icon -->
                                 <div x-show="selectedProductId == '{{ $product->id }}'" 
-                                     class="absolute top-2 left-2 z-20 bg-[#0b6e4f] text-white w-5 h-5 rounded-full flex items-center justify-center shadow-md"
+                                     class="absolute top-2 left-2 z-20 bg-[#0b6e4f] dark:bg-emerald-600 text-white w-5 h-5 rounded-full flex items-center justify-center shadow-md"
                                      x-cloak x-transition>
                                     <span class="material-symbols-outlined text-[12px] font-bold">check</span>
                                 </div>
@@ -187,11 +187,11 @@
                                 @endif
 
                                 <!-- Product Image / Placeholder Initials -->
-                                <div class="w-full h-20 rounded-lg overflow-hidden bg-stone-50 relative border border-stone-200/40 flex items-center justify-center">
+                                <div class="w-full h-20 rounded-lg overflow-hidden bg-stone-50 dark:bg-zinc-800 relative border border-stone-200/40 dark:border-zinc-800/40 flex items-center justify-center">
                                     @if($product->image)
                                         <img src="{{ asset('storage/' . $product->image) }}" class="w-full h-full object-cover" alt="{{ $product->name }}">
                                     @else
-                                        <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-emerald-50 to-teal-50 text-[#0b6e4f] font-black text-base">
+                                        <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-emerald-50 to-teal-50 text-[#0b6e4f] dark:text-emerald-400 font-black text-base">
                                             {{ strtoupper(substr($product->name, 0, 2)) }}
                                         </div>
                                     @endif
@@ -204,8 +204,8 @@
 
                                 <!-- Title and price -->
                                 <div class="mt-1 space-y-0.5">
-                                    <p class="text-[11px] font-bold text-stone-800 truncate">{{ $product->name }}</p>
-                                    <p class="text-[10px] font-bold text-[#0b6e4f]">Rp {{ number_format($product->selling_price, 0, ',', '.') }}</p>
+                                    <p class="text-[11px] font-bold text-stone-800 dark:text-white truncate">{{ $product->name }}</p>
+                                    <p class="text-[10px] font-bold text-[#0b6e4f] dark:text-emerald-400">Rp {{ number_format($product->selling_price, 0, ',', '.') }}</p>
                                 </div>
                             </div>
                         @endforeach
@@ -213,20 +213,20 @@
                 </div>
 
                 <!-- 2 & 3. Quantity Stepper & Pilih Pelanggan (Side-by-Side to reduce spacing) -->
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 pt-4 border-t border-stone-100">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 pt-4 border-t border-stone-100 dark:border-zinc-800/60">
                     
                     <!-- Stepper (5 Columns) -->
                     <div class="md:col-span-5 space-y-2">
                         <div class="flex justify-between items-center">
-                            <label class="block text-xs font-bold uppercase tracking-wider text-stone-600">Jumlah Unit</label>
-                            <span x-show="selectedProductId && selectedProductStock > 0" class="text-[10px] font-semibold text-stone-400" x-cloak>
-                                Sedia: <span class="text-[#0b6e4f] font-bold" x-text="selectedProductStock"></span>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-zinc-300">Jumlah Unit</label>
+                            <span x-show="selectedProductId && selectedProductStock > 0" class="text-[10px] font-semibold text-stone-400 dark:text-zinc-300" x-cloak>
+                                Sedia: <span class="text-[#0b6e4f] dark:text-emerald-400 font-bold" x-text="selectedProductStock"></span>
                             </span>
                         </div>
-                        <div class="flex items-center gap-3 bg-stone-50/50 p-1.5 rounded-xl border border-stone-200/60 w-full h-[46px]">
+                        <div class="flex items-center gap-3 bg-stone-50/50 dark:bg-zinc-800/30 p-1.5 rounded-xl border border-stone-200/60 dark:border-zinc-800/80 w-full h-[46px]">
                             <button type="button" 
                                     @click="if(quantity > 1) quantity--" 
-                                    class="w-10 h-10 bg-white hover:bg-stone-50 text-stone-850 rounded-lg flex items-center justify-center border border-stone-200/60 shadow-sm font-black text-sm active:scale-95 transition-all cursor-pointer">
+                                    class="w-10 h-10 bg-white hover:bg-stone-50 dark:hover:bg-zinc-800 text-stone-850 dark:text-white rounded-lg flex items-center justify-center border border-stone-200/60 dark:border-zinc-800/80 shadow-sm font-black text-sm active:scale-95 transition-all cursor-pointer">
                                 -
                             </button>
                             <input type="number" 
@@ -235,11 +235,11 @@
                                    min="1" 
                                    :max="selectedProductStock"
                                    @input="if(quantity > selectedProductStock) quantity = selectedProductStock; if(quantity < 1) quantity = 1;"
-                                   class="flex-1 text-center bg-transparent border-none text-lg font-black text-stone-850 outline-none w-10"
+                                   class="flex-1 text-center bg-transparent border-none text-lg font-black text-stone-850 dark:text-white outline-none w-10"
                                    required />
                             <button type="button" 
                                     @click="if(quantity < selectedProductStock) quantity++" 
-                                    class="w-10 h-10 bg-white hover:bg-stone-50 text-stone-850 rounded-lg flex items-center justify-center border border-stone-200/60 shadow-sm font-black text-sm active:scale-95 transition-all cursor-pointer">
+                                    class="w-10 h-10 bg-white hover:bg-stone-50 dark:hover:bg-zinc-800 text-stone-850 dark:text-white rounded-lg flex items-center justify-center border border-stone-200/60 dark:border-zinc-800/80 shadow-sm font-black text-sm active:scale-95 transition-all cursor-pointer">
                                 +
                             </button>
                         </div>
@@ -248,7 +248,7 @@
                     <!-- Customer Dropdown (7 Columns) -->
                     <div class="md:col-span-7 space-y-2">
                         <div class="flex justify-between items-center">
-                            <label class="text-xs font-bold uppercase tracking-wider text-stone-600">Pilih Pelanggan</label>
+                            <label class="text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-zinc-300">Pilih Pelanggan</label>
                             <span x-show="paymentMethod === 'debt'" 
                                   class="text-[9px] font-black uppercase tracking-wider text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200"
                                   x-cloak x-transition>
@@ -258,7 +258,7 @@
                         <select name="customer_id" 
                                 x-model="customerId"
                                 :required="paymentMethod === 'debt'"
-                                class="w-full bg-stone-50/50 border border-stone-200/60 rounded-xl px-3 text-xs font-bold text-stone-800 focus:bg-white focus:border-[#0b6e4f] focus:ring-4 focus:ring-[#0b6e4f]/10 transition-all outline-none h-[46px] cursor-pointer">
+                                class="w-full bg-stone-50/50 dark:bg-zinc-800/30 border border-stone-200/60 dark:border-zinc-800/80 rounded-xl px-3 text-xs font-bold text-stone-800 dark:text-white focus:bg-white focus:border-[#0b6e4f] dark:focus:border-emerald-500 focus:ring-4 focus:ring-[#0b6e4f]/10 dark:focus:ring-emerald-500/10 transition-all outline-none h-[46px] cursor-pointer">
                             <option value="">-- Umum / Walk-in Customer --</option>
                             @foreach ($customers as $c)
                                 <option value="{{ $c->id }}">
@@ -270,16 +270,16 @@
                 </div>
 
                 <!-- 4. Payment Toggle & Details (Side-by-Side to reduce spacing) -->
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 pt-4 border-t border-stone-100">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 pt-4 border-t border-stone-100 dark:border-zinc-800/60">
                     
                     <!-- Left: Tunai vs Piutang (6 Columns) -->
                     <div class="md:col-span-6 space-y-2">
-                        <label class="block text-xs font-bold uppercase tracking-wider text-stone-600">Tipe Pembayaran</label>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-zinc-300">Tipe Pembayaran</label>
                         <div class="flex gap-2">
                             <!-- Tunai -->
                             <button type="button" 
                                     @click="paymentMethod = 'cash'"
-                                    :class="paymentMethod !== 'debt' ? 'border-2 border-[#0b6e4f] bg-emerald-50/30 text-stone-850 ring-4 ring-[#0b6e4f]/10 font-black' : 'border border-stone-200/60 bg-stone-50/50 text-stone-500 hover:bg-stone-100/50 font-semibold'"
+                                    :class="paymentMethod !== 'debt' ? 'border-2 border-[#0b6e4f] dark:border-emerald-500 bg-emerald-50/30 text-stone-850 dark:text-white ring-4 ring-[#0b6e4f]/10 dark:ring-emerald-500/10 font-black' : 'border border-stone-200/60 dark:border-zinc-800/80 bg-stone-50/50 dark:bg-zinc-800/30 text-stone-500 dark:text-zinc-100 hover:bg-stone-100/50 dark:hover:bg-zinc-800/50 font-semibold'"
                                     class="flex-1 flex items-center justify-center gap-2 h-[46px] rounded-xl cursor-pointer transition-all duration-300">
                                 <span class="material-symbols-outlined text-base">payments</span>
                                 <span class="text-xs tracking-tight">Tunai</span>
@@ -287,7 +287,7 @@
                             <!-- Piutang -->
                             <button type="button" 
                                     @click="paymentMethod = 'debt'"
-                                    :class="paymentMethod === 'debt' ? 'border-2 border-amber-600 bg-amber-50/30 text-stone-850 ring-4 ring-amber-500/10 font-black' : 'border border-stone-200/60 bg-stone-50/50 text-stone-500 hover:bg-stone-100/50 font-semibold'"
+                                    :class="paymentMethod === 'debt' ? 'border-2 border-amber-600 bg-amber-50/30 text-stone-850 dark:text-white ring-4 ring-amber-500/10 font-black' : 'border border-stone-200/60 dark:border-zinc-800/80 bg-stone-50/50 dark:bg-zinc-800/30 text-stone-500 dark:text-zinc-100 hover:bg-stone-100/50 dark:hover:bg-zinc-800/50 font-semibold'"
                                     class="flex-1 flex items-center justify-center gap-2 h-[46px] rounded-xl cursor-pointer transition-all duration-300">
                                 <span class="material-symbols-outlined text-base">menu_book</span>
                                 <span class="text-xs tracking-tight">Piutang</span>
@@ -297,19 +297,19 @@
 
                     <!-- Right: Payment Details (6 Columns) -->
                     <div class="md:col-span-6 space-y-2">
-                        <label class="block text-xs font-bold uppercase tracking-wider text-stone-600">Rincian Pembayaran</label>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-zinc-300">Rincian Pembayaran</label>
                         
                         <!-- When Tunai is selected -->
                         <div x-show="paymentMethod !== 'debt'" class="flex gap-1.5 h-[46px] items-center" x-cloak x-transition>
-                            <label class="flex-1 relative flex items-center justify-center h-full px-1.5 bg-stone-50/50 hover:bg-stone-100/50 border border-stone-200/60 rounded-xl cursor-pointer has-[:checked]:border-2 has-[:checked]:border-[#0b6e4f] has-[:checked]:bg-emerald-50/30 has-[:checked]:text-[#0b6e4f] text-[10px] font-bold text-stone-750 transition-all select-none">
+                            <label class="flex-1 relative flex items-center justify-center h-full px-1.5 bg-stone-50/50 dark:bg-zinc-800/30 hover:bg-stone-100/50 dark:hover:bg-zinc-800/50 border border-stone-200/60 dark:border-zinc-800/80 rounded-xl cursor-pointer has-[:checked]:border-2 has-[:checked]:border-[#0b6e4f] dark:has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-50/30 has-[:checked]:text-[#0b6e4f] dark:has-[:checked]:text-emerald-400 text-[10px] font-bold text-stone-750 dark:text-zinc-50 transition-all select-none">
                                 <input type="radio" name="payment_method" value="cash" checked class="hidden">
                                 Cash
                             </label>
-                            <label class="flex-1 relative flex items-center justify-center h-full px-1.5 bg-stone-50/50 hover:bg-stone-100/50 border border-stone-200/60 rounded-xl cursor-pointer has-[:checked]:border-2 has-[:checked]:border-[#0b6e4f] has-[:checked]:bg-emerald-50/30 has-[:checked]:text-[#0b6e4f] text-[10px] font-bold text-stone-750 transition-all select-none">
+                            <label class="flex-1 relative flex items-center justify-center h-full px-1.5 bg-stone-50/50 dark:bg-zinc-800/30 hover:bg-stone-100/50 dark:hover:bg-zinc-800/50 border border-stone-200/60 dark:border-zinc-800/80 rounded-xl cursor-pointer has-[:checked]:border-2 has-[:checked]:border-[#0b6e4f] dark:has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-50/30 has-[:checked]:text-[#0b6e4f] dark:has-[:checked]:text-emerald-400 text-[10px] font-bold text-stone-750 dark:text-zinc-50 transition-all select-none">
                                 <input type="radio" name="payment_method" value="transfer" class="hidden">
                                 Transfer
                             </label>
-                            <label class="flex-1 relative flex items-center justify-center h-full px-1.5 bg-stone-50/50 hover:bg-stone-100/50 border border-stone-200/60 rounded-xl cursor-pointer has-[:checked]:border-2 has-[:checked]:border-[#0b6e4f] has-[:checked]:bg-emerald-50/30 has-[:checked]:text-[#0b6e4f] text-[10px] font-bold text-stone-750 transition-all select-none">
+                            <label class="flex-1 relative flex items-center justify-center h-full px-1.5 bg-stone-50/50 dark:bg-zinc-800/30 hover:bg-stone-100/50 dark:hover:bg-zinc-800/50 border border-stone-200/60 dark:border-zinc-800/80 rounded-xl cursor-pointer has-[:checked]:border-2 has-[:checked]:border-[#0b6e4f] dark:has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-50/30 has-[:checked]:text-[#0b6e4f] dark:has-[:checked]:text-emerald-400 text-[10px] font-bold text-stone-750 dark:text-zinc-50 transition-all select-none">
                                 <input type="radio" name="payment_method" value="qris" class="hidden">
                                 QRIS
                             </label>
@@ -331,56 +331,56 @@
         <div class="lg:col-span-5 space-y-4">
             
             <!-- Real-time Cart Summary Card (Receipt Slip style) -->
-            <div class="bg-white rounded-[1.5rem] shadow-sm border border-stone-200/60 overflow-hidden">
-                <div class="p-4 bg-stone-50/50 border-b border-stone-200/60 flex justify-between items-center">
-                    <h3 class="text-[10px] font-bold uppercase tracking-widest text-stone-500">Rincian Pembelian</h3>
-                    <span class="px-2.5 py-0.5 bg-emerald-50 text-[#0b6e4f] text-[9px] font-bold rounded-full">Struk Pembayaran</span>
+            <div class="bg-white rounded-[1.5rem] shadow-sm border border-stone-200/60 dark:border-zinc-800/80 overflow-hidden">
+                <div class="p-4 bg-stone-50/50 dark:bg-zinc-800/30 border-b border-stone-200/60 dark:border-zinc-800/80 flex justify-between items-center">
+                    <h3 class="text-[10px] font-bold uppercase tracking-widest text-stone-500 dark:text-zinc-100">Rincian Pembelian</h3>
+                    <span class="px-2.5 py-0.5 bg-emerald-50 text-[#0b6e4f] dark:text-emerald-400 text-[9px] font-bold rounded-full">Struk Pembayaran</span>
                 </div>
                 
                 <div class="p-4 space-y-4">
                     <!-- Item Line -->
                     <div class="flex justify-between items-start gap-4">
                         <div class="flex gap-2.5">
-                            <div class="w-10 h-10 bg-stone-50 border border-stone-200/60 rounded-xl flex items-center justify-center text-stone-400 flex-shrink-0">
+                            <div class="w-10 h-10 bg-stone-50 dark:bg-zinc-800 border border-stone-200/60 dark:border-zinc-800/80 rounded-xl flex items-center justify-center text-stone-400 dark:text-zinc-300 flex-shrink-0">
                                 <span class="material-symbols-outlined text-xl">bakery_dining</span>
                             </div>
                             <div>
-                                <p class="text-xs font-bold text-stone-850" x-text="selectedProductId ? 'Item Terpilih' : 'Belum Ada Produk'"></p>
-                                <p class="text-[10px] font-semibold text-stone-400 mt-0.5" x-text="selectedProductId ? 'Siap Checkout' : 'Sentuh kartu produk di sebelah kiri'"></p>
+                                <p class="text-xs font-bold text-stone-850 dark:text-white" x-text="selectedProductId ? 'Item Terpilih' : 'Belum Ada Produk'"></p>
+                                <p class="text-[10px] font-semibold text-stone-400 dark:text-zinc-300 mt-0.5" x-text="selectedProductId ? 'Siap Checkout' : 'Sentuh kartu produk di sebelah kiri'"></p>
                             </div>
                         </div>
                         <div class="text-right" x-show="selectedProductId">
-                            <p class="text-xs font-bold text-stone-800" x-text="formatRupiah(selectedProductPrice)"></p>
-                            <p class="text-[10px] font-semibold text-stone-400 mt-0.5" x-text="'x ' + quantity + ' pcs'"></p>
+                            <p class="text-xs font-bold text-stone-800 dark:text-white" x-text="formatRupiah(selectedProductPrice)"></p>
+                            <p class="text-[10px] font-semibold text-stone-400 dark:text-zinc-300 mt-0.5" x-text="'x ' + quantity + ' pcs'"></p>
                         </div>
                     </div>
 
                     <!-- Separator -->
-                    <div class="border-t border-dashed border-stone-200"></div>
+                    <div class="border-t border-dashed border-stone-200 dark:border-zinc-800"></div>
 
                     <!-- Bill details -->
                     <div class="space-y-1.5 text-xs">
-                        <div class="flex justify-between font-semibold text-stone-500">
+                        <div class="flex justify-between font-semibold text-stone-500 dark:text-zinc-100">
                             <span>Subtotal</span>
                             <span x-text="formatRupiah(totalBill)"></span>
                         </div>
-                        <div class="flex justify-between font-semibold text-stone-500">
+                        <div class="flex justify-between font-semibold text-stone-500 dark:text-zinc-100">
                             <span>Diskon / Promo</span>
                             <span>Rp 0</span>
                         </div>
-                        <div class="flex justify-between font-semibold text-stone-500">
+                        <div class="flex justify-between font-semibold text-stone-500 dark:text-zinc-100">
                             <span>Status Bayar</span>
-                            <span :class="paymentMethod === 'debt' ? 'text-amber-650' : 'text-emerald-700'" 
+                            <span :class="paymentMethod === 'debt' ? 'text-amber-650 dark:text-amber-400' : 'text-emerald-700'" 
                                   class="font-bold uppercase text-[10px]" 
                                   x-text="paymentMethod === 'debt' ? 'Piutang / Kasbon' : 'Lunas'"></span>
                         </div>
                     </div>
 
                     <!-- Grand Total Banner -->
-                    <div class="p-3 bg-stone-50/50 rounded-xl flex justify-between items-center border border-stone-200/60">
+                    <div class="p-3 bg-stone-50/50 dark:bg-zinc-800/30 rounded-xl flex justify-between items-center border border-stone-200/60 dark:border-zinc-800/80">
                         <div>
-                            <p class="text-[8px] font-black uppercase tracking-wider text-stone-400">Total Tagihan</p>
-                            <p class="text-xl font-bold text-stone-850 mt-0.5" x-text="formatRupiah(totalBill)"></p>
+                            <p class="text-[8px] font-black uppercase tracking-wider text-stone-400 dark:text-zinc-300">Total Tagihan</p>
+                            <p class="text-xl font-bold text-stone-850 dark:text-white mt-0.5" x-text="formatRupiah(totalBill)"></p>
                         </div>
                         <div class="px-3 py-1.5 bg-amber-500/10 text-amber-800 text-[9px] font-bold rounded-lg border border-amber-500/10">
                             IDR / Rupiah
@@ -390,7 +390,7 @@
                     <!-- Checkout Submit Button - Placed at the bottom of the receipt card -->
                     <button type="submit" 
                             form="pos-form"
-                            class="w-full text-white py-3.5 rounded-xl shadow-md shadow-[#0b6e4f]/10 bg-[#0b6e4f] hover:bg-[#09523b] active:scale-[0.99] transition-all font-bold text-sm flex items-center justify-center gap-2 cursor-pointer">
+                            class="w-full text-white py-3.5 rounded-xl shadow-md shadow-[#0b6e4f]/10 dark:shadow-emerald-950/15 bg-[#0b6e4f] dark:bg-emerald-600 hover:bg-[#09523b] active:scale-[0.99] transition-all font-bold text-sm flex items-center justify-center gap-2 cursor-pointer">
                         <span class="material-symbols-outlined text-lg">check_circle</span>
                         <span>Konfirmasi & Cetak Nota</span>
                     </button>
@@ -398,43 +398,43 @@
             </div>
 
             <!-- Transaksi Terakhir (Hari Ini) -->
-            <div class="bg-white rounded-[1.5rem] shadow-sm border border-stone-200/60 overflow-hidden">
-                <div class="p-4 bg-stone-50/50 border-b border-stone-200/60 flex justify-between items-center">
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-stone-600 flex items-center gap-1.5">
-                        <span class="material-symbols-outlined text-base text-[#0b6e4f]">history</span>
+            <div class="bg-white rounded-[1.5rem] shadow-sm border border-stone-200/60 dark:border-zinc-800/80 overflow-hidden">
+                <div class="p-4 bg-stone-50/50 dark:bg-zinc-800/30 border-b border-stone-200/60 dark:border-zinc-800/80 flex justify-between items-center">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-zinc-300 flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-base text-[#0b6e4f] dark:text-emerald-400">history</span>
                         <span>Transaksi Terakhir (Hari Ini)</span>
                     </h3>
-                    <span class="px-2 py-0.5 bg-[#0b6e4f]/10 text-[#0b6e4f] text-[9px] font-bold rounded-full">5 Terbaru</span>
+                    <span class="px-2 py-0.5 bg-[#0b6e4f]/10 text-[#0b6e4f] dark:text-emerald-400 text-[9px] font-bold rounded-full">5 Terbaru</span>
                 </div>
                 <div class="divide-y divide-stone-100">
                     @forelse($todaySales as $sale)
-                        <div class="p-3.5 flex items-center justify-between gap-4 hover:bg-stone-50/50 transition-colors">
+                        <div class="p-3.5 flex items-center justify-between gap-4 hover:bg-stone-50/50 dark:hover:bg-zinc-800/30 transition-colors">
                             <div class="space-y-0.5 min-w-0">
                                 <div class="flex items-center gap-1.5">
-                                    <span class="text-xs font-bold text-stone-850 truncate">#{{ $sale->id }}</span>
-                                    <span class="text-[9px] font-semibold text-stone-400">{{ $sale->created_at->format('H:i') }}</span>
+                                    <span class="text-xs font-bold text-stone-850 dark:text-white truncate">#{{ $sale->id }}</span>
+                                    <span class="text-[9px] font-semibold text-stone-400 dark:text-zinc-300">{{ $sale->created_at->format('H:i') }}</span>
                                 </div>
-                                <p class="text-[10px] text-stone-500 truncate">
+                                <p class="text-[10px] text-stone-500 dark:text-zinc-100 truncate">
                                     👤 {{ $sale->customer ?: 'Umum / Walk-in' }}
                                 </p>
                             </div>
                             <div class="flex items-center gap-3 flex-shrink-0">
                                 <div class="text-right">
-                                    <p class="text-xs font-bold text-stone-850">Rp {{ number_format($sale->total, 0, ',', '.') }}</p>
-                                    <span class="inline-block text-[8px] font-black uppercase px-1.5 py-0.5 rounded {{ $sale->payment_method !== 'debt' ? 'bg-emerald-50 text-[#0b6e4f] border border-emerald-100' : 'bg-amber-50 text-amber-850 border border-amber-200' }}">
+                                    <p class="text-xs font-bold text-stone-850 dark:text-white">Rp {{ number_format($sale->total, 0, ',', '.') }}</p>
+                                    <span class="inline-block text-[8px] font-black uppercase px-1.5 py-0.5 rounded {{ $sale->payment_method !== 'debt' ? 'bg-emerald-50 text-[#0b6e4f] dark:text-emerald-400 border border-emerald-100' : 'bg-amber-50 text-amber-850 border border-amber-200' }}">
                                         {{ $sale->payment_method !== 'debt' ? 'Lunas' : 'Kasbon' }}
                                     </span>
                                 </div>
                                 <a href="{{ route('sales.receipt', $sale->id) }}" 
                                    target="_blank" 
-                                   class="w-8 h-8 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-650 flex items-center justify-center transition-all cursor-pointer"
+                                   class="w-8 h-8 rounded-lg bg-stone-100 hover:bg-stone-200 dark:hover:bg-zinc-800 text-stone-650 dark:text-zinc-300 flex items-center justify-center transition-all cursor-pointer"
                                    title="Cetak Nota">
                                     <span class="material-symbols-outlined text-[16px]">print</span>
                                 </a>
                             </div>
                         </div>
                     @empty
-                        <div class="p-6 text-center text-stone-400 space-y-1">
+                        <div class="p-6 text-center text-stone-400 dark:text-zinc-300 space-y-1">
                             <span class="material-symbols-outlined text-2xl opacity-40">receipt_long</span>
                             <p class="text-[10px] font-bold">Belum ada transaksi hari ini</p>
                         </div>
@@ -455,57 +455,57 @@
          x-transition:leave-end="opacity-0 scale-95"
          x-cloak>
         
-        <div class="bg-white p-6 sm:p-8 rounded-[1.5rem] shadow-xl border border-stone-200/60 max-w-md w-full mx-4 relative"
+        <div class="bg-white p-6 sm:p-8 rounded-[1.5rem] shadow-xl border border-stone-200/60 dark:border-zinc-800/80 max-w-md w-full mx-4 relative"
              @click.away="isNewCustomerModalOpen = false">
             
             <!-- Close Button -->
             <button @click="isNewCustomerModalOpen = false" 
-                    class="absolute top-4 right-4 text-stone-400 hover:text-stone-600 transition-colors cursor-pointer">
+                    class="absolute top-4 right-4 text-stone-400 dark:text-zinc-300 hover:text-stone-600 dark:hover:text-zinc-300 transition-colors cursor-pointer">
                 <span class="material-symbols-outlined">close</span>
             </button>
 
             <!-- Header -->
             <div class="mb-6 space-y-1">
-                <h3 class="text-lg font-bold text-stone-850">Daftarkan Pelanggan Baru</h3>
-                <p class="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Layanan CRM Kasbon SAHAYU</p>
+                <h3 class="text-lg font-bold text-stone-850 dark:text-white">Daftarkan Pelanggan Baru</h3>
+                <p class="text-[10px] font-bold text-stone-400 dark:text-zinc-300 uppercase tracking-wider">Layanan CRM Kasbon SAHAYU</p>
             </div>
 
             <!-- Form -->
             <form action="{{ route('customers.store') }}" method="POST" class="space-y-4">
                 @csrf
                 <div class="space-y-1">
-                    <label class="block text-[10px] font-bold uppercase tracking-wider text-stone-450">Nama Pelanggan / Toko</label>
+                    <label class="block text-[10px] font-bold uppercase tracking-wider text-stone-450 dark:text-zinc-300">Nama Pelanggan / Toko</label>
                     <input type="text" 
                            name="name" 
                            required 
                            placeholder="Contoh: Toko Berkah Mandiri"
-                           class="w-full bg-stone-50/50 border border-stone-200/60 rounded-xl p-3 text-sm focus:bg-white focus:border-[#0b6e4f] focus:ring-4 focus:ring-[#0b6e4f]/10 transition-all outline-none font-semibold text-stone-800" />
+                           class="w-full bg-stone-50/50 dark:bg-zinc-800/30 border border-stone-200/60 dark:border-zinc-800/80 rounded-xl p-3 text-sm focus:bg-white focus:border-[#0b6e4f] dark:focus:border-emerald-500 focus:ring-4 focus:ring-[#0b6e4f]/10 dark:focus:ring-emerald-500/10 transition-all outline-none font-semibold text-stone-800 dark:text-white" />
                 </div>
 
                 <div class="space-y-1">
-                    <label class="block text-[10px] font-bold uppercase tracking-wider text-stone-450">No. WhatsApp / HP</label>
+                    <label class="block text-[10px] font-bold uppercase tracking-wider text-stone-450 dark:text-zinc-300">No. WhatsApp / HP</label>
                     <input type="text" 
                            name="phone" 
                            placeholder="Contoh: 081234567890"
-                           class="w-full bg-stone-50/50 border border-stone-200/60 rounded-xl p-3 text-sm focus:bg-white focus:border-[#0b6e4f] focus:ring-4 focus:ring-[#0b6e4f]/10 transition-all outline-none font-semibold text-stone-800" />
+                           class="w-full bg-stone-50/50 dark:bg-zinc-800/30 border border-stone-200/60 dark:border-zinc-800/80 rounded-xl p-3 text-sm focus:bg-white focus:border-[#0b6e4f] dark:focus:border-emerald-500 focus:ring-4 focus:ring-[#0b6e4f]/10 dark:focus:ring-emerald-500/10 transition-all outline-none font-semibold text-stone-800 dark:text-white" />
                 </div>
 
                 <div class="space-y-1">
-                    <label class="block text-[10px] font-bold uppercase tracking-wider text-stone-450">Alamat Lengkap</label>
+                    <label class="block text-[10px] font-bold uppercase tracking-wider text-stone-450 dark:text-zinc-300">Alamat Lengkap</label>
                     <textarea name="address" 
                               rows="3" 
                               placeholder="Alamat toko atau rumah pelanggan..."
-                              class="w-full bg-stone-50/50 border border-stone-200/60 rounded-xl p-3 text-sm focus:bg-white focus:border-[#0b6e4f] focus:ring-4 focus:ring-[#0b6e4f]/10 transition-all outline-none font-semibold text-stone-800"></textarea>
+                              class="w-full bg-stone-50/50 dark:bg-zinc-800/30 border border-stone-200/60 dark:border-zinc-800/80 rounded-xl p-3 text-sm focus:bg-white focus:border-[#0b6e4f] dark:focus:border-emerald-500 focus:ring-4 focus:ring-[#0b6e4f]/10 dark:focus:ring-emerald-500/10 transition-all outline-none font-semibold text-stone-800 dark:text-white"></textarea>
                 </div>
 
                 <div class="pt-4 flex gap-3">
                     <button type="button" 
                             @click="isNewCustomerModalOpen = false"
-                            class="flex-1 py-3 bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-bold rounded-xl transition-all cursor-pointer">
+                            class="flex-1 py-3 bg-stone-100 hover:bg-stone-200 dark:hover:bg-zinc-800 text-stone-700 dark:text-zinc-50 text-xs font-bold rounded-xl transition-all cursor-pointer">
                         Batalkan
                     </button>
                     <button type="submit" 
-                            class="flex-1 py-3 text-white text-xs font-bold rounded-xl transition-all shadow-sm bg-[#0b6e4f] hover:bg-[#09523b] shadow-[#0b6e4f]/10 cursor-pointer">
+                            class="flex-1 py-3 text-white text-xs font-bold rounded-xl transition-all shadow-sm bg-[#0b6e4f] dark:bg-emerald-600 hover:bg-[#09523b] shadow-[#0b6e4f]/10 dark:shadow-emerald-950/15 cursor-pointer">
                         Simpan Pelanggan
                     </button>
                 </div>
@@ -524,21 +524,21 @@
          x-transition:leave-end="opacity-0 scale-95"
          x-cloak>
         
-        <div class="bg-white p-6 sm:p-8 rounded-[1.5rem] shadow-xl border border-stone-200/60 max-w-sm w-full mx-4 text-center relative"
+        <div class="bg-white p-6 sm:p-8 rounded-[1.5rem] shadow-xl border border-stone-200/60 dark:border-zinc-800/80 max-w-sm w-full mx-4 text-center relative"
              @click.away="isSuccessModalOpen = false">
             
             <!-- Success Icon Animation -->
-            <div class="mx-auto w-16 h-16 bg-emerald-50 text-[#0b6e4f] rounded-full flex items-center justify-center mb-6 shadow-inner animate-bounce">
+            <div class="mx-auto w-16 h-16 bg-emerald-50 text-[#0b6e4f] dark:text-emerald-400 rounded-full flex items-center justify-center mb-6 shadow-inner animate-bounce">
                 <span class="material-symbols-outlined text-4xl">check_circle</span>
             </div>
 
             <!-- Header -->
             <div class="mb-6 space-y-2">
-                <h3 class="text-xl font-bold text-stone-850">Transaksi Berhasil!</h3>
-                <p class="text-xs font-bold text-stone-400 uppercase tracking-widest">Nota #{{ session('print_sale_id') }} Telah Dicatat</p>
+                <h3 class="text-xl font-bold text-stone-850 dark:text-white">Transaksi Berhasil!</h3>
+                <p class="text-xs font-bold text-stone-400 dark:text-zinc-300 uppercase tracking-widest">Nota #{{ session('print_sale_id') }} Telah Dicatat</p>
             </div>
 
-            <p class="text-stone-500 text-xs font-semibold leading-relaxed mb-8">
+            <p class="text-stone-500 dark:text-zinc-100 text-xs font-semibold leading-relaxed mb-8">
                 Nota penjualan ini telah berhasil tersimpan dalam sistem ledger keuangan SAHAYU. Siap untuk dicetak ke thermal printer.
             </p>
 
@@ -547,13 +547,13 @@
                 <a href="{{ route('sales.receipt', session('print_sale_id', 0)) }}" 
                    target="_blank"
                    @click="isSuccessModalOpen = false"
-                   class="w-full py-4 text-white text-sm font-bold rounded-2xl transition-all shadow-md flex items-center justify-center gap-2 bg-[#0b6e4f] hover:bg-[#09523b] shadow-[#0b6e4f]/10 cursor-pointer">
+                   class="w-full py-4 text-white text-sm font-bold rounded-2xl transition-all shadow-md flex items-center justify-center gap-2 bg-[#0b6e4f] dark:bg-emerald-600 hover:bg-[#09523b] shadow-[#0b6e4f]/10 dark:shadow-emerald-950/15 cursor-pointer">
                     <span class="material-symbols-outlined text-lg">print</span>
                     <span>Cetak Struk Thermal</span>
                 </a>
                 <button type="button" 
                         @click="isSuccessModalOpen = false"
-                        class="w-full py-4 bg-stone-100 hover:bg-stone-200 text-stone-700 text-sm font-bold rounded-2xl transition-all cursor-pointer">
+                        class="w-full py-4 bg-stone-100 hover:bg-stone-200 dark:hover:bg-zinc-800 text-stone-700 dark:text-zinc-50 text-sm font-bold rounded-2xl transition-all cursor-pointer">
                     Transaksi Baru (Tutup)
                 </button>
             </div>

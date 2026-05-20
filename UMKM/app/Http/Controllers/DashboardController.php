@@ -20,7 +20,7 @@ class DashboardController extends Controller
 
         $filter = $request->query('range');
         if (!$filter) {
-            $filter = auth()->check() && auth()->user()->isStaff() ? '1' : '30';
+            $filter = '30';
         }
         if ($isTimeTravel) {
             $filter = '1';
@@ -359,7 +359,7 @@ class DashboardController extends Controller
 
             $filter = $request->query('range');
             if (!$filter) {
-                $filter = auth()->check() && auth()->user()->isStaff() ? '1' : '30';
+                $filter = '30';
             }
             if ($isTimeTravel) {
                 $filter = '1';

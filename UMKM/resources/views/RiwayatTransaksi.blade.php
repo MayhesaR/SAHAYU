@@ -1,22 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="px-4 py-6 sm:px-8 space-y-6 bg-slate-50/50 min-h-screen">
+<div class="px-4 py-6 sm:px-8 space-y-6 bg-slate-50/50 dark:bg-zinc-800/30 min-h-screen">
     
     <!-- HEADER -->
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div class="space-y-1">
-            <h1 class="text-3xl font-black text-slate-900 tracking-tight font-manrope">
+            <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight font-manrope">
                 Riwayat Transaksi
             </h1>
-            <p class="text-slate-500 font-medium text-sm flex items-center gap-2">
+            <p class="text-slate-500 dark:text-white font-medium text-sm flex items-center gap-2">
                 <span class="material-symbols-outlined text-sm">history</span>
                 Log operasional, penjualan, dan pembayaran terpusat untuk UMKM Anda.
             </p>
         </div>
         
         <!-- BACK TO DASHBOARD -->
-        <a href="{{ route('dashboard') }}" class="flex items-center gap-2 px-5 py-2.5 bg-white text-slate-600 font-bold text-xs rounded-xl shadow-sm hover:shadow-md hover:text-primary transition-all border border-slate-100 w-fit">
+        <a href="{{ route('dashboard') }}" class="flex items-center gap-2 px-5 py-2.5 bg-white text-slate-600 dark:text-white font-bold text-xs rounded-xl shadow-sm hover:shadow-md hover:text-primary transition-all border border-slate-100 dark:border-zinc-800/60 w-fit">
             <span class="material-symbols-outlined text-sm">arrow_back</span>
             Kembali ke Dashboard
         </a>
@@ -25,48 +25,48 @@
     <!-- STATS CARDS -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Card 1: Total Omzet -->
-        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden group">
+        <div class="bg-white p-6 rounded-3xl border border-slate-100 dark:border-zinc-800/60 shadow-sm relative overflow-hidden group">
             <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-4">
                 <span class="material-symbols-outlined text-xl">payments</span>
             </div>
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Omzet Penjualan</p>
-            <h3 class="text-2xl font-black text-slate-900 mt-1">Rp {{ number_format($totalSalesAmount, 0, ',', '.') }}</h3>
-            <p class="text-[10px] text-slate-400 font-medium mt-4">Akumulasi seluruh transaksi penjualan</p>
+            <p class="text-[10px] font-black text-slate-400 dark:text-white uppercase tracking-widest">Total Omzet Penjualan</p>
+            <h3 class="text-2xl font-black text-slate-900 dark:text-white mt-1">Rp {{ number_format($totalSalesAmount, 0, ',', '.') }}</h3>
+            <p class="text-[10px] text-slate-400 dark:text-white font-medium mt-4">Akumulasi seluruh transaksi penjualan</p>
         </div>
 
         <!-- Card 2: Total Transaksi Penjualan -->
-        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden group">
+        <div class="bg-white p-6 rounded-3xl border border-slate-100 dark:border-zinc-800/60 shadow-sm relative overflow-hidden group">
             <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-4">
                 <span class="material-symbols-outlined text-xl">shopping_cart</span>
             </div>
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Transaksi Penjualan</p>
-            <h3 class="text-2xl font-black text-slate-900 mt-1">{{ number_format($totalSalesCount, 0, ',', '.') }} <span class="text-sm text-slate-400">Transaksi</span></h3>
-            <p class="text-[10px] text-slate-400 font-medium mt-4">Jumlah nota penjualan yang dicatat</p>
+            <p class="text-[10px] font-black text-slate-400 dark:text-white uppercase tracking-widest">Transaksi Penjualan</p>
+            <h3 class="text-2xl font-black text-slate-900 dark:text-white mt-1">{{ number_format($totalSalesCount, 0, ',', '.') }} <span class="text-sm text-slate-400 dark:text-white">Transaksi</span></h3>
+            <p class="text-[10px] text-slate-400 dark:text-white font-medium mt-4">Jumlah nota penjualan yang dicatat</p>
         </div>
 
         <!-- Card 3: Total Operasi Produksi -->
-        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden group">
+        <div class="bg-white p-6 rounded-3xl border border-slate-100 dark:border-zinc-800/60 shadow-sm relative overflow-hidden group">
             <div class="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mb-4">
                 <span class="material-symbols-outlined text-xl">precision_manufacturing</span>
             </div>
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Operasi Produksi</p>
-            <h3 class="text-2xl font-black text-slate-900 mt-1">{{ number_format($totalProductionCount, 0, ',', '.') }} <span class="text-sm text-slate-400">Batch</span></h3>
-            <p class="text-[10px] text-slate-400 font-medium mt-4">Jumlah batch produksi barang jadi</p>
+            <p class="text-[10px] font-black text-slate-400 dark:text-white uppercase tracking-widest">Operasi Produksi</p>
+            <h3 class="text-2xl font-black text-slate-900 dark:text-white mt-1">{{ number_format($totalProductionCount, 0, ',', '.') }} <span class="text-sm text-slate-400 dark:text-white">Batch</span></h3>
+            <p class="text-[10px] text-slate-400 dark:text-white font-medium mt-4">Jumlah batch produksi barang jadi</p>
         </div>
     </div>
 
     <!-- ADVANCED FILTERING BOARD -->
-    <div class="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-4" x-data="{ showAdvanced: {{ ($startDate || $endDate || $sortBy !== 'transaction_date' || $currentType !== 'all') ? 'true' : 'false' }} }">
+    <div class="bg-white p-6 rounded-[2.5rem] border border-slate-100 dark:border-zinc-800/60 shadow-sm space-y-4" x-data="{ showAdvanced: {{ ($startDate || $endDate || $sortBy !== 'transaction_date' || $currentType !== 'all') ? 'true' : 'false' }} }">
         <form method="GET" action="{{ route('history.index') }}" class="space-y-4">
             <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <!-- Text Search Input -->
                 <div class="relative flex-1">
-                    <span class="material-symbols-outlined absolute left-4 top-3.5 text-slate-400">search</span>
+                    <span class="material-symbols-outlined absolute left-4 top-3.5 text-slate-400 dark:text-white">search</span>
                     <input type="text" 
                            name="search" 
                            value="{{ $search }}" 
                            placeholder="Cari Pelanggan, No. Transaksi, atau Keterangan..." 
-                           class="w-full bg-slate-50/70 border-2 border-slate-100 rounded-2xl pl-12 pr-4 py-3.5 text-sm font-semibold text-slate-800 focus:bg-white focus:border-emerald-600 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none" />
+                           class="w-full bg-slate-50/70 dark:bg-zinc-800/70 border-2 border-slate-100 dark:border-zinc-800/60 rounded-2xl pl-12 pr-4 py-3.5 text-sm font-semibold text-slate-800 dark:text-white focus:bg-white focus:border-emerald-600 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none" />
                 </div>
                 
                 <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
@@ -81,7 +81,7 @@
                     <!-- Advanced Filter Button -->
                     <button type="button" 
                             @click="showAdvanced = !showAdvanced" 
-                            class="flex-1 sm:flex-none px-4 py-3 bg-slate-50 border border-slate-100 hover:bg-slate-100 text-slate-700 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm">
+                            class="flex-1 sm:flex-none px-4 py-3 bg-slate-50 dark:bg-zinc-800 border border-slate-100 dark:border-zinc-800/60 hover:bg-slate-100 text-slate-700 dark:text-zinc-50 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm">
                         <span class="material-symbols-outlined text-[16px] flex-shrink-0">tune</span>
                         <span>Filter Lanjutan</span>
                         <span class="material-symbols-outlined text-[12px] transition-transform flex-shrink-0" :class="showAdvanced ? 'rotate-180' : ''">keyboard_arrow_down</span>
@@ -110,13 +110,13 @@
             <div x-show="showAdvanced" 
                  x-collapse
                  x-cloak
-                 class="grid grid-cols-1 md:grid-cols-4 gap-6 pt-4 border-t border-dashed border-slate-100">
+                 class="grid grid-cols-1 md:grid-cols-4 gap-6 pt-4 border-t border-dashed border-slate-100 dark:border-zinc-800/60">
                 
                 <!-- Filter 1: Kategori Tipe -->
                 <div class="space-y-2">
-                    <label class="block text-[10px] font-black uppercase tracking-wider text-slate-400">Jenis Transaksi</label>
+                    <label class="block text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-white">Jenis Transaksi</label>
                     <select name="type" 
-                            class="w-full bg-slate-50 border-2 border-slate-100 rounded-xl p-3 text-xs font-semibold text-slate-800 focus:bg-white focus:border-emerald-600 transition-all outline-none">
+                            class="w-full bg-slate-50 dark:bg-zinc-800 border-2 border-slate-100 dark:border-zinc-800/60 rounded-xl p-3 text-xs font-semibold text-slate-800 dark:text-white focus:bg-white focus:border-emerald-600 transition-all outline-none">
                         <option value="all" {{ $currentType === 'all' ? 'selected' : '' }}>-- Semua Jenis --</option>
                         <option value="sale_cash" {{ $currentType === 'sale_cash' ? 'selected' : '' }}>Penjualan Tunai</option>
                         <option value="sale_debt" {{ $currentType === 'sale_debt' ? 'selected' : '' }}>Penjualan Piutang</option>
@@ -129,9 +129,9 @@
 
                 <!-- Filter 2: Sort By -->
                 <div class="space-y-2">
-                    <label class="block text-[10px] font-black uppercase tracking-wider text-slate-400">Urutkan Berdasarkan</label>
+                    <label class="block text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-white">Urutkan Berdasarkan</label>
                     <select name="sort_by" 
-                            class="w-full bg-slate-50 border-2 border-slate-100 rounded-xl p-3 text-xs font-semibold text-slate-800 focus:bg-white focus:border-emerald-600 transition-all outline-none">
+                            class="w-full bg-slate-50 dark:bg-zinc-800 border-2 border-slate-100 dark:border-zinc-800/60 rounded-xl p-3 text-xs font-semibold text-slate-800 dark:text-white focus:bg-white focus:border-emerald-600 transition-all outline-none">
                         <option value="transaction_date" {{ $sortBy === 'transaction_date' ? 'selected' : '' }}>Tanggal Transaksi (Terbaru)</option>
                         <option value="input_time" {{ $sortBy === 'input_time' ? 'selected' : '' }}>Waktu Diinput (Terbaru)</option>
                         <option value="amount" {{ $sortBy === 'amount' ? 'selected' : '' }}>Nominal (Terbesar)</option>
@@ -140,63 +140,63 @@
 
                 <!-- Filter 3: Tanggal Mulai -->
                 <div class="space-y-2">
-                    <label class="block text-[10px] font-black uppercase tracking-wider text-slate-400">Tanggal Mulai</label>
+                    <label class="block text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-white">Tanggal Mulai</label>
                     <input type="date" 
                            name="start_date" 
                            value="{{ $startDate }}" 
-                           class="w-full bg-slate-50 border-2 border-slate-100 rounded-xl p-3 text-xs font-semibold text-slate-800 focus:bg-white focus:border-emerald-600 transition-all outline-none" />
+                           class="w-full bg-slate-50 dark:bg-zinc-800 border-2 border-slate-100 dark:border-zinc-800/60 rounded-xl p-3 text-xs font-semibold text-slate-800 dark:text-white focus:bg-white focus:border-emerald-600 transition-all outline-none" />
                 </div>
 
                 <!-- Filter 4: Tanggal Akhir -->
                 <div class="space-y-2">
-                    <label class="block text-[10px] font-black uppercase tracking-wider text-slate-400">Tanggal Akhir</label>
+                    <label class="block text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-white">Tanggal Akhir</label>
                     <input type="date" 
                            name="end_date" 
                            value="{{ $endDate }}" 
-                           class="w-full bg-slate-50 border-2 border-slate-100 rounded-xl p-3 text-xs font-semibold text-slate-800 focus:bg-white focus:border-emerald-600 transition-all outline-none" />
+                           class="w-full bg-slate-50 dark:bg-zinc-800 border-2 border-slate-100 dark:border-zinc-800/60 rounded-xl p-3 text-xs font-semibold text-slate-800 dark:text-white focus:bg-white focus:border-emerald-600 transition-all outline-none" />
                 </div>
             </div>
         </form>
     </div>
 
     <!-- FILTER & DATA TABLE CARD -->
-    <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
+    <div class="bg-white rounded-[2.5rem] border border-slate-100 dark:border-zinc-800/60 shadow-sm overflow-hidden">
         
         <!-- Filter Tabs Header -->
-        <div class="px-8 py-6 border-b border-slate-100 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div class="px-8 py-6 border-b border-slate-100 dark:border-zinc-800/60 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div class="space-y-1">
-                <h4 class="text-lg font-black text-slate-900 font-manrope">Log Transaksi Terbaru</h4>
-                <p class="text-xs text-slate-400">Log operasional terpadu yang memvisualisasikan seluruh arus kas masuk, keluar, dan produksi.</p>
+                <h4 class="text-lg font-black text-slate-900 dark:text-white font-manrope">Log Transaksi Terbaru</h4>
+                <p class="text-xs text-slate-400 dark:text-white">Log operasional terpadu yang memvisualisasikan seluruh arus kas masuk, keluar, dan produksi.</p>
             </div>
             
             <!-- Quick Filter Badges -->
-            <div class="flex flex-wrap items-center gap-2 bg-slate-100/60 p-1.5 rounded-2xl border border-slate-200/40 w-fit">
+            <div class="flex flex-wrap items-center gap-2 bg-slate-100/60 dark:bg-zinc-800/60 p-1.5 rounded-2xl border border-slate-200/40 dark:border-zinc-800/40 w-fit">
                 <a href="{{ route('history.index', array_merge(request()->query(), ['type' => 'all'])) }}" 
-                   class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ $currentType === 'all' ? 'bg-primary text-white shadow-sm' : 'text-slate-500 hover:bg-white/50' }}">
+                   class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ $currentType === 'all' ? 'bg-primary text-white shadow-sm' : 'text-slate-500 dark:text-white hover:bg-white/50' }}">
                     Semua
                 </a>
                 <a href="{{ route('history.index', array_merge(request()->query(), ['type' => 'sale_cash'])) }}" 
-                   class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ $currentType === 'sale_cash' ? 'bg-primary text-white shadow-sm' : 'text-slate-500 hover:bg-white/50' }}">
+                   class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ $currentType === 'sale_cash' ? 'bg-primary text-white shadow-sm' : 'text-slate-500 dark:text-white hover:bg-white/50' }}">
                     Penjualan Tunai
                 </a>
                 <a href="{{ route('history.index', array_merge(request()->query(), ['type' => 'sale_debt'])) }}" 
-                   class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ $currentType === 'sale_debt' ? 'bg-primary text-white shadow-sm' : 'text-slate-500 hover:bg-white/50' }}">
+                   class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ $currentType === 'sale_debt' ? 'bg-primary text-white shadow-sm' : 'text-slate-500 dark:text-white hover:bg-white/50' }}">
                     Penjualan Piutang
                 </a>
                 <a href="{{ route('history.index', array_merge(request()->query(), ['type' => 'payment'])) }}" 
-                   class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ $currentType === 'payment' ? 'bg-primary text-white shadow-sm' : 'text-slate-500 hover:bg-white/50' }}">
+                   class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ $currentType === 'payment' ? 'bg-primary text-white shadow-sm' : 'text-slate-500 dark:text-white hover:bg-white/50' }}">
                     Cicilan Piutang
                 </a>
                 <a href="{{ route('history.index', array_merge(request()->query(), ['type' => 'production'])) }}" 
-                   class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ $currentType === 'production' ? 'bg-primary text-white shadow-sm' : 'text-slate-500 hover:bg-white/50' }}">
+                   class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ $currentType === 'production' ? 'bg-primary text-white shadow-sm' : 'text-slate-500 dark:text-white hover:bg-white/50' }}">
                     Produksi
                 </a>
                 <a href="{{ route('history.index', array_merge(request()->query(), ['type' => 'expense'])) }}" 
-                   class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ $currentType === 'expense' ? 'bg-primary text-white shadow-sm' : 'text-slate-500 hover:bg-white/50' }}">
+                   class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ $currentType === 'expense' ? 'bg-primary text-white shadow-sm' : 'text-slate-500 dark:text-white hover:bg-white/50' }}">
                     Operasional
                 </a>
                 <a href="{{ route('history.index', array_merge(request()->query(), ['type' => 'purchase'])) }}" 
-                   class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ $currentType === 'purchase' ? 'bg-primary text-white shadow-sm' : 'text-slate-500 hover:bg-white/50' }}">
+                   class="px-4 py-2 rounded-xl text-xs font-bold transition-all {{ $currentType === 'purchase' ? 'bg-primary text-white shadow-sm' : 'text-slate-500 dark:text-white hover:bg-white/50' }}">
                     Belanja Bahan
                 </a>
             </div>
@@ -206,12 +206,12 @@
         <div class="overflow-x-auto min-w-full">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="border-b border-slate-100 bg-slate-50/70">
-                        <th class="px-8 py-4 text-xs font-black text-slate-400 uppercase tracking-widest">Waktu Transaksi</th>
-                        <th class="px-6 py-4 text-xs font-black text-slate-400 uppercase tracking-widest">Tipe</th>
-                        <th class="px-6 py-4 text-xs font-black text-slate-400 uppercase tracking-widest">Detail Transaksi</th>
-                        <th class="px-6 py-4 text-xs font-black text-slate-400 uppercase tracking-widest">Jumlah / Nominal</th>
-                        <th class="px-6 py-4 text-xs font-black text-slate-400 uppercase tracking-widest">Status</th>
+                    <tr class="border-b border-slate-100 dark:border-zinc-800/60 bg-slate-50/70 dark:bg-zinc-800/70">
+                        <th class="px-8 py-4 text-xs font-black text-slate-400 dark:text-white uppercase tracking-widest">Waktu Transaksi</th>
+                        <th class="px-6 py-4 text-xs font-black text-slate-400 dark:text-white uppercase tracking-widest">Tipe</th>
+                        <th class="px-6 py-4 text-xs font-black text-slate-400 dark:text-white uppercase tracking-widest">Detail Transaksi</th>
+                        <th class="px-6 py-4 text-xs font-black text-slate-400 dark:text-white uppercase tracking-widest">Jumlah / Nominal</th>
+                        <th class="px-6 py-4 text-xs font-black text-slate-400 dark:text-white uppercase tracking-widest">Status</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
@@ -220,10 +220,10 @@
                             <!-- Column 1: Waktu -->
                             <td class="px-8 py-5">
                                 <div class="flex flex-col">
-                                    <span class="text-sm font-bold text-slate-800">
+                                    <span class="text-sm font-bold text-slate-800 dark:text-white">
                                         {{ $log['time']->translatedFormat('d M Y') }}
                                     </span>
-                                    <span class="text-[10px] text-slate-400 font-medium flex items-center gap-1 mt-0.5">
+                                    <span class="text-[10px] text-slate-400 dark:text-white font-medium flex items-center gap-1 mt-0.5">
                                         <span class="material-symbols-outlined text-xs">schedule</span>
                                         {{ $log['time']->format('H:i') }} ({{ $log['time']->diffForHumans() }})
                                     </span>
@@ -244,7 +244,7 @@
                                         </span>
                                     @endif
                                 @elseif($log['type'] === 'production')
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-indigo-50 text-indigo-600 border border-indigo-100/50">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-indigo-50 text-indigo-600 border border-indigo-100/50 dark:border-indigo-950/50">
                                         <span class="h-1.5 w-1.5 rounded-full bg-indigo-500"></span>
                                         Produksi
                                     </span>
@@ -259,7 +259,7 @@
                                         Belanja Bahan Baku
                                     </span>
                                 @else
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-blue-50 text-blue-600 border border-blue-100/50">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-blue-50 text-blue-600 border border-blue-100/50 dark:border-blue-950/50">
                                         <span class="h-1.5 w-1.5 rounded-full bg-blue-500"></span>
                                         Cicilan Piutang
                                     </span>
@@ -272,14 +272,14 @@
                                         <span class="material-symbols-outlined text-lg">{{ $log['icon'] }}</span>
                                     </div>
                                     <div>
-                                        <p class="text-sm font-black text-slate-900">{{ $log['title'] }}</p>
-                                        <p class="text-xs text-slate-400 font-semibold mt-0.5">{{ $log['details'] }}</p>
+                                        <p class="text-sm font-black text-slate-900 dark:text-white">{{ $log['title'] }}</p>
+                                        <p class="text-xs text-slate-400 dark:text-white font-semibold mt-0.5">{{ $log['details'] }}</p>
                                     </div>
                                 </div>
                             </td>
                             <!-- Column 4: Jumlah / Nominal -->
                             <td class="px-6 py-5">
-                                <span class="text-sm font-black {{ ($log['type'] === 'expense' || $log['type'] === 'purchase') ? 'text-rose-600' : (($log['type'] === 'production') ? 'text-slate-500 font-bold' : 'text-slate-900') }} bg-slate-100/50 px-3 py-1.5 rounded-xl border border-slate-200/20 font-mono">
+                                <span class="text-sm font-black {{ ($log['type'] === 'expense' || $log['type'] === 'purchase') ? 'text-rose-600' : (($log['type'] === 'production') ? 'text-slate-500 dark:text-white font-bold' : 'text-slate-900 dark:text-white') }} bg-slate-100/50 dark:bg-zinc-800/50 px-3 py-1.5 rounded-xl border border-slate-200/20 dark:border-zinc-800/20 font-mono">
                                     {{ $log['amount'] }}
                                 </span>
                             </td>
@@ -292,12 +292,12 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="py-16 text-center text-slate-400">
-                                <div class="w-16 h-16 bg-slate-50 text-slate-300 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-100">
+                            <td colspan="5" class="py-16 text-center text-slate-400 dark:text-white">
+                                <div class="w-16 h-16 bg-slate-50 dark:bg-zinc-800 text-slate-300 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-100 dark:border-zinc-800/60">
                                     <span class="material-symbols-outlined text-3xl">hourglass_empty</span>
                                 </div>
-                                <p class="text-sm font-black text-slate-800">Tidak ada riwayat transaksi</p>
-                                <p class="text-xs text-slate-400 mt-1">Belum ada aktivitas tercatat pada kategori atau filter ini.</p>
+                                <p class="text-sm font-black text-slate-800 dark:text-white">Tidak ada riwayat transaksi</p>
+                                <p class="text-xs text-slate-400 dark:text-white mt-1">Belum ada aktivitas tercatat pada kategori atau filter ini.</p>
                             </td>
                         </tr>
                     @endforelse
@@ -307,7 +307,7 @@
 
         <!-- Pagination Footer -->
         @if($logs->hasPages())
-            <div class="px-8 py-6 border-t border-slate-100 bg-slate-50/50">
+            <div class="px-8 py-6 border-t border-slate-100 dark:border-zinc-800/60 bg-slate-50/50 dark:bg-zinc-800/30">
                 {{ $logs->appends(request()->query())->links() }}
             </div>
         @endif

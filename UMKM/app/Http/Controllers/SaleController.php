@@ -125,12 +125,20 @@ class SaleController extends Controller
             'quantity' => ['required', 'integer', 'min:1'],
             'customer_id' => ['nullable', 'exists:customers,id'],
             'payment_method' => ['required', 'in:cash,transfer,qris,debt'],
+            'due_date' => ['nullable', 'date', 'after_or_equal:today'],
         ]);
 
-        if ($validated['payment_method'] === 'debt' && empty($validated['customer_id'])) {
-            throw ValidationException::withMessages([
-                'customer_id' => 'Pelanggan wajib dipilih jika metode pembayaran adalah Piutang / Kasbon.',
-            ]);
+        if ($validated['payment_method'] === 'debt') {
+            if (empty($validated['customer_id'])) {
+                throw ValidationException::withMessages([
+                    'customer_id' => 'Pelanggan wajib dipilih jika metode pembayaran adalah Piutang / Kasbon.',
+                ]);
+            }
+            if (empty($validated['due_date'])) {
+                throw ValidationException::withMessages([
+                    'due_date' => 'Tanggal jatuh tempo wajib diisi jika metode pembayaran adalah Piutang / Kasbon.',
+                ]);
+            }
         }
 
         $customerName = 'Pelanggan Umum';
@@ -191,7 +199,7 @@ class SaleController extends Controller
                     'sale_id' => $sale->id,
                     'total_amount' => $total,
                     'remaining_amount' => $total,
-                    'due_date' => now()->addDays(14)->toDateString(),
+                    'due_date' => $validated['due_date'],
                     'status' => 'unpaid',
                 ]);
             }
@@ -261,7 +269,7 @@ class SaleController extends Controller
                     'status' => (string) $sale->status,
                     'status_label' => $sale->status === 'paid' ? 'Lunas' : 'Belum Lunas',
                     'status_class' => $sale->status === 'paid' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700',
-                    'can_delete' => auth()->check() && auth()->user()->isAdmin(),
+                    'can_delete' => auth()->check() && (auth()->user()->isAdmin() || auth()->user()->isStaff()),
                     'destroy_url' => route('sales.destroy', $sale),
                 ];
             }
