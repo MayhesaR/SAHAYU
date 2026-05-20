@@ -6,6 +6,56 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-headline: 'Manrope', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-label: 'Inter', sans-serif;
+
+    --color-background: #f9f9f9;
+    --color-outline-variant: #bec9c8;
+    --color-surface-container-highest: #e2e3e2;
+    --color-on-secondary-fixed-variant: #324b4b;
+    --color-tertiary-fixed-dim: #ffb694;
+    --color-surface-container: #edeeee;
+    --color-surface-bright: #f9f9f9;
+    --color-on-tertiary: #ffffff;
+    --color-on-tertiary-fixed: #351000;
+    --color-on-primary-fixed: #002020;
+    --color-secondary: #4a6363;
+    --color-on-secondary-fixed: #051f20;
+    --color-surface-container-low: #f3f4f3;
+    --color-surface-container-lowest: #ffffff;
+    --color-inverse-primary: #84d4d3;
+    --color-primary-fixed-dim: #84d4d3;
+    --color-tertiary-container: #8d4e2f;
+    --color-surface-container-high: #e7e8e8;
+    --color-on-surface: #1a1c1c;
+    --color-on-error-container: #93000a;
+    --color-surface-tint: #006a6a;
+    --color-secondary-fixed-dim: #b1cccb;
+    --color-secondary-container: #cce8e7;
+    --color-error-container: #ffdad6;
+    --color-primary: #005050;
+    --color-surface: #f9f9f9;
+    --color-on-background: #1a1c1c;
+    --color-on-secondary: #ffffff;
+    --color-on-tertiary-fixed-variant: #70371a;
+    --color-surface-dim: #d9dada;
+    --color-primary-container: #006a6a;
+    --color-inverse-on-surface: #f0f1f0;
+    --color-tertiary-fixed: #ffdbcc;
+    --color-outline: #6e7979;
+    --color-inverse-surface: #2e3131;
+    --color-on-primary-fixed-variant: #004f4f;
+    --color-surface-variant: #e2e3e2;
+    --color-on-tertiary-container: #ffcfba;
+    --color-on-surface-variant: #3e4948;
+    --color-on-secondary-container: #506969;
+    --color-error: #ba1a1a;
+    --color-primary-fixed: #a0f0f0;
+    --color-on-error: #ffffff;
+    --color-on-primary: #ffffff;
+    --color-on-primary-container: #97e7e6;
+    --color-secondary-fixed: #cce8e7;
+    --color-tertiary: #70371a;
 }

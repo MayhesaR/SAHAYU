@@ -7,15 +7,15 @@
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="w-full">
-            <h2 class="text-lg sm:text-xl lg:text-2xl font-extrabold text-teal-900 tracking-tight flex items-center gap-3 break-words">
-                <span class="material-symbols-outlined text-2xl sm:text-3xl flex-shrink-0" style="color: #005050;">smart_toy</span>
+            <h2 class="text-lg sm:text-xl lg:text-2xl font-extrabold text-emerald-900 tracking-tight flex items-center gap-3 break-words">
+                <span class="material-symbols-outlined text-2xl sm:text-3xl flex-shrink-0" style="color: #0b6e4f;">smart_toy</span>
                 SAHAYU Assistant
             </h2>
             <p class="text-on-surface-variant font-body mt-1 max-w-xl text-sm sm:text-base">
                 Analisis kesehatan bisnis, deteksi anomali, dan prediksi performa menggunakan kecerdasan buatan.
             </p>
         </div>
-        <span class="px-3 py-1.5 bg-teal-50 text-teal-700 text-[10px] font-black uppercase tracking-widest rounded-full border border-teal-200 flex-shrink-0">
+        <span class="px-3 py-1.5 bg-emerald-50 text-emerald-700 text-[10px] font-black uppercase tracking-widest rounded-full border border-emerald-200 flex-shrink-0">
             AI-Powered
         </span>
     </div>
@@ -32,11 +32,11 @@
                        name="filter_month"
                        value="{{ $filterMonth }}"
                        max="{{ \Carbon\Carbon::now()->format('Y-m') }}"
-                       class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm font-semibold text-teal-900 focus:ring-2 focus:ring-teal-500/20 transition-all" />
+                       class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm font-semibold text-emerald-900 focus:ring-2 focus:ring-emerald-500/20 transition-all" />
             </div>
             <button type="submit"
                     class="px-6 py-3 rounded-lg shadow-sm hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2"
-                    style="background-color: #005050 !important; color: #ffffff !important; font-weight: 900;">
+                    style="background-color: #0b6e4f !important; color: #ffffff !important; font-weight: 900;">
                 <span class="material-symbols-outlined text-base">filter_alt</span>
                 <span>Filter Analisis</span>
             </button>
@@ -67,21 +67,21 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <article class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
                 <p class="text-xs uppercase tracking-widest text-slate-500 font-semibold">Pendapatan</p>
-                <h3 class="mt-2 text-2xl font-extrabold text-teal-900">Rp {{ number_format($monthlyData['total_revenue'], 0, ',', '.') }}</h3>
+                <h3 class="mt-2 text-2xl font-extrabold text-emerald-900">Rp {{ number_format($monthlyData['total_revenue'], 0, ',', '.') }}</h3>
             </article>
             <article class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
                 <p class="text-xs uppercase tracking-widest text-slate-500 font-semibold">Total HPP</p>
-                <h3 class="mt-2 text-2xl font-extrabold text-teal-900">Rp {{ number_format($monthlyData['total_hpp'], 0, ',', '.') }}</h3>
+                <h3 class="mt-2 text-2xl font-extrabold text-emerald-900">Rp {{ number_format($monthlyData['total_hpp'], 0, ',', '.') }}</h3>
             </article>
             <article class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
                 <p class="text-xs uppercase tracking-widest text-slate-500 font-semibold">Margin Laba</p>
-                <h3 class="mt-2 text-2xl font-extrabold {{ $monthlyData['profit_margin'] >= 20 ? 'text-teal-700' : ($monthlyData['profit_margin'] >= 10 ? 'text-amber-600' : 'text-red-600') }}">
+                <h3 class="mt-2 text-2xl font-extrabold {{ $monthlyData['profit_margin'] >= 20 ? 'text-emerald-700' : ($monthlyData['profit_margin'] >= 10 ? 'text-amber-600' : 'text-red-600') }}">
                     {{ number_format($monthlyData['profit_margin'], 1) }}%
                 </h3>
             </article>
             <article class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
                 <p class="text-xs uppercase tracking-widest text-slate-500 font-semibold">Reject Rate</p>
-                <h3 class="mt-2 text-2xl font-extrabold {{ $monthlyData['reject_rate'] <= 5 ? 'text-teal-700' : ($monthlyData['reject_rate'] <= 10 ? 'text-amber-600' : 'text-red-600') }}">
+                <h3 class="mt-2 text-2xl font-extrabold {{ $monthlyData['reject_rate'] <= 5 ? 'text-emerald-700' : ($monthlyData['reject_rate'] <= 10 ? 'text-amber-600' : 'text-red-600') }}">
                     {{ number_format($monthlyData['reject_rate'], 2) }}%
                 </h3>
                 <p class="text-xs text-slate-500 mt-1">dari {{ number_format($monthlyData['total_produced_units'], 0, ',', '.') }} unit</p>
@@ -92,8 +92,8 @@
     {{-- Historical Trend Mini-Table --}}
     <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="px-6 py-4 bg-surface-container-low border-b border-gray-100 flex items-center gap-2">
-            <span class="material-symbols-outlined text-teal-600 text-lg flex-shrink-0">timeline</span>
-            <h3 class="text-sm font-bold text-teal-900 uppercase tracking-wider">Tren 3 Bulan Sebelumnya</h3>
+            <span class="material-symbols-outlined text-emerald-600 text-lg flex-shrink-0">timeline</span>
+            <h3 class="text-sm font-bold text-emerald-900 uppercase tracking-wider">Tren 3 Bulan Sebelumnya</h3>
         </div>
         <div class="w-full overflow-x-auto overflow-y-hidden border border-gray-100 rounded-lg mb-4" style="-webkit-overflow-scrolling: touch; display: block; clear: both; touch-action: pan-x pan-y;">
             <table class="min-w-[800px] w-full text-xs text-left whitespace-nowrap">
@@ -111,15 +111,15 @@
                     @foreach (array_reverse($historicalData) as $index => $history)
                     <tr class="border-t border-slate-100 hover:bg-slate-50/50 transition-colors whitespace-nowrap">
                         <td class="px-6 py-3 font-semibold text-slate-700">{{ $history['period'] }}</td>
-                        <td class="px-6 py-3 text-right text-teal-900 font-medium">Rp {{ number_format($history['revenue'], 0, ',', '.') }}</td>
+                        <td class="px-6 py-3 text-right text-emerald-900 font-medium">Rp {{ number_format($history['revenue'], 0, ',', '.') }}</td>
                         <td class="px-6 py-3 text-right text-slate-600">Rp {{ number_format($history['hpp'], 0, ',', '.') }}</td>
                         <td class="px-6 py-3 text-right">
-                            <span class="px-2.5 py-1 rounded-md text-[10px] font-bold {{ $history['profit_margin'] >= 20 ? 'bg-teal-50 text-teal-700' : ($history['profit_margin'] >= 10 ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700') }}">
+                            <span class="px-2.5 py-1 rounded-md text-[10px] font-bold {{ $history['profit_margin'] >= 20 ? 'bg-emerald-50 text-emerald-700' : ($history['profit_margin'] >= 10 ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700') }}">
                                 {{ number_format($history['profit_margin'], 1) }}%
                             </span>
                         </td>
                         <td class="px-6 py-3 text-right text-slate-700">{{ number_format($history['produced_units'], 0, ',', '.') }}</td>
-                        <td class="px-6 py-3 text-right font-bold {{ $history['reject_rate'] <= 5 ? 'text-teal-700' : ($history['reject_rate'] <= 10 ? 'text-amber-600' : 'text-red-600') }}">
+                        <td class="px-6 py-3 text-right font-bold {{ $history['reject_rate'] <= 5 ? 'text-emerald-700' : ($history['reject_rate'] <= 10 ? 'text-amber-600' : 'text-red-600') }}">
                             {{ number_format($history['reject_rate'], 2) }}%
                         </td>
                     </tr>
@@ -133,23 +133,23 @@
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <article class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
             <p class="text-xs uppercase tracking-widest text-slate-500 font-semibold">Bahan Baku</p>
-            <h3 class="mt-2 text-xl font-extrabold text-teal-900">Rp {{ number_format($monthlyData['material_cost'], 0, ',', '.') }}</h3>
+            <h3 class="mt-2 text-xl font-extrabold text-emerald-900">Rp {{ number_format($monthlyData['material_cost'], 0, ',', '.') }}</h3>
         </article>
         <article class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
             <p class="text-xs uppercase tracking-widest text-slate-500 font-semibold">Overhead</p>
-            <h3 class="mt-2 text-xl font-extrabold text-teal-900">Rp {{ number_format($monthlyData['overhead_cost'], 0, ',', '.') }}</h3>
+            <h3 class="mt-2 text-xl font-extrabold text-emerald-900">Rp {{ number_format($monthlyData['overhead_cost'], 0, ',', '.') }}</h3>
         </article>
         <article class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
             <p class="text-xs uppercase tracking-widest text-slate-500 font-semibold">Tenaga Kerja</p>
-            <h3 class="mt-2 text-xl font-extrabold text-teal-900">Rp {{ number_format($monthlyData['labor_cost'], 0, ',', '.') }}</h3>
+            <h3 class="mt-2 text-xl font-extrabold text-emerald-900">Rp {{ number_format($monthlyData['labor_cost'], 0, ',', '.') }}</h3>
         </article>
     </div>
 
     {{-- Analysis Action --}}
     <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-surface-container-high p-8 text-center" id="analysis-trigger-section">
         <div class="mb-6">
-            <span class="material-symbols-outlined text-5xl text-teal-300 mb-4 block">psychology</span>
-            <h3 class="text-xl font-bold text-teal-900 mb-2">Siap untuk Analisis Lanjutan?</h3>
+            <span class="material-symbols-outlined text-5xl text-emerald-300 mb-4 block">psychology</span>
+            <h3 class="text-xl font-bold text-emerald-900 mb-2">Siap untuk Analisis Lanjutan?</h3>
             <p class="text-sm text-slate-500 max-w-lg mx-auto">
                 AI akan mengaudit data periode <strong>{{ $monthlyData['period'] }}</strong> untuk deteksi anomali,
                 mengklasifikasi kesehatan bisnis, dan memprediksi performa bulan berikutnya berdasarkan tren historis.
@@ -157,7 +157,7 @@
         </div>
         <button id="btn-analyze"
                 class="px-8 py-4 rounded-xl shadow-lg hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 mx-auto"
-                style="background-color: #005050 !important; color: #ffffff !important; font-weight: 900;"
+                style="background-color: #0b6e4f !important; color: #ffffff !important; font-weight: 900;"
                 onclick="runAnalysis()">
             <span class="material-symbols-outlined text-xl">auto_awesome</span>
             <span class="text-base">Analisis Kinerja & Prediksi</span>
@@ -169,12 +169,12 @@
         <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-surface-container-high p-10 text-center">
             <div class="space-y-6">
                 <div class="flex justify-center">
-                    <div class="w-16 h-16 rounded-full bg-teal-100 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-3xl text-teal-500 animate-spin">progress_activity</span>
+                    <div class="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-3xl text-emerald-500 animate-spin">progress_activity</span>
                     </div>
                 </div>
                 <div>
-                    <h3 class="text-lg font-bold text-teal-900 mb-2">AI sedang menganalisis data...</h3>
+                    <h3 class="text-lg font-bold text-emerald-900 mb-2">AI sedang menganalisis data...</h3>
                     <p class="text-sm text-slate-500">Mengaudit anomali, mengklasifikasi kesehatan, dan membangun prediksi.</p>
                 </div>
                 <div class="max-w-md mx-auto space-y-3">
@@ -205,7 +205,7 @@
         {{-- Classification Badge --}}
         <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-surface-container-high p-8" id="classification-card">
             <div class="flex items-center justify-between mb-2">
-                <h3 class="text-lg font-bold text-teal-900 flex items-center gap-2">
+                <h3 class="text-lg font-bold text-emerald-900 flex items-center gap-2">
                     <span class="material-symbols-outlined">monitoring</span>
                     Klasifikasi Kesehatan Bisnis
                 </h3>
@@ -215,7 +215,7 @@
 
         {{-- Summary --}}
         <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-surface-container-high p-8">
-            <h3 class="text-lg font-bold text-teal-900 flex items-center gap-2 mb-4">
+            <h3 class="text-lg font-bold text-emerald-900 flex items-center gap-2 mb-4">
                 <span class="material-symbols-outlined">summarize</span>
                 Ringkasan Performa — {{ $monthlyData['period'] }}
             </h3>
@@ -223,15 +223,15 @@
         </div>
 
         {{-- Prediction Card --}}
-        <div class="rounded-xl shadow-sm overflow-hidden border-2" style="border-color: #005050;">
-            <div class="px-8 py-4 flex items-center gap-3" style="background-color: #005050;">
+        <div class="rounded-xl shadow-sm overflow-hidden border-2" style="border-color: #0b6e4f;">
+            <div class="px-8 py-4 flex items-center gap-3" style="background-color: #0b6e4f;">
                 <span class="material-symbols-outlined text-xl text-white">trending_up</span>
                 <h3 class="text-base font-black text-white uppercase tracking-wider">Prediksi Bulan Depan</h3>
             </div>
-            <div class="p-8 bg-gradient-to-br from-teal-50 to-white">
+            <div class="p-8 bg-gradient-to-br from-emerald-50 to-white">
                 <div class="flex items-start gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-teal-100 flex items-center justify-center flex-shrink-0 mt-1">
-                        <span class="material-symbols-outlined text-2xl" style="color: #005050;">query_stats</span>
+                    <div class="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center flex-shrink-0 mt-1">
+                        <span class="material-symbols-outlined text-2xl" style="color: #0b6e4f;">query_stats</span>
                     </div>
                     <div id="prediction-text" class="flex-1"></div>
                 </div>
@@ -260,17 +260,17 @@
     {{-- ═══ Interactive Chatbot Section ═══ --}}
     <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-surface-container-high overflow-hidden" id="chatbot-section">
         {{-- Chat Header --}}
-        <div class="px-6 py-4 flex items-center gap-3 border-b border-slate-100" style="background: linear-gradient(135deg, #005050 0%, #007070 100%);">
+        <div class="px-6 py-4 flex items-center gap-3 border-b border-slate-100" style="background: linear-gradient(135deg, #0b6e4f 0%, #007070 100%);">
             <div class="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center">
                 <span class="material-symbols-outlined text-white text-lg">chat</span>
             </div>
             <div>
                 <h3 class="text-sm font-black text-white uppercase tracking-wider">Tanya SAHAYU Assistant</h3>
-                <p class="text-[10px] text-teal-100 font-medium">Tanyakan detail lebih lanjut tentang data {{ $monthlyData['period'] }}</p>
+                <p class="text-[10px] text-emerald-100 font-medium">Tanyakan detail lebih lanjut tentang data {{ $monthlyData['period'] }}</p>
             </div>
             <div class="ml-auto flex items-center gap-1.5">
                 <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span class="text-[10px] text-teal-100 font-bold uppercase tracking-wider">Online</span>
+                <span class="text-[10px] text-emerald-100 font-bold uppercase tracking-wider">Online</span>
             </div>
         </div>
 
@@ -278,13 +278,13 @@
         <div id="chatbot-messages" class="p-6 space-y-4 max-h-[420px] overflow-y-auto scroll-smooth" style="min-height: 180px; background: linear-gradient(180deg, #f8fffe 0%, #f0fdfa 100%);">
             {{-- Welcome message --}}
             <div class="flex items-start gap-3" id="chatbot-welcome">
-                <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background-color: #005050;">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background-color: #0b6e4f;">
                     <span class="material-symbols-outlined text-white text-sm">smart_toy</span>
                 </div>
                 <div class="bg-white rounded-2xl rounded-tl-md px-4 py-3 shadow-sm border border-slate-100 max-w-[85%]">
                     <p class="text-sm text-slate-700 leading-relaxed">
                         Halo! 👋 Saya SAHAYU Assistant. Saya siap menjawab pertanyaan Anda seputar data operasional
-                        <strong class="text-teal-800">{{ $monthlyData['period'] }}</strong>.
+                        <strong class="text-emerald-800">{{ $monthlyData['period'] }}</strong>.
                         Silakan ketik pertanyaan Anda di bawah.
                     </p>
                     <p class="text-[10px] text-slate-400 mt-2 font-medium">SAHAYU Assistant</p>
@@ -301,13 +301,13 @@
                            placeholder="Ketik pertanyaan Anda di sini..."
                            autocomplete="off"
                            maxlength="1000"
-                           class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 pr-12 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-400 transition-all" />
+                           class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 pr-12 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 transition-all" />
                     <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-300 font-mono" id="chatbot-char-count">0/1000</span>
                 </div>
                 <button type="submit"
                         id="chatbot-send-btn"
                         class="w-12 h-12 rounded-xl flex items-center justify-center shadow-sm hover:scale-105 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"
-                        style="background-color: #005050; color: white;">
+                        style="background-color: #0b6e4f; color: white;">
                     <span class="material-symbols-outlined text-lg">send</span>
                 </button>
             </form>
@@ -333,7 +333,7 @@
     }
     .markdown-body strong {
         font-weight: 800;
-        color: #005050;
+        color: #0b6e4f;
     }
     .markdown-body ul {
         list-style-type: disc;
@@ -347,7 +347,7 @@
     .markdown-body h3 {
         font-size: 1rem;
         font-weight: 800;
-        color: #005050;
+        color: #0b6e4f;
         margin-top: 0.75rem;
         margin-bottom: 0.5rem;
     }
@@ -393,7 +393,7 @@
             badge.textContent = data.health_status;
 
             if (status.includes('sehat') || status.includes('healthy')) {
-                badge.className = 'px-5 py-2 rounded-full text-sm font-black uppercase tracking-widest bg-teal-100 text-teal-800';
+                badge.className = 'px-5 py-2 rounded-full text-sm font-black uppercase tracking-widest bg-emerald-100 text-emerald-800';
             } else if (status.includes('waspada') || status.includes('warning')) {
                 badge.className = 'px-5 py-2 rounded-full text-sm font-black uppercase tracking-widest bg-amber-100 text-amber-800';
             } else if (status.includes('kritis') || status.includes('critical')) {
@@ -409,28 +409,28 @@
             document.getElementById('summary-text').innerHTML = `
                 <div class="markdown-body text-slate-700 leading-relaxed">${marked.parse(data.summary || '')}</div>
                 <div class="mt-4 inline-flex items-center gap-2 px-4 py-2.5 bg-slate-50 rounded-xl text-xs font-bold text-slate-700 border border-slate-200 shadow-sm">
-                    <span class="material-symbols-outlined text-base text-teal-600">point_of_sale</span>
-                    Target Minimum BEP Harian: <span class="text-teal-700 font-black text-sm ml-1">${formatRp(insights.daily_bep)}</span>
+                    <span class="material-symbols-outlined text-base text-emerald-600">point_of_sale</span>
+                    Target Minimum BEP Harian: <span class="text-emerald-700 font-black text-sm ml-1">${formatRp(insights.daily_bep)}</span>
                 </div>
             `;
 
             // 2. Prediksi + Growth Rate
             document.getElementById('prediction-text').innerHTML = `
-                <div class="markdown-body text-teal-900 leading-relaxed">${marked.parse(data.prediction || '')}</div>
-                <div class="flex items-center gap-3 mt-5 pt-4 border-t border-teal-100/60 flex-wrap">
-                    <div class="px-4 py-2 bg-white rounded-lg text-xs font-bold text-teal-800 border border-teal-100 shadow-sm flex items-center gap-2">
-                        <span class="material-symbols-outlined text-sm text-teal-500">monitoring</span>
-                        Prediksi Matematis: <span class="text-teal-900">${formatRp(insights.prediction.predicted_revenue)}</span>
+                <div class="markdown-body text-emerald-900 leading-relaxed">${marked.parse(data.prediction || '')}</div>
+                <div class="flex items-center gap-3 mt-5 pt-4 border-t border-emerald-100/60 flex-wrap">
+                    <div class="px-4 py-2 bg-white rounded-lg text-xs font-bold text-emerald-800 border border-emerald-100 shadow-sm flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm text-emerald-500">monitoring</span>
+                        Prediksi Matematis: <span class="text-emerald-900">${formatRp(insights.prediction.predicted_revenue)}</span>
                     </div>
-                    <div class="px-4 py-2 bg-white rounded-lg text-xs font-bold border border-teal-100 shadow-sm flex items-center gap-2">
+                    <div class="px-4 py-2 bg-white rounded-lg text-xs font-bold border border-emerald-100 shadow-sm flex items-center gap-2">
                         <span class="material-symbols-outlined text-sm ${insights.prediction.growth_rate >= 0 ? 'text-emerald-500' : 'text-red-500'}">
                             ${insights.prediction.growth_rate >= 0 ? 'trending_up' : 'trending_down'}
                         </span>
                         Tren: <span class="${insights.prediction.growth_rate >= 0 ? 'text-emerald-700' : 'text-red-700'}">${insights.prediction.growth_rate}%</span>
                     </div>
-                    <div class="px-4 py-2 bg-white rounded-lg text-xs font-bold text-teal-800 border border-teal-100 shadow-sm flex items-center gap-2">
-                        <span class="material-symbols-outlined text-sm text-teal-500">verified</span>
-                        Confidence: <span class="text-teal-900">${insights.prediction.confidence}</span>
+                    <div class="px-4 py-2 bg-white rounded-lg text-xs font-bold text-emerald-800 border border-emerald-100 shadow-sm flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm text-emerald-500">verified</span>
+                        Confidence: <span class="text-emerald-900">${insights.prediction.confidence}</span>
                     </div>
                 </div>
             `;
@@ -582,7 +582,7 @@
             const parsedText = isError ? escapeHtml(text) : marked.parse(text);
 
             wrapper.innerHTML = `
-                <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background-color: #005050;">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background-color: #0b6e4f;">
                     <span class="material-symbols-outlined text-white text-sm">smart_toy</span>
                 </div>
                 <div class="${bgClass} rounded-2xl rounded-tl-md px-4 py-3 shadow-sm border max-w-[85%] overflow-hidden">
@@ -607,15 +607,15 @@
         wrapper.id = id;
         wrapper.className = 'flex items-start gap-3';
         wrapper.innerHTML = `
-            <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background-color: #005050;">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background-color: #0b6e4f;">
                 <span class="material-symbols-outlined text-white text-sm animate-pulse">smart_toy</span>
             </div>
             <div class="bg-white rounded-2xl rounded-tl-md px-5 py-3 shadow-sm border border-slate-100">
                 <div class="flex items-center gap-2">
                     <div class="flex gap-1">
-                        <span class="w-2 h-2 rounded-full bg-teal-400 animate-bounce" style="animation-delay: 0ms;"></span>
-                        <span class="w-2 h-2 rounded-full bg-teal-400 animate-bounce" style="animation-delay: 150ms;"></span>
-                        <span class="w-2 h-2 rounded-full bg-teal-400 animate-bounce" style="animation-delay: 300ms;"></span>
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-bounce" style="animation-delay: 0ms;"></span>
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-bounce" style="animation-delay: 150ms;"></span>
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-bounce" style="animation-delay: 300ms;"></span>
                     </div>
                     <span class="text-xs text-slate-400 font-medium italic">SAHAYU Assistant sedang mengetik...</span>
                 </div>

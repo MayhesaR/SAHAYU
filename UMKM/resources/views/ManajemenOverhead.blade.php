@@ -7,22 +7,22 @@
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="space-y-1 w-full">
-            <h2 class="text-lg sm:text-xl lg:text-2xl font-extrabold tracking-tight text-teal-900 break-words">Biaya Operasional (Overhead)</h2>
+            <h2 class="text-lg sm:text-xl lg:text-2xl font-extrabold tracking-tight text-emerald-900 break-words">Biaya Operasional (Overhead)</h2>
             <p class="text-sm sm:text-base text-on-surface-variant font-body">Pantau pengeluaran bulanan Anda untuk perhitungan HPP yang lebih akurat.</p>
         </div>
         <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
             <form action="{{ route('overhead.index') }}" method="GET" class="flex-1 sm:flex-none flex items-center gap-2 bg-surface-container-low p-1.5 rounded-xl border border-gray-100">
-                <select name="month" class="bg-transparent border-none text-xs font-bold text-teal-900 focus:ring-0 cursor-pointer">
+                <select name="month" class="bg-transparent border-none text-xs font-bold text-emerald-900 focus:ring-0 cursor-pointer">
                     @foreach($months as $num => $name)
                         <option value="{{ $num }}" {{ $selectedMonth == $num ? 'selected' : '' }}>{{ $name }}</option>
                     @endforeach
                 </select>
-                <select name="year" class="bg-transparent border-none text-xs font-bold text-teal-900 focus:ring-0 cursor-pointer">
+                <select name="year" class="bg-transparent border-none text-xs font-bold text-emerald-900 focus:ring-0 cursor-pointer">
                     @foreach($years as $year)
                         <option value="{{ $year }}" {{ $selectedYear == $year ? 'selected' : '' }}>{{ $year }}</option>
                     @endforeach
                 </select>
-                <button type="submit" class="px-3 py-2 hover:bg-teal-100 rounded-lg text-teal-700 transition-colors text-[10px] font-black uppercase flex items-center gap-1">
+                <button type="submit" class="px-3 py-2 hover:bg-emerald-100 rounded-lg text-emerald-700 transition-colors text-[10px] font-black uppercase flex items-center gap-1">
                     <span class="material-symbols-outlined text-sm flex-shrink-0">refresh</span>
                     Terapkan
                 </button>
@@ -30,13 +30,13 @@
 
             <!-- Export Excel Button -->
             <a href="{{ route('overhead.export', request()->all()) }}" 
-               class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/30 hover:scale-[1.02] active:scale-95 transition-all">
+               class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-[#0b6e4f] hover:bg-[#09523b] text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/30 hover:scale-[1.02] active:scale-95 transition-all">
                 <span class="material-symbols-outlined text-base flex-shrink-0">download</span>
                 <span>Ekspor Excel</span>
             </a>
 
             @if(auth()->user()->isAdmin())
-            <button class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-[#005050] text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-teal-900/30 hover:bg-[#006a6a] hover:scale-[1.02] active:scale-95 transition-all" id="open-overhead-form">
+            <button class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-[#0b6e4f] text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/30 hover:bg-[#09523b] hover:scale-[1.02] active:scale-95 transition-all" id="open-overhead-form">
                 <span class="material-symbols-outlined text-base flex-shrink-0">add_circle</span>
                 <span>Catat Biaya</span>
             </button>
@@ -45,7 +45,7 @@
     </div>
 
     @if (session('success'))
-    <div class="rounded-xl bg-teal-50 text-teal-800 border border-teal-100 px-4 py-3 text-sm font-medium animate-in fade-in slide-in-from-top-4">
+    <div class="rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-100 px-4 py-3 text-sm font-medium animate-in fade-in slide-in-from-top-4">
         {{ session('success') }}
     </div>
     @endif
@@ -54,7 +54,7 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div class="md:col-span-1 bg-surface-container-lowest p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300">
             <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">Total Biaya {{ $months[$selectedMonth] }}</p>
-            <h3 class="text-2xl font-black text-teal-900 leading-none">Rp {{ number_format($totalOverhead, 0, ',', '.') }}</h3>
+            <h3 class="text-2xl font-black text-emerald-900 leading-none">Rp {{ number_format($totalOverhead, 0, ',', '.') }}</h3>
             <p class="text-[10px] text-slate-400 mt-2 italic">*Digunakan untuk pembagi HPP</p>
         </div>
         <div class="md:col-span-3 bg-surface-container-lowest p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300">
@@ -63,7 +63,7 @@
                 @forelse($categoryBreakdown as $cat)
                 <div class="flex-1 min-w-[140px] bg-slate-50 p-3 rounded-lg border border-slate-100">
                     <p class="text-[9px] font-black uppercase text-slate-500 mb-1 truncate">{{ $cat->category }}</p>
-                    <p class="text-sm font-bold text-teal-900">Rp {{ number_format($cat->total, 0, ',', '.') }}</p>
+                    <p class="text-sm font-bold text-emerald-900">Rp {{ number_format($cat->total, 0, ',', '.') }}</p>
                 </div>
                 @empty
                 <p class="text-xs text-slate-400 italic">Belum ada data kategori.</p>
@@ -75,7 +75,7 @@
     <!-- Sidebar Form -->
     <aside id="overhead-sidebar" class="fixed right-0 top-0 h-screen w-96 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50 overflow-y-auto">
         <div class="p-6 bg-surface-container-low border-b border-outline-variant/5 flex justify-between items-center sticky top-0 z-10">
-            <h3 class="font-bold text-teal-900 flex items-center gap-2">
+            <h3 class="font-bold text-emerald-900 flex items-center gap-2">
                 <span class="material-symbols-outlined">account_balance_wallet</span> Catat Biaya Operasional
             </h3>
             <button id="close-overhead-form" class="text-slate-400 hover:text-error transition-colors">
@@ -109,8 +109,8 @@
                     <input name="cost" type="number" required class="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" placeholder="0"/>
                 </div>
                 <div class="pt-4">
-                    <button class="w-full py-4 rounded-xl shadow-lg shadow-teal-900/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2" 
-                            style="background-color: #005050 !important; color: #ffffff !important; font-weight: 900;" 
+                    <button class="w-full py-4 rounded-xl shadow-lg shadow-emerald-900/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2" 
+                            style="background-color: #0b6e4f !important; color: #ffffff !important; font-weight: 900;" 
                             type="submit">
                         <span class="material-symbols-outlined text-base">save</span>
                         <span>Simpan Pengeluaran</span>
@@ -145,7 +145,7 @@
                                 {{ $cost->category }}
                             </span>
                         </td>
-                        <td class="px-8 py-5 font-bold text-teal-900 text-sm">{{ $cost->name }}</td>
+                        <td class="px-8 py-5 font-bold text-emerald-900 text-sm">{{ $cost->name }}</td>
                         <td class="px-8 py-5 font-black text-sm">Rp {{ number_format($cost->cost, 0, ',', '.') }}</td>
                         <td class="px-8 py-5 text-right">
                             @if(auth()->user()->isAdmin())

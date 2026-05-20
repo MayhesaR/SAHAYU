@@ -7,11 +7,11 @@
 <div class="px-4 py-6 sm:px-8 max-w-7xl mx-auto space-y-8">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="w-full">
-            <h2 class="text-lg sm:text-xl lg:text-2xl font-extrabold text-teal-900 tracking-tight break-words">Manajemen Customer & CRM</h2>
+            <h2 class="text-lg sm:text-xl lg:text-2xl font-extrabold text-emerald-900 tracking-tight break-words">Manajemen Customer & CRM</h2>
             <p class="text-on-surface-variant font-body mt-1 max-w-xl text-sm sm:text-base">Kelola basis data pelanggan, lacak histori transaksi total belanja, dan kontrol sisa kasbon piutang secara digital.</p>
         </div>
-        <a class="w-full sm:w-auto px-6 py-2.5 rounded-xl shadow-lg shadow-teal-900/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2" 
-           style="background-color: #005050 !important; color: #ffffff !important; font-weight: 900;" 
+        <a class="w-full sm:w-auto px-6 py-2.5 rounded-xl shadow-lg shadow-emerald-900/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2" 
+           style="background-color: #0b6e4f !important; color: #ffffff !important; font-weight: 900;" 
            href="#form-customer">
             <span class="material-symbols-outlined text-base flex-shrink-0">person_add</span>
             <span>Tambah Customer</span>
@@ -19,7 +19,7 @@
     </div>
 
     @if (session('success'))
-        <div class="rounded-xl bg-teal-50 text-teal-800 border border-teal-100 px-4 py-3 text-sm font-medium">
+        <div class="rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-100 px-4 py-3 text-sm font-medium">
             {{ session('success') }}
         </div>
     @endif
@@ -36,7 +36,7 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <article class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
             <p class="text-xs uppercase tracking-widest text-slate-500 font-semibold">Total Customer</p>
-            <h3 class="mt-2 text-3xl font-extrabold text-teal-900">{{ $customers->total() }}</h3>
+            <h3 class="mt-2 text-3xl font-extrabold text-emerald-900">{{ $customers->total() }}</h3>
             <p class="text-xs text-slate-500 mt-1">mitra terdaftar di CRM</p>
         </article>
         <article class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
@@ -48,7 +48,7 @@
         </article>
         <article class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
             <p class="text-xs uppercase tracking-widest text-slate-500 font-semibold">Customer Loyal</p>
-            <h3 class="mt-2 text-3xl font-extrabold text-teal-900">
+            <h3 class="mt-2 text-3xl font-extrabold text-emerald-900">
                 {{ $customers->filter(fn($c) => $c->sales->sum('total') > 500000)->count() }}
             </h3>
             <p class="text-xs text-slate-500 mt-1">belanja di atas Rp 500k</p>
@@ -61,8 +61,8 @@
         <!-- Add Customer Panel -->
         <section class="lg:col-span-4 bg-surface-container-lowest rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300" id="form-customer">
             <div class="px-6 py-5 bg-surface-container-low border-b border-gray-100">
-                <h3 class="text-lg font-bold text-teal-900 flex items-center">
-                    <span class="material-symbols-outlined mr-2 text-teal-600 flex-shrink-0">person_add</span> Tambah Customer
+                <h3 class="text-lg font-bold text-emerald-900 flex items-center">
+                    <span class="material-symbols-outlined mr-2 text-emerald-600 flex-shrink-0">person_add</span> Tambah Customer
                 </h3>
             </div>
             <form action="{{ route('customers.store') }}" method="POST" class="p-6 space-y-5">
@@ -79,8 +79,8 @@
                     <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Alamat Lengkap</label>
                     <textarea class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all font-semibold" name="address" rows="3" placeholder="Alamat lengkap toko atau rumah..."></textarea>
                 </div>
-                <button class="w-full px-6 py-3 rounded-full shadow-lg shadow-teal-900/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2" 
-                        style="background-color: #005050 !important; color: #ffffff !important; font-weight: 900;" 
+                <button class="w-full px-6 py-3 rounded-full shadow-lg shadow-emerald-900/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2" 
+                        style="background-color: #0b6e4f !important; color: #ffffff !important; font-weight: 900;" 
                         type="submit">
                     <span class="material-symbols-outlined text-base">save</span>
                     <span>Simpan Customer</span>
@@ -104,16 +104,16 @@
             <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300">
                 <div class="px-6 py-5 bg-surface-container-low border-b border-gray-100 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div class="flex items-center justify-between w-full sm:w-auto">
-                        <h3 class="text-lg font-bold text-teal-900 flex items-center">
-                            <span class="material-symbols-outlined mr-2 text-teal-600 flex-shrink-0">group</span> Database CRM Customer
+                        <h3 class="text-lg font-bold text-emerald-900 flex items-center">
+                            <span class="material-symbols-outlined mr-2 text-emerald-600 flex-shrink-0">group</span> Database CRM Customer
                         </h3>
                     </div>
                     
-                    <div class="flex flex-wrap items-center gap-3">
-                        <span class="text-[10px] font-bold text-slate-400 bg-white px-3 py-1.5 rounded-xl border border-outline-variant/5">{{ $customers->total() }} customer terdaftar</span>
+                    <div class="flex flex-wrap items-center gap-2.5 w-full sm:w-auto justify-start sm:justify-end">
+                        <span class="flex-1 sm:flex-none text-center text-[10px] font-bold text-slate-400 bg-white px-3 py-2 rounded-xl border border-outline-variant/5">{{ $customers->total() }} customer terdaftar</span>
                         
                         <!-- Status Filter Dropdown -->
-                        <form action="{{ route('customers.index') }}" method="GET" class="flex items-center gap-2">
+                        <form action="{{ route('customers.index') }}" method="GET" class="flex-1 sm:flex-none flex items-center gap-2">
                             @if(request('search'))
                                 <input type="hidden" name="search" value="{{ request('search') }}" />
                             @endif
@@ -122,7 +122,7 @@
                             @endif
                             <select name="status" 
                                     onchange="this.form.submit()" 
-                                    class="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 outline-none focus:border-teal-600 transition-all">
+                                    class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-700 outline-none focus:border-emerald-600 transition-all cursor-pointer shadow-sm">
                                 <option value="all" {{ request('status') === 'all' ? 'selected' : '' }}>Semua Status</option>
                                 <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Status: Aktif</option>
                                 <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Status: Inaktif</option>
@@ -131,7 +131,7 @@
 
                         <!-- Export Excel Button -->
                         <a href="{{ route('customers.export', request()->all()) }}" 
-                           class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-extrabold transition-all flex items-center gap-1.5 shadow-sm">
+                           class="flex-1 sm:flex-none justify-center px-4 py-2.5 bg-[#0b6e4f] hover:bg-[#09523b] text-white rounded-xl text-xs font-extrabold transition-all flex items-center gap-1.5 shadow-sm">
                             <span class="material-symbols-outlined text-[16px]">download</span>
                             <span>Ekspor Excel</span>
                         </a>
@@ -158,7 +158,7 @@
                                 <tr class="border-t border-slate-100 hover:bg-slate-50/70 transition-colors">
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-3">
-                                            <div class="w-10 h-10 rounded-xl bg-teal-50 border border-teal-100 text-teal-700 font-black text-sm flex items-center justify-center shadow-sm">
+                                            <div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-700 font-black text-sm flex items-center justify-center shadow-sm">
                                                 {{ strtoupper(substr($c->name, 0, 2)) }}
                                             </div>
                                             <div class="flex flex-col">
@@ -192,7 +192,7 @@
                                     <td class="px-6 py-4">
                                         <div class="flex justify-end gap-2">
                                             <!-- Edit customer (Accessible by both Staff and Admin) -->
-                                            <button class="px-4 py-2 rounded-lg text-xs font-black text-[#005050] bg-[#005050]/10 hover:bg-[#005050]/20 transition-colors flex items-center gap-1 edit-customer-btn"
+                                            <button class="px-4 py-2 rounded-lg text-xs font-black text-[#0b6e4f] bg-[#0b6e4f]/10 hover:bg-[#0b6e4f]/20 transition-colors flex items-center gap-1 edit-customer-btn"
                                                     data-id="{{ $c->id }}"
                                                     data-name="{{ $c->name }}"
                                                     data-phone="{{ $c->phone }}"
@@ -267,8 +267,8 @@
                     <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Alamat Lengkap</label>
                     <textarea name="address" id="edit_address" rows="3" class="w-full px-4 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-slate-700 font-bold"></textarea>
                 </div>
-                <button class="w-full py-4 rounded-xl shadow-lg shadow-teal-900/30 transition-all" 
-                        style="background-color: #005050 !important; color: #ffffff !important; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em;" 
+                <button class="w-full py-4 rounded-xl shadow-lg shadow-emerald-900/30 transition-all" 
+                        style="background-color: #0b6e4f !important; color: #ffffff !important; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em;" 
                         type="submit">
                     <span>Simpan Perubahan</span>
                 </button>

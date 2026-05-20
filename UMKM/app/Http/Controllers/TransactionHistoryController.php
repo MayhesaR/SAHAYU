@@ -71,9 +71,9 @@ class TransactionHistoryController extends Controller
                 'transaction_date' => $sale->created_at,
                 'created_at' => $sale->created_at,
                 'icon' => $isDebt ? 'menu_book' : 'payments',
-                'color' => $isDebt ? 'amber' : 'teal',
+                'color' => $isDebt ? 'amber' : 'emerald',
                 'status' => $sale->status === 'paid' ? 'Lunas' : 'Belum Lunas',
-                'status_color' => $sale->status === 'paid' ? 'bg-teal-100 text-teal-700' : 'bg-amber-100 text-amber-700',
+                'status_color' => $sale->status === 'paid' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700',
                 'details' => $sale->customer ? "Pelanggan: {$sale->customer}" : "Umum",
                 'customer_name' => $sale->customer ?? '',
             ];
@@ -94,7 +94,7 @@ class TransactionHistoryController extends Controller
                 'color' => 'indigo',
                 'status' => ucfirst($prod->status),
                 'status_color' => $prod->status === 'completed' 
-                    ? 'bg-teal-100 text-teal-700' 
+                    ? 'bg-emerald-100 text-emerald-700' 
                     : ($prod->status === 'running' ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-700'),
                 'details' => "HPP: Rp " . number_format($prod->total_cost_snapshot, 0, ',', '.'),
                 'customer_name' => '',

@@ -88,7 +88,7 @@
 
         <!-- Stat 3: Maximum Plafon -->
         <div class="bg-white p-2 md:p-3.5 rounded-2xl border border-slate-100 shadow-sm md:shadow-md flex items-center gap-2 overflow-hidden group">
-            <div class="w-8 h-8 md:w-10 md:h-10 bg-teal-50 text-teal-700 rounded-xl flex items-center justify-center flex-shrink-0">
+            <div class="w-8 h-8 md:w-10 md:h-10 bg-emerald-50 text-emerald-700 rounded-xl flex items-center justify-center flex-shrink-0">
                 <span class="material-symbols-outlined text-base md:text-lg">contacts</span>
             </div>
             <div class="min-w-0">
@@ -205,7 +205,7 @@
                             <!-- Debtor Name -->
                             <td class="px-8 py-6">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-xl bg-teal-50 border border-teal-100 text-teal-700 font-black text-sm flex items-center justify-center shadow-sm">
+                                    <div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-700 font-black text-sm flex items-center justify-center shadow-sm">
                                         {{ $customerInitials }}
                                     </div>
                                     <div>
@@ -637,7 +637,7 @@
                         Batal
                     </button>
                     <button type="submit" 
-                            style="background-color: #005050;" 
+                            style="background-color: #0b6e4f;" 
                             class="px-5 py-2.5 text-white font-black text-xs rounded-xl shadow-md hover:opacity-95 transition-all">
                         Simpan Angsuran
                     </button>

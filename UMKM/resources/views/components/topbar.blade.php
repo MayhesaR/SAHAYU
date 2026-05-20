@@ -1,36 +1,49 @@
-<header class="w-full sticky top-0 z-40 bg-white/80 backdrop-blur-md shadow-sm flex items-center justify-between px-4 md:px-8 h-16 border-b border-outline-variant/10">
-    <div class="flex items-center">
-        <!-- Hamburger Menu Button -->
-        <button @click="sidebarOpen = true" class="mr-4 xl:hidden text-slate-500 hover:text-teal-700 transition-colors">
+<header class="sticky top-0 z-40 bg-white border-b border-stone-200/60 flex items-center justify-between px-6 md:px-8 h-16 w-full xl:sticky xl:top-4 xl:mt-4 xl:mb-2 xl:mx-8 xl:w-auto xl:bg-white/80 xl:backdrop-blur-md xl:border xl:border-stone-200/50 xl:rounded-[1.25rem] xl:shadow-sm xl:shadow-stone-200/5">
+    <div class="flex items-center gap-4">
+        <!-- Hamburger Menu Button (Mobile) -->
+        <button @click="sidebarOpen = true" class="p-2 rounded-xl text-stone-500 hover:text-[#0b6e4f] hover:bg-stone-50 transition-all duration-200 xl:hidden">
             <span class="material-symbols-outlined text-2xl">menu</span>
         </button>
         
-        <span class="text-sm sm:text-lg md:text-xl font-bold tracking-tight text-teal-900 mr-2 md:mr-8 break-words leading-tight">@yield('page_title', 'ArchitectLedger')</span>
-        @hasSection('search_placeholder')
+        <!-- Search bar (Always shown or based on section) -->
         <div class="relative group hidden md:block">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-teal-600 transition-colors">search</span>
-            <input class="pl-10 pr-4 py-2 bg-slate-50 border-none rounded-full text-sm focus:ring-2 focus:ring-teal-600/20 w-64 transition-all" placeholder="@yield('search_placeholder')" type="text"/>
+            <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-[#0b6e4f] transition-colors text-base">search</span>
+            <input class="pl-9 pr-12 py-1.5 bg-stone-100/60 border border-stone-200/40 rounded-xl text-xs focus:ring-4 focus:ring-[#0b6e4f]/5 focus:border-[#0b6e4f] w-64 transition-all duration-200 font-medium placeholder-stone-400 text-stone-700 outline-none" 
+                   placeholder="Cari transaksi atau data..." 
+                   type="text"/>
+            <span class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] font-bold text-stone-400 bg-stone-200/60 px-1.5 py-0.5 rounded-md select-none pointer-events-none">⌘ K</span>
         </div>
-        @endif
     </div>
     
-    <div class="flex items-center space-x-6">
-        <button class="text-slate-500 hover:bg-slate-100 p-2 rounded-full transition-colors relative hidden sm:block">
-            <span class="material-symbols-outlined">notifications</span>
-            <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-white"></span>
+    <div class="flex items-center space-x-3.5">
+        <!-- Mail Button -->
+        <button class="text-stone-500 hover:text-[#0b6e4f] hover:bg-stone-50 p-2 rounded-xl transition-all duration-200 relative hidden sm:block" title="Pesan">
+            <span class="material-symbols-outlined text-xl">mail</span>
         </button>
-        <button class="text-slate-500 hover:bg-slate-100 p-2 rounded-full transition-colors hidden sm:block">
-            <span class="material-symbols-outlined">settings</span>
+
+        <!-- Notifications Button -->
+        <button class="text-stone-500 hover:text-[#0b6e4f] hover:bg-stone-50 p-2 rounded-xl transition-all duration-200 relative hidden sm:block" title="Notifikasi">
+            <span class="material-symbols-outlined text-xl">notifications</span>
+            <span class="absolute top-2 right-2 w-1.5 h-1.5 bg-rose-500 rounded-full border border-white"></span>
         </button>
         
-        <a href="{{ route('profile.index') }}" class="flex items-center space-x-3 ml-4 cursor-pointer hover:bg-slate-50 p-1.5 rounded-lg transition-colors">
+        <!-- Settings Button -->
+        <button class="text-stone-500 hover:text-[#0b6e4f] hover:bg-stone-50 p-2 rounded-xl transition-all duration-200 hidden sm:block" title="Pengaturan">
+            <span class="material-symbols-outlined text-xl">settings</span>
+        </button>
+
+        <div class="h-6 w-px bg-stone-200"></div>
+        
+        <!-- User Profile Pill -->
+        <a href="{{ route('profile.index') }}" 
+           class="flex items-center space-x-3 hover:opacity-85 transition-opacity">
             @if(auth()->check())
-            <div class="w-8 h-8 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center font-bold shadow-sm">
-                {{ substr(auth()->user()->name, 0, 1) }}
+            <div class="hidden md:block text-right leading-none">
+                <p class="text-xs font-semibold text-stone-850">{{ auth()->user()->name }}</p>
+                <p class="text-[8px] font-bold text-stone-400 uppercase tracking-wider mt-0.5">{{ auth()->user()->isAdmin() ? 'Administrator' : 'Staff Kasir' }}</p>
             </div>
-            <div class="hidden xl:block text-right">
-                <p class="text-sm font-bold text-teal-900 leading-tight">{{ auth()->user()->name }}</p>
-                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-tighter">{{ auth()->user()->isAdmin() ? 'Administrator' : 'Staff/Operator' }}</p>
+            <div class="w-8.5 h-8.5 rounded-full bg-gradient-to-tr from-[#0b6e4f] to-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-sm shadow-[#0b6e4f]/10">
+                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
             </div>
             @endif
         </a>

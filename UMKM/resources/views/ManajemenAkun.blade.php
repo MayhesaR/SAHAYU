@@ -7,13 +7,13 @@
 
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div class="w-full">
-                <h2 class="text-lg sm:text-xl lg:text-2xl font-extrabold text-teal-900 tracking-tight break-words">Manajemen Pengguna</h2>
+                <h2 class="text-lg sm:text-xl lg:text-2xl font-extrabold text-emerald-900 tracking-tight break-words">Manajemen Pengguna</h2>
                 <p class="text-on-surface-variant font-body mt-1 max-w-xl text-sm sm:text-base">Kelola akun pegawai dan staf yang dapat mengakses sistem ini.</p>
             </div>
         </div>
 
         @if (session('success'))
-        <div class="rounded-xl bg-teal-50 text-teal-800 border border-teal-100 px-4 py-3 text-sm font-medium">
+        <div class="rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-100 px-4 py-3 text-sm font-medium">
             {{ session('success') }}
         </div>
         @endif
@@ -59,8 +59,8 @@
                         <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Konfirmasi Sandi</label>
                         <input class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all" name="password_confirmation" required type="password" minlength="8"/>
                     </div>
-                    <button class="w-full px-6 py-4 rounded-full shadow-lg shadow-teal-900/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2" 
-                            style="background-color: #005050 !important; color: #ffffff !important; font-weight: 900;" 
+                    <button class="w-full px-6 py-4 rounded-full shadow-lg shadow-emerald-900/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2" 
+                            style="background-color: #0b6e4f !important; color: #ffffff !important; font-weight: 900;" 
                             type="submit">
                         <span class="material-symbols-outlined text-base">save</span>
                         <span>Buat Akun</span>
@@ -75,8 +75,8 @@
 
             <section class="lg:col-span-8 bg-surface-container-lowest rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300">
                 <div class="px-6 py-5 bg-surface-container-low border-b border-gray-100 flex items-center justify-between">
-                    <h3 class="text-lg font-bold text-teal-900 flex items-center">
-                        <span class="material-symbols-outlined mr-2 text-teal-600 flex-shrink-0">group</span> Daftar Pengguna
+                    <h3 class="text-lg font-bold text-emerald-900 flex items-center">
+                        <span class="material-symbols-outlined mr-2 text-emerald-600 flex-shrink-0">group</span> Daftar Pengguna
                     </h3>
                     <span class="text-xs font-semibold text-slate-500 uppercase tracking-widest">{{ $users->count() }} Akun</span>
                 </div>
@@ -93,13 +93,13 @@
                         <tbody>
                             @foreach ($users as $u)
                             <tr class="border-t border-slate-100 hover:bg-slate-50/70 transition-colors">
-                                <td class="px-6 py-4 font-semibold text-teal-900">{{ $u->name }}</td>
+                                <td class="px-6 py-4 font-semibold text-emerald-900">{{ $u->name }}</td>
                                 <td class="px-6 py-4 text-slate-700">{{ $u->email }}</td>
                                 <td class="px-6 py-4">
                                     @if($u->isAdmin())
                                         <span class="px-3 py-1 bg-amber-50 text-amber-700 text-xs font-bold rounded-full">ADMIN</span>
                                     @else
-                                        <span class="px-3 py-1 bg-teal-50 text-teal-700 text-xs font-bold rounded-full">STAFF</span>
+                                        <span class="px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full">STAFF</span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4">

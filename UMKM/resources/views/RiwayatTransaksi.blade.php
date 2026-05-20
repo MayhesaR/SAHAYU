@@ -36,7 +36,7 @@
 
         <!-- Card 2: Total Transaksi Penjualan -->
         <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden group">
-            <div class="w-10 h-10 bg-teal-50 text-teal-600 rounded-xl flex items-center justify-center mb-4">
+            <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-4">
                 <span class="material-symbols-outlined text-xl">shopping_cart</span>
             </div>
             <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Transaksi Penjualan</p>
@@ -69,38 +69,38 @@
                            class="w-full bg-slate-50/70 border-2 border-slate-100 rounded-2xl pl-12 pr-4 py-3.5 text-sm font-semibold text-slate-800 focus:bg-white focus:border-emerald-600 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none" />
                 </div>
                 
-                <div class="flex items-center gap-3">
+                <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
                     <!-- Export Button -->
                     <button type="button" 
                             id="btn-export-transaksi" 
-                            class="px-5 py-3.5 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 font-bold text-xs rounded-xl transition-all flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[16px]">download</span>
-                        <span>Ekspor Excel (.xlsx)</span>
+                            class="flex-1 sm:flex-none px-4 py-3 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm">
+                        <span class="material-symbols-outlined text-[16px] flex-shrink-0">download</span>
+                        <span>Ekspor Excel</span>
                     </button>
 
                     <!-- Advanced Filter Button -->
                     <button type="button" 
                             @click="showAdvanced = !showAdvanced" 
-                            class="px-5 py-3.5 bg-slate-50 border-2 border-slate-100 hover:bg-slate-100 text-slate-700 font-bold text-xs rounded-xl transition-all flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[16px]">tune</span>
+                            class="flex-1 sm:flex-none px-4 py-3 bg-slate-50 border border-slate-100 hover:bg-slate-100 text-slate-700 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm">
+                        <span class="material-symbols-outlined text-[16px] flex-shrink-0">tune</span>
                         <span>Filter Lanjutan</span>
-                        <span class="material-symbols-outlined text-[12px] transition-transform" :class="showAdvanced ? 'rotate-180' : ''">keyboard_arrow_down</span>
+                        <span class="material-symbols-outlined text-[12px] transition-transform flex-shrink-0" :class="showAdvanced ? 'rotate-180' : ''">keyboard_arrow_down</span>
                     </button>
                     
                     <!-- Reset Button -->
                     @if($search || $startDate || $endDate || $currentType !== 'all' || $sortBy !== 'transaction_date')
                         <a href="{{ route('history.index') }}" 
-                           class="px-5 py-3.5 bg-rose-50 text-rose-700 hover:bg-rose-100 font-bold text-xs rounded-xl transition-all flex items-center gap-2 border border-rose-200">
-                            <span class="material-symbols-outlined text-[16px]">clear_all</span>
+                           class="flex-1 sm:flex-none px-4 py-3 bg-rose-50 text-rose-700 hover:bg-rose-100 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 border border-rose-200 shadow-sm">
+                            <span class="material-symbols-outlined text-[16px] flex-shrink-0">clear_all</span>
                             <span>Reset</span>
                         </a>
                     @endif
 
                     <!-- Submit Button -->
                     <button type="submit" 
-                            style="background-color: #005050;" 
-                            class="px-6 py-3.5 text-white hover:opacity-95 font-bold text-xs rounded-xl transition-all flex items-center gap-2 shadow-sm shadow-teal-950/20">
-                        <span class="material-symbols-outlined text-[16px]">filter_alt</span>
+                            style="background-color: #0b6e4f;" 
+                            class="w-full sm:w-auto px-6 py-3.5 text-white hover:opacity-95 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm shadow-emerald-950/20">
+                        <span class="material-symbols-outlined text-[16px] flex-shrink-0">filter_alt</span>
                         <span>Terapkan</span>
                     </button>
                 </div>

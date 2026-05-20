@@ -256,11 +256,11 @@ class SaleController extends Controller
                     'payment_method' => strtoupper((string) $sale->payment_method),
                     'payment_dot_class' => $sale->payment_method === 'cash'
                         ? 'bg-amber-500'
-                        : ($sale->payment_method === 'qris' ? 'bg-teal-500' : 'bg-blue-500'),
+                        : ($sale->payment_method === 'qris' ? 'bg-emerald-500' : 'bg-blue-500'),
                     'total' => (float) $sale->total,
                     'status' => (string) $sale->status,
                     'status_label' => $sale->status === 'paid' ? 'Lunas' : 'Belum Lunas',
-                    'status_class' => $sale->status === 'paid' ? 'bg-teal-100 text-teal-700' : 'bg-amber-100 text-amber-700',
+                    'status_class' => $sale->status === 'paid' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700',
                     'can_delete' => auth()->check() && auth()->user()->isAdmin(),
                     'destroy_url' => route('sales.destroy', $sale),
                 ];

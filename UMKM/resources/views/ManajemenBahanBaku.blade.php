@@ -9,20 +9,18 @@
     <!-- Page Header Section -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div class="space-y-1 w-full">
-            <h2 class="text-lg sm:text-xl lg:text-2xl font-extrabold tracking-tight text-teal-900 break-words leading-tight">Manajemen Bahan Baku</h2>
+            <h2 class="text-lg sm:text-xl lg:text-2xl font-extrabold tracking-tight text-emerald-900 break-words leading-tight">Manajemen Bahan Baku</h2>
             <p class="text-sm sm:text-base text-on-surface-variant font-body">Pantau ketersediaan stok dan biaya unit inventaris Anda secara real-time.</p>
         </div>
-        <div class="flex flex-col sm:flex-row sm:items-center gap-3 w-full sm:w-auto">
-            <div class="flex flex-row gap-2 w-full sm:w-auto">
-                <a href="{{ route('materials.export-pdf') }}" target="_blank" class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-surface-container-highest text-on-surface font-semibold text-sm hover:bg-surface-container-high transition-colors flex items-center justify-center gap-2" title="Ekspor ke PDF">
-                    <span class="material-symbols-outlined text-sm flex-shrink-0">picture_as_pdf</span> PDF
-                </a>
-                <a href="{{ route('materials.export', request()->all()) }}" class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-emerald-600 text-white font-semibold text-sm hover:bg-emerald-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/20" title="Ekspor ke Excel (.xlsx)">
-                    <span class="material-symbols-outlined text-sm flex-shrink-0">download</span> Ekspor Excel
-                </a>
-            </div>
+        <div class="flex flex-wrap items-center gap-2.5 w-full sm:w-auto justify-start sm:justify-end">
+            <a href="{{ route('materials.export-pdf') }}" target="_blank" class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-surface-container-highest text-on-surface font-semibold text-sm hover:bg-surface-container-high transition-colors flex items-center justify-center gap-2 border border-outline-variant/10" title="Ekspor ke PDF">
+                <span class="material-symbols-outlined text-sm flex-shrink-0">picture_as_pdf</span> PDF
+            </a>
+            <a href="{{ route('materials.export', request()->all()) }}" class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-[#0b6e4f] text-white font-semibold text-sm hover:bg-[#09523b] transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/20" title="Ekspor ke Excel (.xlsx)">
+                <span class="material-symbols-outlined text-sm flex-shrink-0">download</span> Ekspor Excel
+            </a>
             @if(auth()->user()->isAdmin())
-            <button class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#005050] text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-teal-900/30 hover:bg-[#006a6a] hover:scale-[1.02] active:scale-95 transition-all" id="open-material-form" type="button">
+            <button class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-[#0b6e4f] text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/30 hover:bg-[#09523b] hover:scale-[1.02] active:scale-95 transition-all" id="open-material-form" type="button">
                 <span class="material-symbols-outlined text-base flex-shrink-0">add_circle</span>
                 <span>Tambah Bahan</span>
             </button>
@@ -31,8 +29,8 @@
     </div>
 
     @if (session('success'))
-    <div class="rounded-xl bg-teal-50 text-teal-800 border border-teal-100 px-4 py-3 text-sm font-medium flex items-center gap-3 animate-in fade-in slide-in-from-top-4">
-        <span class="material-symbols-outlined text-teal-600">check_circle</span>
+    <div class="rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-100 px-4 py-3 text-sm font-medium flex items-center gap-3 animate-in fade-in slide-in-from-top-4">
+        <span class="material-symbols-outlined text-emerald-600">check_circle</span>
         {{ session('success') }}
     </div>
     @endif
@@ -54,8 +52,8 @@
         <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
             <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">Total Kategori</p>
             <div class="flex items-baseline gap-2">
-                <span class="text-2xl font-black text-teal-900 leading-none">{{ $totalCategories }}</span>
-                <span class="text-xs font-medium text-teal-600">kategori aktif</span>
+                <span class="text-2xl font-black text-emerald-900 leading-none">{{ $totalCategories }}</span>
+                <span class="text-xs font-medium text-emerald-600">kategori aktif</span>
             </div>
         </div>
         <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 relative overflow-hidden">
@@ -71,13 +69,13 @@
         <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
             <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">Valuasi Gudang</p>
             <div class="flex items-baseline gap-2">
-                <span class="text-2xl font-black text-teal-900 leading-none">Rp {{ number_format($inventoryValue, 0, ',', '.') }}</span>
+                <span class="text-2xl font-black text-emerald-900 leading-none">Rp {{ number_format($inventoryValue, 0, ',', '.') }}</span>
             </div>
         </div>
         <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
             <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">Stok Masuk Hari Ini</p>
             <div class="flex items-baseline gap-2">
-                <span class="text-2xl font-black text-teal-900 leading-none">{{ number_format($stockInToday, 0, ',', '.') }}</span>
+                <span class="text-2xl font-black text-emerald-900 leading-none">{{ number_format($stockInToday, 0, ',', '.') }}</span>
                 <span class="text-xs font-medium text-slate-400">unit</span>
             </div>
         </div>
@@ -96,7 +94,7 @@
             <h3 class="text-lg font-bold text-primary flex items-center" id="sidebar-title">
                 <span class="material-symbols-outlined mr-2 text-primary">inventory_2</span> Tambah Material
             </h3>
-            <button id="close-material-form" class="text-slate-400 hover:text-teal-900 transition-colors" type="button">
+            <button id="close-material-form" class="text-slate-400 hover:text-emerald-900 transition-colors" type="button">
                 <span class="material-symbols-outlined text-lg">close</span>
             </button>
         </div>
@@ -118,7 +116,7 @@
                                 <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                             @endforeach
                         </select>
-                        <button type="button" onclick="openAddCategoryModal()" class="px-3 bg-teal-50 text-teal-700 border border-teal-200 hover:bg-teal-100 rounded-lg flex items-center justify-center transition-all" title="Tambah Kategori Baru">
+                        <button type="button" onclick="openAddCategoryModal()" class="px-3 bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 rounded-lg flex items-center justify-center transition-all" title="Tambah Kategori Baru">
                             <span class="material-symbols-outlined text-base">add</span>
                         </button>
                     </div>
@@ -147,8 +145,8 @@
                 </div>
 
                 <div class="pt-4">
-                    <button class="w-full px-6 py-4 rounded-xl shadow-lg shadow-teal-900/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2" 
-                            style="background-color: #005050 !important; color: #ffffff !important; font-weight: 900;" 
+                    <button class="w-full px-6 py-4 rounded-xl shadow-lg shadow-emerald-900/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2" 
+                            style="background-color: #0b6e4f !important; color: #ffffff !important; font-weight: 900;" 
                             type="submit">
                         <span class="material-symbols-outlined text-base">save</span>
                         <span id="submit-button-text">Simpan Material Baru</span>
@@ -225,7 +223,7 @@
                             @endphp
                             <span class="px-2 sm:px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest border {{
                                 $catName === 'Struktur' ? 'bg-indigo-50 text-indigo-700 border-indigo-100' :
-                                ($catName === 'Dasar' ? 'bg-teal-50 text-teal-700 border-teal-100' : 
+                                ($catName === 'Dasar' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 
                                 ($catName === 'Finishing' ? 'bg-amber-50 text-amber-700 border-amber-100' : 'bg-slate-50 text-slate-700 border-slate-100'))
                             }}">{{ $catName }}</span>
                         </td>
@@ -243,7 +241,7 @@
                             </div>
                         </td>
                         <td class="px-2 sm:px-8 py-3 sm:py-5 font-bold text-[11px] md:text-sm text-on-surface-variant">{{ number_format($material->minimum_stock, 0, ',', '.') }}</td>
-                        <td class="px-2 sm:px-8 py-3 sm:py-5 font-bold text-[11px] md:text-sm text-teal-900">Rp {{ number_format($material->price, 0, ',', '.') }}</td>
+                        <td class="px-2 sm:px-8 py-3 sm:py-5 font-bold text-[11px] md:text-sm text-emerald-900">Rp {{ number_format($material->price, 0, ',', '.') }}</td>
                         <td class="px-2 sm:px-8 py-3 sm:py-5">
                             <div class="text-[11px] md:text-sm font-semibold text-on-surface">{{ $material->default_supplier ?: '-' }}</div>
                             <div class="text-[10px] text-slate-400">Lead time: {{ $material->supplier_lead_time_days ?? '0' }} hr</div>
@@ -325,16 +323,16 @@
                                     </span>
                                 </div>
                             </td>
-                            <td class="px-8 py-4 font-bold text-sm text-teal-900">{{ $movement->material?->name ?? '-' }}</td>
+                            <td class="px-8 py-4 font-bold text-sm text-emerald-900">{{ $movement->material?->name ?? '-' }}</td>
                             <td class="px-8 py-4">
                                 <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest {{
-                                    $movement->type === 'in' ? 'bg-teal-100 text-teal-700' :
+                                    $movement->type === 'in' ? 'bg-emerald-100 text-emerald-700' :
                                     ($movement->type === 'out' ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-700')
                                 }}">
                                     {{ $movement->type === 'in' ? 'Masuk' : ($movement->type === 'out' ? 'Keluar' : 'Adj') }}
                                 </span>
                             </td>
-                            <td class="px-8 py-4 text-center font-black text-sm {{ $movement->type === 'in' ? 'text-teal-600' : 'text-error' }}">
+                            <td class="px-8 py-4 text-center font-black text-sm {{ $movement->type === 'in' ? 'text-emerald-600' : 'text-error' }}">
                                 {{ $movement->type === 'in' ? '+' : '-' }}{{ number_format($movement->quantity, 0, ',', '.') }}
                             </td>
                             <td class="px-8 py-4 text-[11px] font-medium text-slate-500">
@@ -370,8 +368,8 @@
             </button>
 
             <div class="mb-8">
-                <span class="text-[10px] font-black uppercase tracking-[0.2em] text-teal-600 mb-1 block">Opsi Cepat Material</span>
-                <h3 class="text-xl font-black text-teal-900 leading-tight" id="modal-material-name">-</h3>
+                <span class="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 mb-1 block">Opsi Cepat Material</span>
+                <h3 class="text-xl font-black text-emerald-900 leading-tight" id="modal-material-name">-</h3>
                 <p class="text-xs text-slate-400 mt-1" id="modal-material-unit">-</p>
             </div>
 
@@ -392,25 +390,25 @@
                 </button>
 
                 <!-- Stock In Form -->
-                <div class="p-5 rounded-2xl bg-teal-50/50 border border-teal-100 space-y-3">
+                <div class="p-5 rounded-2xl bg-emerald-50/50 border border-emerald-100 space-y-3">
                     <div class="flex items-center gap-2 mb-1">
-                        <span class="material-symbols-outlined text-teal-600 text-sm">add_circle</span>
-                        <span class="text-[10px] font-black uppercase tracking-widest text-teal-700">Stok Masuk (Supply)</span>
+                        <span class="material-symbols-outlined text-emerald-600 text-sm">add_circle</span>
+                        <span class="text-[10px] font-black uppercase tracking-widest text-emerald-700">Stok Masuk (Supply)</span>
                     </div>
                     <form id="modal-stock-in-form" method="POST" class="space-y-3">
                         @csrf
                         <div class="grid grid-cols-2 gap-2">
                             <div class="space-y-1">
-                                <label class="block text-[9px] font-black text-teal-700 uppercase tracking-wider">Jumlah Stok Masuk</label>
-                                <input name="quantity" min="1" required class="w-full bg-white border-2 border-slate-100/80 rounded-xl px-3 py-2 text-sm focus:border-teal-500 outline-none transition-all" type="number" placeholder="Jumlah..."/>
+                                <label class="block text-[9px] font-black text-emerald-700 uppercase tracking-wider">Jumlah Stok Masuk</label>
+                                <input name="quantity" min="1" required class="w-full bg-white border-2 border-slate-100/80 rounded-xl px-3 py-2 text-sm focus:border-emerald-500 outline-none transition-all" type="number" placeholder="Jumlah..."/>
                             </div>
                             <div class="space-y-1">
-                                <label class="block text-[9px] font-black text-teal-700 uppercase tracking-wider">Total Belanja (Rp)</label>
-                                <input name="total_spent" min="0" value="0" class="w-full bg-white border-2 border-slate-100/80 rounded-xl px-3 py-2 text-sm focus:border-teal-500 outline-none transition-all" type="number" placeholder="Default: 0"/>
+                                <label class="block text-[9px] font-black text-emerald-700 uppercase tracking-wider">Total Belanja (Rp)</label>
+                                <input name="total_spent" min="0" value="0" class="w-full bg-white border-2 border-slate-100/80 rounded-xl px-3 py-2 text-sm focus:border-emerald-500 outline-none transition-all" type="number" placeholder="Default: 0"/>
                             </div>
                         </div>
                         <input type="hidden" name="unit_price" id="modal-stock-in-price"/>
-                        <button class="w-full py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-md shadow-teal-900/10" type="submit">
+                        <button class="w-full py-2.5 rounded-xl bg-[#0b6e4f] hover:bg-[#09523b] text-white text-xs font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-md shadow-emerald-900/10" type="submit">
                             <span class="material-symbols-outlined text-sm">save</span>
                             Simpan Stok & Belanja
                         </button>
@@ -457,26 +455,26 @@
             </button>
             
             <div class="mb-6 flex items-center gap-3">
-                <div class="w-10 h-10 bg-teal-50 text-teal-700 rounded-xl flex items-center justify-center">
+                <div class="w-10 h-10 bg-emerald-50 text-emerald-700 rounded-xl flex items-center justify-center">
                     <span class="material-symbols-outlined text-xl">category</span>
                 </div>
                 <div>
-                    <span class="text-[10px] font-black uppercase tracking-[0.2em] text-teal-600 block">Kategori Baru</span>
-                    <h3 class="text-lg font-black text-teal-900 leading-tight">Tambah Kategori Bahan</h3>
+                    <span class="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 block">Kategori Baru</span>
+                    <h3 class="text-lg font-black text-emerald-900 leading-tight">Tambah Kategori Bahan</h3>
                 </div>
             </div>
 
             <div class="space-y-4">
                 <div class="space-y-1.5">
                     <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Nama Kategori</label>
-                    <input type="text" id="new-category-name" placeholder="Contoh: Tepung & Pati" class="block w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-bold focus:outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 transition-all"/>
+                    <input type="text" id="new-category-name" placeholder="Contoh: Tepung & Pati" class="block w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-bold focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 transition-all"/>
                 </div>
                 
                 <div class="flex items-center justify-end gap-3 pt-4">
                     <button type="button" onclick="closeAddCategoryModal()" class="px-5 py-2.5 bg-white text-slate-600 font-bold text-xs rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-all">
                         Batal
                     </button>
-                    <button type="button" onclick="submitNewCategory()" class="px-5 py-2.5 bg-teal-600 text-white font-black text-xs rounded-xl shadow-md hover:bg-teal-700 transition-all">
+                    <button type="button" onclick="submitNewCategory()" class="px-5 py-2.5 bg-[#0b6e4f] text-white font-black text-xs rounded-xl shadow-md hover:bg-[#09523b] transition-all">
                         Simpan Kategori
                     </button>
                 </div>
@@ -575,7 +573,7 @@
         document.getElementById('form-minimum_stock').value = data.minimum_stock;
         document.getElementById('form-supplier').value = data.default_supplier || '';
     } else {
-        sidebarTitle.innerHTML = '<span class="material-symbols-outlined mr-2 text-teal-600">inventory_2</span> Tambah Material';
+        sidebarTitle.innerHTML = '<span class="material-symbols-outlined mr-2 text-emerald-600">inventory_2</span> Tambah Material';
         submitButtonText.innerText = 'Simpan Material Baru';
         materialForm.action = "{{ route('materials.store') }}";
         methodContainer.innerHTML = '';

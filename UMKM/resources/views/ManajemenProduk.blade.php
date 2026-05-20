@@ -7,12 +7,12 @@
 <div class="px-4 py-6 sm:px-8 max-w-7xl mx-auto space-y-8">
 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
     <div class="w-full">
-        <h2 class="text-lg sm:text-xl lg:text-2xl font-extrabold text-teal-900 tracking-tight break-words">Manajemen Produk Jadi</h2>
+        <h2 class="text-lg sm:text-xl lg:text-2xl font-extrabold text-emerald-900 tracking-tight break-words">Manajemen Produk Jadi</h2>
         <p class="text-on-surface-variant font-body mt-1 max-w-xl text-sm sm:text-base">Kelola daftar produk jadi agar proses Produksi, Penjualan, dan perhitungan HPP tetap sinkron.</p>
     </div>
     @if(auth()->user()->isAdmin())
-        <a class="w-full sm:w-auto px-6 py-2.5 rounded-xl shadow-lg shadow-teal-900/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2" 
-           style="background-color: #005050 !important; color: #ffffff !important; font-weight: 900;" 
+        <a class="w-full sm:w-auto px-6 py-2.5 rounded-xl shadow-lg shadow-emerald-900/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2" 
+           style="background-color: #0b6e4f !important; color: #ffffff !important; font-weight: 900;" 
            href="#form-produk">
             <span class="material-symbols-outlined text-base flex-shrink-0">add_circle</span>
             <span>Tambah Produk</span>
@@ -26,7 +26,7 @@
 </div>
 
 @if (session('success'))
-<div class="rounded-xl bg-teal-50 text-teal-800 border border-teal-100 px-4 py-3 text-sm font-medium">
+<div class="rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-100 px-4 py-3 text-sm font-medium">
 {{ session('success') }}
 </div>
 @endif
@@ -42,17 +42,17 @@
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 <article class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
 <p class="text-xs uppercase tracking-widest text-slate-500 font-semibold">Total Produk</p>
-<h3 class="mt-2 text-3xl font-extrabold text-teal-900">{{ $products->total() }}</h3>
+<h3 class="mt-2 text-3xl font-extrabold text-emerald-900">{{ $products->total() }}</h3>
 <p class="text-xs text-slate-500 mt-1">produk terdaftar</p>
 </article>
 <article class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
 <p class="text-xs uppercase tracking-widest text-slate-500 font-semibold">Harga Rata-rata</p>
-<h3 class="mt-2 text-3xl font-extrabold text-teal-900">Rp {{ number_format((float) $products->avg('selling_price'), 0, ',', '.') }}</h3>
+<h3 class="mt-2 text-3xl font-extrabold text-emerald-900">Rp {{ number_format((float) $products->avg('selling_price'), 0, ',', '.') }}</h3>
 <p class="text-xs text-slate-500 mt-1">nilai jual per produk</p>
 </article>
 <article class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
 <p class="text-xs uppercase tracking-widest text-slate-500 font-semibold">Stok Barang Jadi</p>
-<h3 class="mt-2 text-3xl font-extrabold text-teal-900">{{ number_format((int) $products->sum('stock'), 0, ',', '.') }}</h3>
+<h3 class="mt-2 text-3xl font-extrabold text-emerald-900">{{ number_format((int) $products->sum('stock'), 0, ',', '.') }}</h3>
 <p class="text-xs text-slate-500 mt-1">unit siap jual</p>
 </article>
 </div>
@@ -75,7 +75,7 @@
 <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Foto Produk</label>
 <div class="relative bg-surface-container-highest rounded-lg p-3 flex items-center gap-3 border-2 border-dashed border-slate-200">
     <span class="material-symbols-outlined text-slate-400">image</span>
-    <input class="w-full text-xs text-slate-500 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 cursor-pointer" name="image" accept="image/*" type="file"/>
+    <input class="w-full text-xs text-slate-500 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 cursor-pointer" name="image" accept="image/*" type="file"/>
 </div>
 </div>
 <div class="space-y-2">
@@ -102,8 +102,8 @@
 <input class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all" min="0" name="minimum_stock" placeholder="0" required type="number"/>
 </div>
 </div>
-<button class="w-full px-6 py-3 rounded-full shadow-lg shadow-teal-900/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2" 
-        style="background-color: #005050 !important; color: #ffffff !important; font-weight: 900;" 
+<button class="w-full px-6 py-3 rounded-full shadow-lg shadow-emerald-900/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2" 
+        style="background-color: #0b6e4f !important; color: #ffffff !important; font-weight: 900;" 
         type="submit">
     <span class="material-symbols-outlined text-base">save</span>
     <span>Simpan Produk</span>
@@ -130,8 +130,8 @@
 
 <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300">
 <div class="px-6 py-5 bg-surface-container-low border-b border-gray-100 flex items-center justify-between">
-<h3 class="text-lg font-bold text-teal-900 flex items-center">
-<span class="material-symbols-outlined mr-2 text-teal-600 flex-shrink-0">table_view</span> Daftar Produk
+<h3 class="text-lg font-bold text-emerald-900 flex items-center">
+<span class="material-symbols-outlined mr-2 text-emerald-600 flex-shrink-0">table_view</span> Daftar Produk
 </h3>
 <span class="text-[10px] font-bold text-slate-400 bg-white px-3 py-1 rounded-full border border-outline-variant/5">{{ $products->total() }} item ditemukan</span>
 </div>
@@ -149,12 +149,12 @@
 <tbody>
 @forelse ($products as $product)
 <tr class="border-t border-surface-container-high hover:bg-slate-50/70 transition-colors">
-<td class="px-6 py-4 font-semibold text-teal-900">
+<td class="px-6 py-4 font-semibold text-emerald-900">
     <div class="flex items-center gap-3">
         @if($product->image)
             <img src="{{ asset('storage/' . $product->image) }}" class="w-10 h-10 object-cover rounded-xl border border-slate-100 shadow-sm" alt="{{ $product->name }}">
         @else
-            <div class="w-10 h-10 rounded-xl bg-teal-50 border border-teal-100 text-teal-700 font-black text-sm flex items-center justify-center shadow-sm">
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-700 font-black text-sm flex items-center justify-center shadow-sm">
                 {{ strtoupper(substr($product->name, 0, 2)) }}
             </div>
         @endif
@@ -162,7 +162,7 @@
             <span class="font-bold tracking-tight text-slate-800">{{ $product->name }}</span>
             <div class="mt-0.5">
                 @if($product->category)
-                    <span class="inline-block text-[9px] font-black uppercase bg-teal-50 text-[#005050] px-2 py-0.5 rounded-md border border-teal-100/50">
+                    <span class="inline-block text-[9px] font-black uppercase bg-emerald-50 text-[#0b6e4f] px-2 py-0.5 rounded-md border border-emerald-100/50">
                         {{ $product->category->name }}
                     </span>
                 @else
@@ -180,7 +180,7 @@
 <td class="px-6 py-4">
     <div class="flex justify-end gap-2">
         @if(auth()->user()->isAdmin())
-            <button class="px-4 py-2 rounded-lg text-xs font-black text-[#005050] bg-[#005050]/10 hover:bg-[#005050]/20 transition-colors flex items-center gap-1 edit-product-btn"
+            <button class="px-4 py-2 rounded-lg text-xs font-black text-[#0b6e4f] bg-[#0b6e4f]/10 hover:bg-[#0b6e4f]/20 transition-colors flex items-center gap-1 edit-product-btn"
                     data-id="{{ $product->id }}"
                     data-name="{{ $product->name }}"
                     data-price="{{ (int)$product->selling_price }}"
@@ -243,7 +243,7 @@
             <div class="relative bg-slate-50 rounded-xl p-3 flex flex-col gap-2 border-2 border-dashed border-slate-200">
                 <div class="flex items-center gap-3">
                     <span class="material-symbols-outlined text-slate-400">image</span>
-                    <input class="w-full text-xs text-slate-500 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 cursor-pointer" name="image" accept="image/*" type="file"/>
+                    <input class="w-full text-xs text-slate-500 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 cursor-pointer" name="image" accept="image/*" type="file"/>
                 </div>
                 <p class="text-[10px] text-slate-400 font-semibold">*Biarkan kosong jika tidak ingin mengubah foto</p>
             </div>
@@ -262,8 +262,8 @@
             <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Harga Jual (Rp)</label>
             <input name="selling_price" id="edit_price" required class="w-full px-4 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-slate-700 font-semibold" type="number"/>
         </div>
-        <button class="w-full py-4 rounded-xl shadow-lg shadow-teal-900/30 transition-all" 
-                style="background-color: #005050 !important; color: #ffffff !important; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em;" 
+        <button class="w-full py-4 rounded-xl shadow-lg shadow-emerald-900/30 transition-all" 
+                style="background-color: #0b6e4f !important; color: #ffffff !important; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em;" 
                 type="submit">
             <span>Simpan Perubahan</span>
         </button>

@@ -34,17 +34,17 @@
                         "surface-container-high": "#e7e8e8",
                         "on-surface": "#1a1c1c",
                         "on-error-container": "#93000a",
-                        "surface-tint": "#006a6a",
+                        "surface-tint": "#09523b",
                         "secondary-fixed-dim": "#b1cccb",
                         "secondary-container": "#cce8e7",
                         "error-container": "#ffdad6",
-                        "primary": "#005050",
+                        "primary": "#0b6e4f",
                         "surface": "#f9f9f9",
                         "on-background": "#1a1c1c",
                         "on-secondary": "#ffffff",
                         "on-tertiary-fixed-variant": "#70371a",
                         "surface-dim": "#d9dada",
-                        "primary-container": "#006a6a",
+                        "primary-container": "#09523b",
                         "inverse-on-surface": "#f0f1f0",
                         "tertiary-fixed": "#ffdbcc",
                         "outline": "#6e7979",
@@ -87,7 +87,7 @@
             box-shadow: 0 12px 40px rgba(0, 80, 80, 0.06);
         }
         .primary-gradient {
-            background: linear-gradient(135deg, #005050 0%, #006a6a 100%);
+            background: linear-gradient(135deg, #0b6e4f 0%, #09523b 100%);
         }
     </style>
 </head>
@@ -141,7 +141,7 @@
 <label class="text-sm font-medium text-on-surface-variant cursor-pointer select-none" for="remember">Keep me signed in for 30 days</label>
 </div>
 <div class="pt-4">
-<button class="w-full bg-[#005050] text-white py-4 px-6 rounded-xl font-black tracking-wide shadow-lg shadow-teal-900/30 hover:bg-[#006a6a] hover:shadow-xl active:scale-[0.98] transition-all flex items-center justify-center space-x-2" type="submit">
+<button class="w-full bg-[#0b6e4f] text-white py-4 px-6 rounded-xl font-black tracking-wide shadow-lg shadow-emerald-900/30 hover:bg-[#09523b] hover:shadow-xl active:scale-[0.98] transition-all flex items-center justify-center space-x-2" type="submit">
 <span>Sign In to Dashboard</span>
 <span class="material-symbols-outlined text-lg" data-icon="arrow_forward">arrow_forward</span>
 </button>

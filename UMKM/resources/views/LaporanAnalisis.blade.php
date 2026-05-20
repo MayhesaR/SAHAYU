@@ -35,7 +35,7 @@
                     @if($activePeriod === 'mingguan')
                     <div class="relative w-full sm:w-auto">
                         <select name="week_number" onchange="this.form.submit()"
-                                class="w-full pl-3 pr-8 py-2 bg-surface-container-highest border-none rounded-lg text-sm font-semibold text-teal-900 focus:ring-2 focus:ring-teal-500/20 transition-all cursor-pointer appearance-none">
+                                class="w-full pl-3 pr-8 py-2 bg-surface-container-highest border-none rounded-lg text-sm font-semibold text-emerald-900 focus:ring-2 focus:ring-emerald-500/20 transition-all cursor-pointer appearance-none">
                             @for($i = 1; $i <= 5; $i++)
                                 <option value="{{ $i }}" {{ $weekNumber == $i ? 'selected' : '' }}>Minggu {{ $i }}</option>
                             @endfor
@@ -53,7 +53,7 @@
                                name="specific_month"
                                value="{{ $specificMonth }}"
                                onchange="this.form.submit()"
-                               class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 bg-surface-container-highest text-sm font-semibold text-teal-900 transition-all cursor-pointer" />
+                               class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500 bg-surface-container-highest text-sm font-semibold text-emerald-900 transition-all cursor-pointer" />
                     </div>
 
                     <!-- Daily Date Picker -->
@@ -65,12 +65,12 @@
                                name="filter_date"
                                value="{{ $filterDate }}"
                                onchange="this.form.submit()"
-                               class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 bg-surface-container-highest text-sm font-semibold text-teal-900 transition-all cursor-pointer" />
+                               class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500 bg-surface-container-highest text-sm font-semibold text-emerald-900 transition-all cursor-pointer" />
                     </div>
                     
                     <button type="submit"
                             class="flex-shrink-0 w-full sm:w-auto px-3 py-2 sm:px-4 rounded-lg text-sm shadow-sm transition-all flex items-center justify-center gap-1.5 hover:scale-[1.02] active:scale-95"
-                            style="background-color: #005050 !important; color: #ffffff !important; font-weight: 900;">
+                            style="background-color: #0b6e4f !important; color: #ffffff !important; font-weight: 900;">
                         <span class="material-symbols-outlined text-sm flex-shrink-0">filter_alt</span>
                         <span class="hidden sm:inline">Filter</span>
                     </button>
@@ -80,9 +80,9 @@
 
         {{-- Active Period Label --}}
         <div class="flex flex-wrap items-center gap-3">
-            <div class="flex items-center gap-2 px-3 sm:px-4 py-2 bg-teal-50 rounded-lg border border-teal-200">
-                <span class="material-symbols-outlined text-sm text-teal-600 hidden sm:inline">date_range</span>
-                <span class="text-xs sm:text-sm font-bold text-teal-800 break-words">Menampilkan Laporan: {{ $periodLabel }}</span>
+            <div class="flex items-center gap-2 px-3 sm:px-4 py-2 bg-emerald-50 rounded-lg border border-emerald-200">
+                <span class="material-symbols-outlined text-sm text-emerald-600 hidden sm:inline">date_range</span>
+                <span class="text-xs sm:text-sm font-bold text-emerald-800 break-words">Menampilkan Laporan: {{ $periodLabel }}</span>
             </div>
             
             @if($filterDate)
@@ -216,14 +216,14 @@
                                 <p class="text-[10px] text-on-surface-variant truncate">{{ number_format($product->total_qty, 0, ',', '.') }} Unit Terjual</p>
                             </div>
                         </div>
-                        <span class="text-xs font-black text-teal-700 flex-shrink-0">Rp {{ number_format($product->total_revenue, 0, ',', '.') }}</span>
+                        <span class="text-xs font-black text-emerald-700 flex-shrink-0">Rp {{ number_format($product->total_revenue, 0, ',', '.') }}</span>
                     </div>
                     @empty
                     <p class="text-sm text-on-surface-variant">Belum ada data produk terpopuler.</p>
                     @endforelse
                     <div class="pt-4 border-t border-surface-container-low">
                         <button class="w-full py-2.5 rounded-lg transition-all hover:scale-[1.02] active:scale-95" 
-                                style="background-color: #005050 !important; color: #ffffff !important; font-weight: 900; font-size: 0.75rem;">
+                                style="background-color: #0b6e4f !important; color: #ffffff !important; font-weight: 900; font-size: 0.75rem;">
                             Lihat Semua Produk
                         </button>
                     </div>
@@ -240,11 +240,11 @@
                 <a href="{{ route('reports.export-pdf', ['view_mode' => $activePeriod, 'specific_month' => $specificMonth, 'week_number' => $weekNumber, 'filter_date' => $filterDate]) }}" target="_blank" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-surface-container-highest text-on-surface rounded-lg text-sm font-semibold hover:bg-surface-dim transition-all border border-outline-variant/20" title="Ekspor ke PDF">
                     <span class="material-symbols-outlined text-sm flex-shrink-0">picture_as_pdf</span> PDF
                 </a>
-                <a href="{{ route('reports.export-sheets', ['view_mode' => $activePeriod, 'specific_month' => $specificMonth, 'week_number' => $weekNumber, 'filter_date' => $filterDate]) }}" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-teal-50 text-teal-700 rounded-lg text-sm font-semibold hover:bg-teal-100 transition-all border border-teal-200" title="Unduh Excel (XLSX)">
+                <a href="{{ route('reports.export-sheets', ['view_mode' => $activePeriod, 'specific_month' => $specificMonth, 'week_number' => $weekNumber, 'filter_date' => $filterDate]) }}" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-700 rounded-lg text-sm font-semibold hover:bg-emerald-100 transition-all border border-emerald-200" title="Unduh Excel (XLSX)">
                     <span class="material-symbols-outlined text-sm flex-shrink-0">table</span> Spreadsheet
                 </a>
                 <a href="{{ route('reports.export-csv', ['view_mode' => $activePeriod, 'specific_month' => $specificMonth, 'week_number' => $weekNumber, 'filter_date' => $filterDate]) }}" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm shadow-sm transition-all" 
-                   style="background-color: #005050 !important; color: #ffffff !important; font-weight: 900;" 
+                   style="background-color: #0b6e4f !important; color: #ffffff !important; font-weight: 900;" 
                    title="Unduh CSV Native">
                     <span class="material-symbols-outlined text-sm flex-shrink-0">description</span> CSV
                 </a>
@@ -266,13 +266,13 @@
                     <tr class="{{ $index % 2 === 1 ? 'bg-surface-container-low/30' : '' }} hover:bg-primary/5 transition-colors group border-b border-outline-variant/5 whitespace-nowrap">
                         <td class="px-2 sm:px-8 py-3 sm:py-4 font-semibold">{{ $row['label'] }}</td>
                         <td class="px-2 sm:px-8 py-3 sm:py-4">Rp {{ number_format($row['target'], 0, ',', '.') }}</td>
-                        <td class="px-2 sm:px-8 py-3 sm:py-4 font-bold text-teal-800">Rp {{ number_format($row['realization'], 0, ',', '.') }}</td>
-                        <td class="px-2 sm:px-8 py-3 sm:py-4 {{ $row['growth'] < 0 ? 'text-error' : 'text-teal-600' }} font-bold">
+                        <td class="px-2 sm:px-8 py-3 sm:py-4 font-bold text-emerald-800">Rp {{ number_format($row['realization'], 0, ',', '.') }}</td>
+                        <td class="px-2 sm:px-8 py-3 sm:py-4 {{ $row['growth'] < 0 ? 'text-error' : 'text-emerald-600' }} font-bold">
                             {{ $row['growth'] >= 0 ? '+' : '' }}{{ number_format($row['growth'], 1) }}%
                         </td>
                         <td class="px-2 sm:px-8 py-3 sm:py-4">
                             <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest {{
-                                $row['status'] === 'Exceeded' ? 'bg-teal-50 text-teal-700' :
+                                $row['status'] === 'Exceeded' ? 'bg-emerald-50 text-emerald-700' :
                                 ($row['status'] === 'Near Target' ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700')
                             }}">
                                 {{ $row['status'] }}

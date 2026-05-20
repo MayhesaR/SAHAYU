@@ -42,7 +42,7 @@
                        name="{{ $p }}search"
                        value="{{ request($p . 'search') }}"
                        placeholder="{{ $searchPlaceholder }}"
-                       class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-teal-500 focus:border-teal-500 bg-surface-container-highest text-sm font-medium text-teal-900 placeholder-slate-400 transition-all shadow-sm" />
+                       class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 bg-surface-container-highest text-sm font-medium text-emerald-900 placeholder-slate-400 transition-all shadow-sm" />
                 @if(request($p . 'search'))
                 <a href="{{ $action }}" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors" title="Hapus pencarian">
                     <span class="material-symbols-outlined text-base">close</span>
@@ -60,7 +60,7 @@
             <select id="{{ $p }}tc-sort"
                     name="{{ $p }}sort"
                     onchange="this.form.submit()"
-                    class="w-full bg-surface-container-highest border-none rounded-lg px-4 py-2.5 text-sm font-semibold text-teal-900 focus:ring-2 focus:ring-teal-500/20 transition-all cursor-pointer shadow-sm">
+                    class="w-full bg-surface-container-highest border-none rounded-lg px-4 py-2.5 text-sm font-semibold text-emerald-900 focus:ring-2 focus:ring-emerald-500/20 transition-all cursor-pointer shadow-sm">
                 <option value="">Default</option>
                 @foreach($sortOptions as $option)
                 <option value="{{ $option['value'] }}" {{ request($p . 'sort') === $option['value'] ? 'selected' : '' }}>
@@ -73,7 +73,7 @@
 
         {{-- Date Range --}}
         @if($showDates)
-        <div class="flex items-end gap-2 w-full lg:w-auto">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-end gap-3 w-full lg:w-auto">
             <div class="flex-1 lg:w-[150px]">
                 <label for="{{ $p }}tc-start-date" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">
                     <span class="material-symbols-outlined text-[10px] align-middle mr-0.5">calendar_today</span> Dari
@@ -83,7 +83,7 @@
                        name="{{ $p }}start_date"
                        value="{{ request($p . 'start_date') }}"
                        onchange="this.form.submit()"
-                       class="w-full bg-surface-container-highest border-none rounded-lg px-4 py-2.5 text-sm font-semibold text-teal-900 focus:ring-2 focus:ring-teal-500/20 transition-all cursor-pointer shadow-sm" />
+                       class="w-full bg-surface-container-highest border-none rounded-lg px-4 py-2.5 text-sm font-semibold text-emerald-900 focus:ring-2 focus:ring-emerald-500/20 transition-all cursor-pointer shadow-sm" />
             </div>
             <div class="flex-1 lg:w-[150px]">
                 <label for="{{ $p }}tc-end-date" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">
@@ -94,7 +94,7 @@
                        name="{{ $p }}end_date"
                        value="{{ request($p . 'end_date') }}"
                        onchange="this.form.submit()"
-                       class="w-full bg-surface-container-highest border-none rounded-lg px-4 py-2.5 text-sm font-semibold text-teal-900 focus:ring-2 focus:ring-teal-500/20 transition-all cursor-pointer shadow-sm" />
+                       class="w-full bg-surface-container-highest border-none rounded-lg px-4 py-2.5 text-sm font-semibold text-emerald-900 focus:ring-2 focus:ring-emerald-500/20 transition-all cursor-pointer shadow-sm" />
             </div>
         </div>
         @endif
@@ -108,7 +108,7 @@
             <select id="{{ $p }}tc-filter-{{ $filter['name'] }}"
                     name="{{ $p }}{{ $filter['name'] }}"
                     onchange="this.form.submit()"
-                    class="w-full bg-surface-container-highest border-none rounded-lg px-4 py-2.5 text-sm font-semibold text-teal-900 focus:ring-2 focus:ring-teal-500/20 transition-all cursor-pointer shadow-sm">
+                    class="w-full bg-surface-container-highest border-none rounded-lg px-4 py-2.5 text-sm font-semibold text-emerald-900 focus:ring-2 focus:ring-emerald-500/20 transition-all cursor-pointer shadow-sm">
                 <option value="">Semua</option>
                 @foreach($filter['choices'] as $choiceValue => $choiceLabel)
                 <option value="{{ $choiceValue }}" {{ request($p . $filter['name']) === (string) $choiceValue ? 'selected' : '' }}>
@@ -128,7 +128,7 @@
             <select id="{{ $p }}tc-per-page"
                     name="{{ $p }}per_page"
                     onchange="this.form.submit()"
-                    class="w-full bg-surface-container-highest border-none rounded-lg px-4 py-2.5 text-sm font-semibold text-teal-900 focus:ring-2 focus:ring-teal-500/20 transition-all cursor-pointer shadow-sm">
+                    class="w-full bg-surface-container-highest border-none rounded-lg px-4 py-2.5 text-sm font-semibold text-emerald-900 focus:ring-2 focus:ring-emerald-500/20 transition-all cursor-pointer shadow-sm">
                 @foreach([10, 15, 25, 50] as $pp)
                 <option value="{{ $pp }}" {{ (int) request($p . 'per_page', 15) === $pp ? 'selected' : '' }}>{{ $pp }}</option>
                 @endforeach
@@ -137,17 +137,17 @@
         @endif
 
         {{-- Action Buttons --}}
-        <div class="flex items-center gap-2 ml-auto">
+        <div class="flex items-center gap-2 w-full sm:w-auto sm:ml-auto justify-end sm:justify-start">
             <button type="submit"
-                    class="px-6 py-2.5 rounded-lg shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2"
-                    style="background-color: #005050 !important; color: #ffffff !important; font-weight: 900;">
+                    class="flex-1 sm:flex-none px-6 py-2.5 rounded-lg shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+                    style="background-color: #0b6e4f !important; color: #ffffff !important; font-weight: 900;">
                 <span class="material-symbols-outlined text-base">search</span>
                 <span>Cari</span>
             </button>
 
             @if(request()->anyFilled(array_map(fn($k) => $p . $k, ['search', 'sort', 'category', 'status', 'per_page', 'start_date', 'end_date', 'type'])))
             <a href="{{ $action }}"
-               class="px-6 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-600 text-sm font-bold hover:bg-slate-50 transition-all flex items-center gap-1.5 shadow-sm"
+               class="flex-1 sm:flex-none px-6 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-600 text-sm font-bold hover:bg-slate-50 transition-all flex items-center justify-center gap-1.5 shadow-sm"
                title="Reset semua filter">
                 <span class="material-symbols-outlined text-base">restart_alt</span>
                 <span>Reset</span>
@@ -161,9 +161,9 @@
     <div class="mt-3 pt-3 border-t border-slate-100 flex items-center gap-2 flex-wrap">
         <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Filter aktif:</span>
         @if(request($p . 'search'))
-        <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-teal-50 text-teal-700 text-[10px] font-bold rounded-full border border-teal-200">
+        <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold rounded-full border border-emerald-200">
             Pencarian: "{{ request($p . 'search') }}"
-            <a href="{{ request()->fullUrlWithoutQuery($p . 'search') }}" class="text-teal-500 hover:text-teal-800">
+            <a href="{{ request()->fullUrlWithoutQuery($p . 'search') }}" class="text-emerald-500 hover:text-emerald-800">
                 <span class="material-symbols-outlined text-[10px]">close</span>
             </a>
         </span>

@@ -15,7 +15,7 @@
 </div>
 </div>
 @if (session('success'))
-<div class="mb-6 rounded-xl bg-teal-50 text-teal-800 border border-teal-100 px-4 py-3 text-sm font-medium">
+<div class="mb-6 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-100 px-4 py-3 text-sm font-medium">
 {{ session('success') }}
 </div>
 @endif
@@ -47,7 +47,7 @@ Belum ada data produksi selesai untuk filter yang dipilih. Ubah produk atau peri
 <h3 class="text-xs uppercase tracking-widest font-bold text-on-surface-variant mb-8">Distribusi Biaya</h3>
 <div class="flex justify-center mb-8">
 <!-- Custom CSS Pie Chart Placeholder -->
-<div class="relative w-48 h-48 rounded-full flex items-center justify-center" style="background: conic-gradient(#005050 0% {{ $materialStopPercent }}%, #4a6363 {{ $materialStopPercent }}% {{ $laborStopPercent }}%, #70371a {{ $laborStopPercent }}% 100%);">
+<div class="relative w-48 h-48 rounded-full flex items-center justify-center" style="background: conic-gradient(#0b6e4f 0% {{ $materialStopPercent }}%, #4a6363 {{ $materialStopPercent }}% {{ $laborStopPercent }}%, #70371a {{ $laborStopPercent }}% 100%);">
 <div class="absolute inset-4 bg-white rounded-full flex flex-col items-center justify-center">
 <span class="text-xs font-bold text-slate-400">Total HPP</span>
 <span class="text-2xl font-black text-primary">Rp {{ number_format($hppPerUnit, 0, ',', '.') }}</span>
@@ -80,7 +80,7 @@ Belum ada data produksi selesai untuk filter yang dipilih. Ubah produk atau peri
 </div>
 <!-- Market Comparison Card -->
 <div class="p-8 rounded-xl shadow-lg relative overflow-hidden" 
-     style="background-color: #005050 !important; color: #ffffff !important;">
+     style="background-color: #0b6e4f !important; color: #ffffff !important;">
 <div class="absolute top-0 right-0 p-4 opacity-20">
 <span class="material-symbols-outlined text-6xl" style="font-variation-settings: 'FILL' 1;">trending_up</span>
 </div>
@@ -167,7 +167,7 @@ Belum ada data produksi selesai untuk filter yang dipilih. Ubah produk atau peri
 </div>
 <div class="mt-6 flex justify-end">
 <button class="px-5 py-2.5 rounded-xl shadow-sm" 
-        style="background-color: #005050 !important; color: #ffffff !important; font-weight: 900;" 
+        style="background-color: #0b6e4f !important; color: #ffffff !important; font-weight: 900;" 
         type="submit">Hitung Ulang</button>
 </div>
 </form>

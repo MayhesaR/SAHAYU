@@ -102,7 +102,7 @@ class DashboardController extends Controller
                 'amount' => 'Rp ' . number_format($sale->total, 0, ',', '.'),
                 'time' => $sale->created_at,
                 'icon' => $isDebt ? 'menu_book' : 'payments',
-                'color' => $isDebt ? 'amber' : 'teal'
+                'color' => $isDebt ? 'amber' : 'emerald'
             ];
         });
 
@@ -215,7 +215,7 @@ class DashboardController extends Controller
                                        AVG(labor_cost / quantity) as avg_lab,
                                        AVG(overhead_cost_snapshot / quantity) as avg_over
                                 FROM productions 
-                                WHERE status = 'done' AND company_id = {$companyId} 
+                                WHERE status = 'done' AND company_id = " . intval($companyId) . " 
                                 GROUP BY product_id) as p_hpp"), 'p_hpp.product_id', '=', 'products.id')
             ->whereBetween('sales.created_at', [$startDate, $endDate])
             ->where('sales.company_id', $companyId)
@@ -269,6 +269,19 @@ class DashboardController extends Controller
             'overhead' => (float) $totalOverheadCost,
         ];
 
+        // 7. Top Selling Products
+        $topProducts = DB::table('sale_items')
+            ->join('sales', 'sales.id', '=', 'sale_items.sale_id')
+            ->join('products', 'products.id', '=', 'sale_items.product_id')
+            ->where('sales.company_id', $companyId)
+            ->where('sale_items.company_id', $companyId)
+            ->whereBetween('sales.created_at', [$startDate, $endDate])
+            ->select('products.name', DB::raw('SUM(sale_items.quantity) as total_qty'), DB::raw('SUM(sale_items.quantity * sale_items.price) as total_revenue'))
+            ->groupBy('products.id', 'products.name')
+            ->orderByDesc('total_qty')
+            ->limit(5)
+            ->get();
+
         return view('DashboardUtama', [
             'companyName' => auth()->user()->company->name ?? 'UMKM Anda',
             'totalSales' => $salesThisPeriod,
@@ -289,6 +302,7 @@ class DashboardController extends Controller
             'recentActivities' => $recentActivities,
             'targetDate' => $now->toDateString(),
             'isTimeTravel' => $isTimeTravel,
+            'topProducts' => $topProducts,
         ]);
     }
 

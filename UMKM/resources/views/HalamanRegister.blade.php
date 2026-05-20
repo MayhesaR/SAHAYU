@@ -14,7 +14,7 @@
                 extend: {
                     "colors": {
                         "background": "#f9f9f9",
-                        "primary": "#005050",
+                        "primary": "#0b6e4f",
                         "on-surface": "#1a1c1c",
                         "surface-container-lowest": "#ffffff",
                         "surface-container-highest": "#e2e3e2",
@@ -40,8 +40,8 @@
 </head>
 <body class="bg-background text-on-surface min-h-screen flex items-center justify-center p-6 relative overflow-x-hidden">
     <div class="absolute inset-0 z-0 opacity-40 pointer-events-none">
-        <div class="absolute top-[-10%] left-[-5%] w-[40%] h-[40%] rounded-full bg-teal-100 blur-[120px]"></div>
-        <div class="absolute bottom-[-10%] right-[-5%] w-[30%] h-[30%] rounded-full bg-teal-200 blur-[120px]"></div>
+        <div class="absolute top-[-10%] left-[-5%] w-[40%] h-[40%] rounded-full bg-emerald-100 blur-[120px]"></div>
+        <div class="absolute bottom-[-10%] right-[-5%] w-[30%] h-[30%] rounded-full bg-emerald-200 blur-[120px]"></div>
     </div>
     <main class="relative z-10 w-full max-w-md">
         <div class="flex flex-col items-center mb-10 space-y-2">
@@ -112,7 +112,7 @@
                     </div>
                 </div>
                 <div class="pt-4">
-                    <button class="w-full bg-[#005050] text-white py-4 px-6 rounded-xl font-black tracking-wide shadow-lg shadow-teal-900/30 hover:bg-[#006a6a] hover:shadow-xl active:scale-[0.98] transition-all flex items-center justify-center space-x-2" type="submit">
+                    <button class="w-full bg-[#0b6e4f] text-white py-4 px-6 rounded-xl font-black tracking-wide shadow-lg shadow-emerald-900/30 hover:bg-[#09523b] hover:shadow-xl active:scale-[0.98] transition-all flex items-center justify-center space-x-2" type="submit">
                         <span>Register Now</span>
                         <span class="material-symbols-outlined text-lg">app_registration</span>
                     </button>

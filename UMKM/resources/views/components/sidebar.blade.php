@@ -1,46 +1,73 @@
-<aside class="h-screen w-64 fixed left-0 top-0 z-50 bg-slate-50 flex flex-col py-6 border-r border-outline-variant/10 transition-transform duration-300 -translate-x-full xl:translate-x-0"
-       :class="sidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full xl:translate-x-0'">
-    <div class="px-8 mb-10 flex justify-between items-center">
-        <div>
-            <h1 class="text-lg font-black text-teal-800 tracking-tight">SAHAYU</h1>
-            <p class="text-xs font-semibold text-slate-500 uppercase tracking-widest mt-1"></p>
+<aside class="h-screen w-64 fixed left-0 top-0 z-50 bg-white border-r border-stone-200/60 flex flex-col py-6 shadow-sm transition-all duration-300 -translate-x-full xl:translate-x-0 xl:left-4 xl:top-4 xl:h-[calc(100vh-2rem)] xl:rounded-[2rem] xl:border xl:shadow-lg xl:shadow-stone-200/5"
+       :class="sidebarOpen ? 'translate-x-0 !shadow-2xl' : '-translate-x-full xl:translate-x-0'">
+    
+    <!-- Branding Header -->
+    <div class="px-6 mb-8 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <img src="{{ asset('logo.png') }}" alt="SAHAYU Logo" class="w-9 h-9 rounded-xl shadow-md shadow-[#0b6e4f]/10 flex-shrink-0 object-cover" />
+            <div>
+                <h1 class="text-lg font-black text-stone-900 tracking-tight font-headline">SAHAYU</h1>
+                <p class="text-[9px] font-bold text-stone-400 uppercase tracking-widest leading-none mt-0.5">Keuangan UMKM</p>
+            </div>
         </div>
         <!-- Close button for mobile -->
-        <button @click="sidebarOpen = false" class="xl:hidden text-slate-400 hover:text-slate-600">
-            <span class="material-symbols-outlined">close</span>
+        <button @click="sidebarOpen = false" class="xl:hidden p-1.5 rounded-lg hover:bg-stone-100 text-stone-400 hover:text-stone-600 transition-colors">
+            <span class="material-symbols-outlined text-lg">close</span>
         </button>
     </div>
 
-    <nav class="flex-1 space-y-1 overflow-y-auto no-scrollbar">
+    <!-- Navigation Items -->
+    <div class="px-3 mb-2">
+        <p class="text-[9px] font-bold text-stone-400 uppercase tracking-widest px-3 mb-2">Menu Utama</p>
+    </div>
+    <nav class="flex-1 space-y-1 overflow-y-auto no-scrollbar px-3">
         @php
-            $activeClass = "flex items-center px-8 py-3 text-teal-900 border-r-4 border-teal-600 bg-teal-50/50 font-manrope text-sm font-semibold tracking-wide material-slide";
-            $inactiveClass = "flex items-center px-8 py-3 text-slate-500 font-manrope text-sm font-semibold tracking-wide hover:text-teal-700 hover:pl-10 transition-all material-slide";
+            $activeClass = "flex items-center justify-between px-3.5 py-2.5 text-white bg-[#0b6e4f] rounded-xl font-body text-xs font-semibold tracking-wide transition-all duration-200 shadow-sm shadow-[#0b6e4f]/10";
+            $inactiveClass = "flex items-center justify-between px-3.5 py-2.5 text-stone-500 hover:text-[#0b6e4f] hover:bg-stone-100/60 rounded-xl font-body text-xs font-medium tracking-wide transition-all duration-200";
         @endphp
 
         @if(auth()->check() && auth()->user()->isStaff())
             <!-- STAFF ROLE NAVIGATION -->
             <a class="{{ request()->routeIs('dashboard') ? $activeClass : $inactiveClass }}" href="{{ route('dashboard') }}">
-                <span class="material-symbols-outlined mr-3 flex-shrink-0">home</span> Dashboard Harian
+                <div class="flex items-center">
+                    <span class="material-symbols-outlined mr-3 text-lg flex-shrink-0 {{ request()->routeIs('dashboard') ? 'text-white' : 'text-stone-400' }}">home</span>
+                    <span>Dashboard Harian</span>
+                </div>
             </a>
 
             <a class="{{ request()->routeIs('sales.*') ? $activeClass : $inactiveClass }}" href="{{ route('sales.index') }}">
-                <span class="material-symbols-outlined mr-3 flex-shrink-0">shopping_cart</span> Kasir POS
+                <div class="flex items-center">
+                    <span class="material-symbols-outlined mr-3 text-lg flex-shrink-0 {{ request()->routeIs('sales.*') ? 'text-white' : 'text-stone-400' }}">shopping_cart</span>
+                    <span>Kasir POS</span>
+                </div>
             </a>
 
             <a class="{{ request()->routeIs('history.*') ? $activeClass : $inactiveClass }}" href="{{ route('history.index') }}">
-                <span class="material-symbols-outlined mr-3 flex-shrink-0">history</span> Riwayat Transaksi
+                <div class="flex items-center">
+                    <span class="material-symbols-outlined mr-3 text-lg flex-shrink-0 {{ request()->routeIs('history.*') ? 'text-white' : 'text-stone-400' }}">history</span>
+                    <span>Riwayat Transaksi</span>
+                </div>
             </a>
 
             <a class="{{ request()->routeIs('expenses.*') ? $activeClass : $inactiveClass }}" href="{{ route('expenses.index') }}">
-                <span class="material-symbols-outlined mr-3 flex-shrink-0">receipt_long</span> Catat Pengeluaran
+                <div class="flex items-center">
+                    <span class="material-symbols-outlined mr-3 text-lg flex-shrink-0 {{ request()->routeIs('expenses.*') ? 'text-white' : 'text-stone-400' }}">receipt_long</span>
+                    <span>Catat Pengeluaran</span>
+                </div>
             </a>
 
             <a class="{{ request()->routeIs('debts.*') ? $activeClass : $inactiveClass }}" href="{{ route('debts.index') }}">
-                <span class="material-symbols-outlined mr-3 flex-shrink-0">book</span> Piutang / Kasbon
+                <div class="flex items-center">
+                    <span class="material-symbols-outlined mr-3 text-lg flex-shrink-0 {{ request()->routeIs('debts.*') ? 'text-white' : 'text-stone-400' }}">book</span>
+                    <span>Piutang / Kasbon</span>
+                </div>
             </a>
 
             <a class="{{ request()->routeIs('customers.*') ? $activeClass : $inactiveClass }}" href="{{ route('customers.index') }}">
-                <span class="material-symbols-outlined mr-3 flex-shrink-0">group</span> Data Pelanggan
+                <div class="flex items-center">
+                    <span class="material-symbols-outlined mr-3 text-lg flex-shrink-0 {{ request()->routeIs('customers.*') ? 'text-white' : 'text-stone-400' }}">group</span>
+                    <span>Data Pelanggan</span>
+                </div>
             </a>
 
             <!-- Collapsible Dropdown "Kelola Toko" -->
@@ -49,12 +76,12 @@
             @endphp
             <div x-data="{ openKelolaToko: {{ $isKelolaActive ? 'true' : 'false' }} }" class="w-full">
                 <button @click="openKelolaToko = !openKelolaToko" 
-                        class="w-full flex items-center justify-between px-8 py-3 text-slate-500 font-manrope text-sm font-semibold tracking-wide hover:text-teal-700 transition-all material-slide">
+                        class="w-full flex items-center justify-between px-3.5 py-2.5 text-stone-500 hover:text-[#0b6e4f] hover:bg-stone-100/60 rounded-xl font-body text-xs font-medium tracking-wide transition-all duration-200">
                     <div class="flex items-center">
-                        <span class="material-symbols-outlined mr-3 flex-shrink-0">storefront</span>
+                        <span class="material-symbols-outlined mr-3 text-lg flex-shrink-0 {{ $isKelolaActive ? 'text-[#0b6e4f]' : 'text-stone-400' }}">storefront</span>
                         <span>Kelola Toko</span>
                     </div>
-                    <span class="material-symbols-outlined text-xs transition-transform duration-200" :class="openKelolaToko ? 'rotate-180' : ''">expand_more</span>
+                    <span class="material-symbols-outlined text-xs transition-transform duration-200" :class="openKelolaToko ? 'rotate-180 text-[#0b6e4f]' : 'text-stone-400'">expand_more</span>
                 </button>
                 
                 <div x-show="openKelolaToko" 
@@ -64,102 +91,163 @@
                      x-transition:leave="transition ease-in duration-150"
                      x-transition:leave-start="opacity-100 max-h-[500px]"
                      x-transition:leave-end="opacity-0 max-h-0 overflow-hidden"
-                     class="space-y-1 pl-4 bg-slate-100/20">
+                     class="space-y-0.5 mt-0.5 pl-3 border-l border-[#0b6e4f]/10 ml-5">
                     
                     <a class="{{ request()->routeIs('materials.*') ? $activeClass : $inactiveClass }}" href="{{ route('materials.index') }}">
-                        <span class="material-symbols-outlined mr-3 flex-shrink-0">inventory_2</span> Bahan Baku
+                        <div class="flex items-center">
+                            <span class="material-symbols-outlined mr-3 text-lg flex-shrink-0 {{ request()->routeIs('materials.*') ? 'text-white' : 'text-stone-400' }}">inventory_2</span>
+                            <span>Bahan Baku</span>
+                        </div>
                     </a>
 
                     <a class="{{ request()->routeIs('productions.*') ? $activeClass : $inactiveClass }}" href="{{ route('productions.index') }}">
-                        <span class="material-symbols-outlined mr-3 flex-shrink-0">precision_manufacturing</span> Produksi
+                        <div class="flex items-center">
+                            <span class="material-symbols-outlined mr-3 text-lg flex-shrink-0 {{ request()->routeIs('productions.*') ? 'text-white' : 'text-stone-400' }}">precision_manufacturing</span>
+                            <span>Produksi</span>
+                        </div>
                     </a>
 
                     <a class="{{ request()->routeIs('overhead.*') ? $activeClass : $inactiveClass }}" href="{{ route('overhead.index') }}">
-                        <span class="material-symbols-outlined mr-3 flex-shrink-0">account_balance_wallet</span> Biaya Operasional
+                        <div class="flex items-center">
+                            <span class="material-symbols-outlined mr-3 text-lg flex-shrink-0 {{ request()->routeIs('overhead.*') ? 'text-white' : 'text-stone-400' }}">account_balance_wallet</span>
+                            <span>Biaya Operasional</span>
+                        </div>
                     </a>
 
                     <a class="{{ request()->routeIs('reports.*') ? $activeClass : $inactiveClass }}" href="{{ route('reports.index') }}">
-                        <span class="material-symbols-outlined mr-3 flex-shrink-0">analytics</span> Laporan Analisis
+                        <div class="flex items-center">
+                            <span class="material-symbols-outlined mr-3 text-lg flex-shrink-0 {{ request()->routeIs('reports.*') ? 'text-white' : 'text-stone-400' }}">analytics</span>
+                            <span>Laporan Analisis</span>
+                        </div>
                     </a>
 
                     <a class="{{ request()->routeIs('ai.*') ? $activeClass : $inactiveClass }}" href="{{ route('ai.index') }}">
-                        <span class="material-symbols-outlined mr-3 flex-shrink-0">smart_toy</span> SAHAYU AI Assistant
+                        <div class="flex items-center">
+                            <span class="material-symbols-outlined mr-3 text-lg flex-shrink-0 {{ request()->routeIs('ai.*') ? 'text-white' : 'text-stone-400' }}">smart_toy</span>
+                            <span>SAHAYU AI Assistant</span>
+                        </div>
                     </a>
                 </div>
             </div>
-
-            <a class="{{ request()->routeIs('profile.*') ? $activeClass : $inactiveClass }}" href="{{ route('profile.index') }}">
-                <span class="material-symbols-outlined mr-3 flex-shrink-0">person</span> Profil Saya
-            </a>
         @else
             <!-- ORIGINAL ADMIN / OTHER ROLES NAVIGATION -->
             <a class="{{ request()->routeIs('dashboard') ? $activeClass : $inactiveClass }}" href="{{ route('dashboard') }}">
-                <span class="material-symbols-outlined mr-3 flex-shrink-0">dashboard</span> Dashboard
+                <div class="flex items-center">
+                    <span class="material-symbols-outlined mr-3 text-lg flex-shrink-0 {{ request()->routeIs('dashboard') ? 'text-white' : 'text-stone-400' }}">dashboard</span>
+                    <span>Dashboard</span>
+                </div>
             </a>
 
             <a class="{{ request()->routeIs('materials.*') ? $activeClass : $inactiveClass }}" href="{{ route('materials.index') }}">
-                <span class="material-symbols-outlined mr-3 flex-shrink-0">inventory_2</span> Bahan Baku
+                <div class="flex items-center">
+                    <span class="material-symbols-outlined mr-3 text-lg flex-shrink-0 {{ request()->routeIs('materials.*') ? 'text-white' : 'text-stone-400' }}">inventory_2</span>
+                    <span>Bahan Baku</span>
+                </div>
             </a>
 
             <a class="{{ request()->routeIs('productions.*') ? $activeClass : $inactiveClass }}" href="{{ route('productions.index') }}">
-                <span class="material-symbols-outlined mr-3 flex-shrink-0">precision_manufacturing</span> Produksi
+                <div class="flex items-center">
+                    <span class="material-symbols-outlined mr-3 text-lg flex-shrink-0 {{ request()->routeIs('productions.*') ? 'text-white' : 'text-stone-400' }}">precision_manufacturing</span>
+                    <span>Produksi</span>
+                </div>
             </a>
 
             <a class="{{ request()->routeIs('products.*') ? $activeClass : $inactiveClass }}" href="{{ route('products.index') }}">
-                <span class="material-symbols-outlined mr-3 flex-shrink-0">inventory</span> Produk Jadi
+                <div class="flex items-center">
+                    <span class="material-symbols-outlined mr-3 text-lg flex-shrink-0 {{ request()->routeIs('products.*') ? 'text-white' : 'text-stone-400' }}">inventory</span>
+                    <span>Produk Jadi</span>
+                </div>
             </a>
 
             @if(auth()->check() && auth()->user()->isAdmin())
             <a class="{{ request()->routeIs('hpp.*') ? $activeClass : $inactiveClass }}" href="{{ route('hpp.index') }}">
-                <span class="material-symbols-outlined mr-3 flex-shrink-0">calculate</span> HPP Otomatis
+                <div class="flex items-center">
+                    <span class="material-symbols-outlined mr-3 text-lg flex-shrink-0 {{ request()->routeIs('hpp.*') ? 'text-white' : 'text-stone-400' }}">calculate</span>
+                    <span>HPP Otomatis</span>
+                </div>
             </a>
             @endif
 
             <a class="{{ request()->routeIs('sales.*') ? $activeClass : $inactiveClass }}" href="{{ route('sales.index') }}">
-                <span class="material-symbols-outlined mr-3 flex-shrink-0">point_of_sale</span> Penjualan
+                <div class="flex items-center">
+                    <span class="material-symbols-outlined mr-3 text-lg flex-shrink-0 {{ request()->routeIs('sales.*') ? 'text-white' : 'text-stone-400' }}">point_of_sale</span>
+                    <span>Penjualan</span>
+                </div>
             </a>
 
             <a class="{{ request()->routeIs('expenses.*') ? $activeClass : $inactiveClass }}" href="{{ route('expenses.index') }}">
-                <span class="material-symbols-outlined mr-3 flex-shrink-0">receipt_long</span> Catat Pengeluaran
+                <div class="flex items-center">
+                    <span class="material-symbols-outlined mr-3 text-lg flex-shrink-0 {{ request()->routeIs('expenses.*') ? 'text-white' : 'text-stone-400' }}">receipt_long</span>
+                    <span>Catat Pengeluaran</span>
+                </div>
             </a>
 
-
-
             <a class="{{ request()->routeIs('customers.*') ? $activeClass : $inactiveClass }}" href="{{ route('customers.index') }}">
-                <span class="material-symbols-outlined mr-3 flex-shrink-0">group</span> Data Pelanggan
+                <div class="flex items-center">
+                    <span class="material-symbols-outlined mr-3 text-lg flex-shrink-0 {{ request()->routeIs('customers.*') ? 'text-white' : 'text-stone-400' }}">group</span>
+                    <span>Data Pelanggan</span>
+                </div>
             </a>
 
             <a class="{{ request()->routeIs('overhead.*') ? $activeClass : $inactiveClass }}" href="{{ route('overhead.index') }}">
-                <span class="material-symbols-outlined mr-3 flex-shrink-0">account_balance_wallet</span> Biaya Operasional
+                <div class="flex items-center">
+                    <span class="material-symbols-outlined mr-3 text-lg flex-shrink-0 {{ request()->routeIs('overhead.*') ? 'text-white' : 'text-stone-400' }}">account_balance_wallet</span>
+                    <span>Biaya Operasional</span>
+                </div>
             </a>
 
             <a class="{{ request()->routeIs('reports.*') ? $activeClass : $inactiveClass }}" href="{{ route('reports.index') }}">
-                <span class="material-symbols-outlined mr-3 flex-shrink-0">analytics</span> Laporan
+                <div class="flex items-center">
+                    <span class="material-symbols-outlined mr-3 text-lg flex-shrink-0 {{ request()->routeIs('reports.*') ? 'text-white' : 'text-stone-400' }}">analytics</span>
+                    <span>Laporan Keuangan</span>
+                </div>
             </a>
 
             <a class="{{ request()->routeIs('ai.*') ? $activeClass : $inactiveClass }}" href="{{ route('ai.index') }}">
-                <span class="material-symbols-outlined mr-3 flex-shrink-0">smart_toy</span> SAHAYU Assistant
+                <div class="flex items-center">
+                    <span class="material-symbols-outlined mr-3 text-lg flex-shrink-0 {{ request()->routeIs('ai.*') ? 'text-white' : 'text-stone-400' }}">smart_toy</span>
+                    <span>SAHAYU Assistant</span>
+                </div>
             </a>
 
             @if(auth()->check() && auth()->user()->isAdmin())
             <a class="{{ request()->routeIs('accounts.*') ? $activeClass : $inactiveClass }}" href="{{ route('accounts.index') }}">
-                <span class="material-symbols-outlined mr-3 flex-shrink-0">manage_accounts</span> Manajemen Akun
+                <div class="flex items-center">
+                    <span class="material-symbols-outlined mr-3 text-lg flex-shrink-0 {{ request()->routeIs('accounts.*') ? 'text-white' : 'text-stone-400' }}">manage_accounts</span>
+                    <span>Manajemen Akun</span>
+                </div>
             </a>
             @endif
-
-            <a class="{{ request()->routeIs('profile.*') ? $activeClass : $inactiveClass }}" href="{{ route('profile.index') }}">
-                <span class="material-symbols-outlined mr-3 flex-shrink-0">person</span> Profil Saya
-            </a>
         @endif
     </nav>
 
-    <div class="px-8 mt-auto pt-6 border-t border-slate-100">
-        <form method="POST" action="{{ route('logout') }}" class="m-0 w-full block">
-            @csrf
-            <button type="submit" class="flex items-center py-2 space-x-3 text-slate-500 hover:text-error transition-all w-full text-left font-semibold">
-                <span class="material-symbols-outlined">logout</span>
-                <span>Keluar</span>
-            </button>
-        </form>
+    <!-- Bottom User Profile Card -->
+    @if(auth()->check())
+    <div class="relative overflow-hidden m-4 p-4 bg-[#0b6e4f] rounded-2xl text-white shadow-md shadow-[#0b6e4f]/10">
+        <!-- Glow Decorative backgrounds -->
+        <div class="absolute -right-6 -bottom-6 w-20 h-20 bg-emerald-400/25 rounded-full blur-xl pointer-events-none"></div>
+        <div class="absolute -left-6 -top-6 w-16 h-16 bg-emerald-400/15 rounded-full blur-lg pointer-events-none"></div>
+
+        <div class="relative z-10 flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full bg-white/10 text-white flex items-center justify-center font-bold text-xs uppercase border border-white/20">
+                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+            </div>
+            <div class="overflow-hidden">
+                <h4 class="text-xs font-semibold truncate leading-tight">{{ auth()->user()->name }}</h4>
+                <p class="text-[9px] text-emerald-400 font-medium tracking-wide mt-0.5">{{ auth()->user()->isAdmin() ? 'Administrator' : 'Staff Kasir' }}</p>
+            </div>
+        </div>
+        <div class="relative z-10 mt-4 pt-3 border-t border-white/10 flex items-center justify-between gap-2">
+            <a href="{{ route('profile.index') }}" class="flex-1 text-center py-1.5 bg-white/10 hover:bg-white/20 text-white rounded-lg text-[9px] font-bold uppercase tracking-wider transition-all duration-200">
+                Profil Saya
+            </a>
+            <form method="POST" action="{{ route('logout') }}" class="m-0">
+                @csrf
+                <button type="submit" class="p-1.5 bg-rose-500/20 hover:bg-rose-500/40 text-rose-300 hover:text-white rounded-lg transition-colors" title="Keluar">
+                    <span class="material-symbols-outlined text-sm block">logout</span>
+                </button>
+            </form>
+        </div>
     </div>
+    @endif
 </aside>
