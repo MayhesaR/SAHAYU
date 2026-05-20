@@ -6,7 +6,7 @@
 @section('content')
 <!-- Dashboard Container -->
 <div class="px-2 py-4 sm:px-4 space-y-8 bg-transparent min-h-screen">
-    
+
     <!-- HEADER & DATE FILTER -->
     <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
         <div class="space-y-1.5">
@@ -31,25 +31,25 @@
                 <form action="{{ route('dashboard') }}" method="GET" class="flex items-center gap-3">
                     <div class="flex items-center gap-2 pl-2">
                         <span class="material-symbols-outlined text-stone-400 text-base">travel_explore</span>
-                        <input type="date" 
-                               name="date" 
+                        <input type="date"
+                               name="date"
                                value="{{ $targetDate }}"
                                onchange="this.form.submit()"
                                class="border-none bg-stone-100/60 hover:bg-stone-100 rounded-xl p-2 text-xs font-semibold text-stone-700 focus:ring-0 outline-none cursor-pointer transition-all" />
                     </div>
-                    
+
                     <div class="h-6 w-px bg-stone-200"></div>
 
                     <div class="flex items-center gap-1 pr-1">
-                        <a href="{{ route('dashboard', ['range' => '1']) }}" 
+                        <a href="{{ route('dashboard', ['range' => '1']) }}"
                            class="px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all duration-200 {{ $currentFilter == '1' && !$isTimeTravel ? 'bg-[#0b6e4f] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-50' }}">
                             Hari Ini
                         </a>
-                        <a href="{{ route('dashboard', ['range' => '7']) }}" 
+                        <a href="{{ route('dashboard', ['range' => '7']) }}"
                            class="px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all duration-200 {{ $currentFilter == '7' && !$isTimeTravel ? 'bg-[#0b6e4f] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-50' }}">
                             7 Hari
                         </a>
-                        <a href="{{ route('dashboard', ['range' => '30']) }}" 
+                        <a href="{{ route('dashboard', ['range' => '30']) }}"
                            class="px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all duration-200 {{ $currentFilter == '30' && !$isTimeTravel ? 'bg-[#0b6e4f] text-white shadow-sm' : 'text-stone-500 hover:bg-stone-50' }}">
                             30 Hari
                         </a>
@@ -58,14 +58,14 @@
             </div>
 
             <!-- Export Excel Button (Secondary) -->
-            <a href="{{ route('dashboard.export', array_merge(request()->all(), ['date' => $targetDate, 'range' => $currentFilter])) }}" 
+            <a href="{{ route('dashboard.export', array_merge(request()->all(), ['date' => $targetDate, 'range' => $currentFilter])) }}"
                class="flex items-center gap-2 px-4 py-2.5 bg-white border border-stone-200/60 hover:bg-stone-50 text-stone-700 rounded-xl text-xs font-semibold shadow-sm transition-all duration-200">
                 <span class="material-symbols-outlined text-[16px] text-stone-500">download</span>
                 <span>Ekspor</span>
             </a>
 
             <!-- Quick POS Action Button (Primary) -->
-            <a href="{{ route('sales.index') }}" 
+            <a href="{{ route('sales.index') }}"
                class="flex items-center gap-2 px-4 py-2.5 bg-[#0b6e4f] hover:opacity-95 text-white rounded-xl text-xs font-semibold shadow-sm transition-all duration-200">
                 <span class="material-symbols-outlined text-[16px]">add</span>
                 <span>POS Kasir</span>
@@ -279,7 +279,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Left Column (2/3 width) -->
         <div class="lg:col-span-2 space-y-8">
-            
+
             <!-- Financial Trend Chart (Line/Bar Chart) -->
             <div class="bg-white p-6 sm:p-8 rounded-[1.5rem] border border-stone-200/60 shadow-sm">
                 <div class="flex items-center justify-between mb-8">
@@ -309,7 +309,7 @@
                     </div>
                     <span class="text-stone-450"><span class="material-symbols-outlined text-xl">history</span></span>
                 </div>
-                
+
                 <div class="divide-y divide-stone-100">
                     @forelse($recentActivities as $activity)
                         @php
@@ -340,7 +340,7 @@
                                 <span class="material-symbols-outlined text-xl">hourglass_empty</span>
                             </div>
                             <p class="text-xs font-bold text-stone-800">Belum ada aktivitas</p>
-                            <p class="text-[10px] text-stone-400 mt-1">Aktivitas baru akan muncul di sini</p>
+                            <p class="text-[10px] text-stone-400 mt-1">Aktivitas baru akan muncul di sini.</p>
                         </div>
                     @endforelse
                 </div>
@@ -355,7 +355,7 @@
                     </div>
                     <span class="text-stone-450"><span class="material-symbols-outlined text-xl">workspace_premium</span></span>
                 </div>
-                
+
                 <div class="space-y-5">
                     @php
                         $maxQty = $topProducts->first()->total_qty ?? 1;
@@ -403,7 +403,7 @@
 
         <!-- Right Column (1/3 width) -->
         <div class="space-y-8">
-            
+
             <!-- Stacked Quick Actions -->
             <div class="bg-white p-6 sm:p-8 rounded-[1.5rem] border border-stone-200/60 shadow-sm">
                 <div class="mb-5">
@@ -546,7 +546,7 @@
                         </span>
                     </span>
                 </div>
-                
+
                 <div class="space-y-3">
                     @forelse($lowStockMaterials as $mat)
                         <div class="flex items-center justify-between p-3.5 bg-amber-50/45 hover:bg-amber-50/60 border border-amber-500/25 rounded-2xl transition-all duration-200">
@@ -585,13 +585,13 @@
     document.addEventListener('DOMContentLoaded', function() {
         // Financial Trend Chart
         const ctxFinancial = document.getElementById('financialTrendChart').getContext('2d');
-        
+
         // Custom Area Gradients
         const gradSales = ctxFinancial.createLinearGradient(0, 0, 0, 360);
         gradSales.addColorStop(0, 'rgba(11, 110, 79, 0.22)');
         gradSales.addColorStop(0.5, 'rgba(11, 110, 79, 0.08)');
         gradSales.addColorStop(1, 'rgba(11, 110, 79, 0)');
-        
+
         const gradExp = ctxFinancial.createLinearGradient(0, 0, 0, 360);
         gradExp.addColorStop(0, 'rgba(244, 63, 94, 0.22)');
         gradExp.addColorStop(0.5, 'rgba(244, 63, 94, 0.08)');
@@ -615,7 +615,7 @@
                         pointBackgroundColor: '#0b6e4f',
                         pointBorderColor: '#ffffff',
                         pointBorderWidth: 2,
-                        borderRadius: 6, 
+                        borderRadius: 6,
                         maxBarThickness: 32,
                     },
                     {
@@ -655,20 +655,20 @@
                     }
                 },
                 scales: {
-                    x: { 
-                        grid: { display: false }, 
-                        ticks: { 
-                            font: { weight: 'bold', size: 9, family: 'Inter' }, 
+                    x: {
+                        grid: { display: false },
+                        ticks: {
+                            font: { weight: 'bold', size: 9, family: 'Inter' },
                             color: '#a8a29e',
                             maxRotation: 0,
                             autoSkip: true,
                             maxTicksLimit: {{ $currentFilter == '1' ? 8 : 12 }}
-                        } 
+                        }
                     },
-                    y: { 
+                    y: {
                         grid: { color: 'rgba(120, 113, 108, 0.08)' },
-                        ticks: { 
-                            font: { weight: 'bold', size: 9, family: 'Inter' }, 
+                        ticks: {
+                            font: { weight: 'bold', size: 9, family: 'Inter' },
                             color: '#a8a29e',
                             callback: (value) => 'Rp ' + new Intl.NumberFormat('id-ID', { notation: 'compact' }).format(value)
                         },
@@ -696,7 +696,7 @@
                 responsive: true,
                 maintainAspectRatio: false,
                 cutout: '82%',
-                plugins: { 
+                plugins: {
                     legend: { display: false },
                     tooltip: {
                         backgroundColor: '#1c1917',
