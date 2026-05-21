@@ -10,12 +10,20 @@
             <h2 class="text-lg sm:text-xl lg:text-2xl font-extrabold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400 tracking-tight break-words">Manajemen Customer & CRM</h2>
             <p class="text-on-surface-variant font-body mt-1 max-w-xl text-sm sm:text-base">Kelola basis data pelanggan, lacak histori transaksi total belanja, dan kontrol sisa kasbon piutang secara digital.</p>
         </div>
-        <a class="w-full sm:w-auto px-6 py-2.5 rounded-xl shadow-lg shadow-emerald-900/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2" 
-           style="background-color: #0b6e4f !important; color: #ffffff !important; font-weight: 900;" 
-           href="#form-customer">
-            <span class="material-symbols-outlined text-base flex-shrink-0">person_add</span>
-            <span>Tambah Customer</span>
-        </a>
+        <div class="flex items-center gap-3 w-full sm:w-auto">
+            <!-- Guided Tour Button -->
+            <button type="button" id="btn-start-tour"
+                    class="bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 rounded-xl px-4 py-2.5 text-xs font-bold transition-all flex items-center justify-center gap-2 border border-emerald-200/50 shadow-sm w-full sm:w-auto">
+                <span class="material-symbols-outlined text-[16px]">lightbulb</span>
+                Panduan CRM
+            </button>
+            <a class="w-full sm:w-auto px-6 py-2.5 rounded-xl shadow-lg shadow-emerald-900/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2" 
+               style="background-color: #0b6e4f !important; color: #ffffff !important; font-weight: 900;" 
+               href="#form-customer">
+                <span class="material-symbols-outlined text-base flex-shrink-0">person_add</span>
+                <span>Tambah Customer</span>
+            </a>
+        </div>
     </div>
 
     @if (session('success'))
@@ -33,7 +41,7 @@
     @endif
 
     <!-- Mini Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div id="tour-crm-stats" class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <article class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-gray-100 dark:border-zinc-800/50 hover:shadow-md transition-all duration-300">
             <p class="text-xs uppercase tracking-widest text-slate-500 dark:text-zinc-400 font-semibold">Total Customer</p>
             <h3 class="mt-2 text-3xl font-extrabold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400">{{ $customers->total() }}</h3>
@@ -101,7 +109,7 @@
                 ]"
             />
 
-            <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800/50 overflow-hidden hover:shadow-md transition-all duration-300">
+            <div id="tour-crm-table" class="bg-surface-container-lowest rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800/50 overflow-hidden hover:shadow-md transition-all duration-300">
                 <div class="px-6 py-5 bg-surface-container-low border-b border-gray-100 dark:border-zinc-800/50 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div class="flex items-center justify-between w-full sm:w-auto">
                         <h3 class="text-lg font-bold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400 flex items-center">
@@ -308,5 +316,54 @@
         editContent.classList.remove('scale-100', 'opacity-100');
         setTimeout(() => editModal.classList.add('hidden'), 300);
     }
+
+    // Driver.js Guided Tour Initialization for Data Pelanggan
+    document.addEventListener('DOMContentLoaded', function () {
+        const btnStartTour = document.getElementById('btn-start-tour');
+        if (btnStartTour && window.driver) {
+            const driver = window.driver.js.driver;
+            const tour = driver({
+                showProgress: true,
+                animate: true,
+                nextBtnText: 'Lanjut →',
+                prevBtnText: '← Kembali',
+                doneBtnText: 'Selesai ✓',
+                popoverClass: 'driverjs-theme-emerald',
+                steps: [
+                    {
+                        element: '#form-customer',
+                        popover: {
+                            title: 'Daftarkan Pelanggan Baru',
+                            description: 'Isi nama dan kontak pelanggan di sini. Wajib mendaftarkan pelanggan jika mereka sering berutang/kasbon agar sistem bisa melacaknya.',
+                            side: 'right',
+                            align: 'start'
+                        }
+                    },
+                    {
+                        element: '#tour-crm-stats',
+                        popover: {
+                            title: 'Indikator Kasbon Aktif',
+                            description: 'Pantau total piutang yang masih menggantung dari semua pelanggan Anda secara real-time di angka merah ini.',
+                            side: 'bottom',
+                            align: 'center'
+                        }
+                    },
+                    {
+                        element: '#tour-crm-table',
+                        popover: {
+                            title: 'Direktori Pelanggan',
+                            description: 'Lihat daftar lengkap pelanggan setia Anda, total uang yang sudah mereka belanjakan, dan sisa utang yang belum lunas.',
+                            side: 'top',
+                            align: 'start'
+                        }
+                    }
+                ]
+            });
+
+            btnStartTour.addEventListener('click', () => {
+                tour.drive();
+            });
+        }
+    });
 </script>
 @endsection

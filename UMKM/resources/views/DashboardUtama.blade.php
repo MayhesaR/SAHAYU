@@ -65,6 +65,12 @@
             </a>
 
             <!-- Quick POS Action Button (Primary) -->
+            <button type="button" id="btn-start-tour"
+                    class="bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 rounded-xl px-4 py-2.5 text-xs font-semibold transition-all flex items-center gap-2 border border-emerald-100/30 dark:border-emerald-900/30 shadow-sm hover:scale-[1.02] active:scale-[0.98]">
+                <span class="material-symbols-outlined text-[16px] font-bold">help</span>
+                <span>Panduan Fitur</span>
+            </button>
+
             <a href="{{ route('sales.index') }}"
                class="flex items-center gap-2 px-4 py-2.5 bg-[#0b6e4f] dark:bg-emerald-600 hover:opacity-95 text-white rounded-xl text-xs font-semibold shadow-sm transition-all duration-200">
                 <span class="material-symbols-outlined text-[16px]">add</span>
@@ -75,7 +81,7 @@
 
     <!-- METRICS CARDS (ROW 1) -->
     @if(auth()->check() && auth()->user()->isStaff())
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="tour-dashboard-stats">
             <!-- Pemasukan Card (Sales) -->
             <div class="relative overflow-hidden bg-[#0b6e4f] dark:bg-emerald-600 text-white p-6 rounded-[1.5rem] border border-[#0b6e4f] dark:border-emerald-500 shadow-md shadow-[#0b6e4f]/10 dark:shadow-emerald-950/15">
                 <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-white/5 rounded-full blur-xl pointer-events-none"></div>
@@ -173,7 +179,7 @@
             </div>
         </div>
     @else
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6" id="tour-dashboard-stats">
             <!-- Sales Card -->
             <div class="relative overflow-hidden bg-[#0b6e4f] dark:bg-emerald-600 text-white p-6 rounded-[1.5rem] border border-[#0b6e4f] dark:border-emerald-500 shadow-md shadow-[#0b6e4f]/10 dark:shadow-emerald-950/15">
                 <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-white/5 rounded-full blur-xl pointer-events-none"></div>
@@ -281,7 +287,7 @@
         <div class="lg:col-span-2 space-y-8">
 
             <!-- Financial Trend Chart (Line/Bar Chart) -->
-            <div class="bg-white dark:bg-zinc-900 p-6 sm:p-8 rounded-[1.5rem] border border-stone-200/60 dark:border-zinc-800/80 shadow-sm">
+            <div id="tour-dashboard-chart" class="bg-white dark:bg-zinc-900 p-6 sm:p-8 rounded-[1.5rem] border border-stone-200/60 dark:border-zinc-800/80 shadow-sm">
                 <div class="flex items-center justify-between mb-8">
                     <h4 class="text-sm font-bold text-stone-800 dark:text-white font-manrope">Tren Arus Kas</h4>
                     <div class="flex items-center gap-3">
@@ -401,7 +407,7 @@
         <div class="space-y-8">
 
             <!-- Stacked Quick Actions -->
-            <div class="bg-white dark:bg-zinc-900 p-6 sm:p-8 rounded-[1.5rem] border border-stone-200/60 dark:border-zinc-800/80 shadow-sm">
+            <div id="tour-dashboard-actions" class="bg-white dark:bg-zinc-900 p-6 sm:p-8 rounded-[1.5rem] border border-stone-200/60 dark:border-zinc-800/80 shadow-sm">
                 <div class="mb-5">
                     <h4 class="text-sm font-bold text-stone-800 dark:text-white font-manrope">Pintasan Aksi</h4>
                     <p class="text-xs text-stone-400 dark:text-zinc-400 font-medium mt-0.5">Akses cepat menu operasional utama</p>
@@ -706,6 +712,50 @@
                     }
                 }
             }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const btnStartTour = document.getElementById('btn-start-tour');
+        if (!btnStartTour) return;
+
+        btnStartTour.addEventListener('click', () => {
+            const driver = window.driver.js.driver;
+            
+            const driverObj = driver({
+                showProgress: true,
+                steps: [
+                    {
+                        element: '#tour-dashboard-stats',
+                        popover: {
+                            title: 'Ringkasan Finansial',
+                            description: 'Kartu ini menampilkan pergerakan arus kas tunai Anda secara real-time, membandingkan performa penjualan dan pengeluaran dengan periode sebelumnya.',
+                            side: 'bottom',
+                            align: 'start'
+                        }
+                    },
+                    {
+                        element: '#tour-dashboard-chart',
+                        popover: {
+                            title: 'Tren Arus Kas',
+                            description: 'Grafik interaktif ini membantu Anda memvisualisasikan tren pemasukan versus pengeluaran dari hari ke hari.',
+                            side: 'top',
+                            align: 'center'
+                        }
+                    },
+                    {
+                        element: '#tour-dashboard-actions',
+                        popover: {
+                            title: 'Pintasan Operasional',
+                            description: 'Akses menu kasir, stok bahan, produksi, atau bahkan asisten AI dengan satu sentuhan dari sini.',
+                            side: 'left',
+                            align: 'start'
+                        }
+                    }
+                ]
+            });
+
+            driverObj.drive();
         });
     });
 </script>

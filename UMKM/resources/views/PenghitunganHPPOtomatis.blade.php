@@ -11,6 +11,12 @@
 <p class="text-on-surface-variant max-w-xl leading-relaxed">Analisis HPP berbasis batch produksi selesai untuk <span class="font-bold text-primary">{{ $selectedProductName }}</span> pada periode <span class="font-semibold">{{ $periodLabel }}</span>.</p>
 </div>
 <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+<!-- Guided Tour Button -->
+<button type="button" id="btn-start-tour"
+        class="bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 rounded-xl px-4 py-2.5 text-xs font-bold transition-all flex items-center justify-center gap-2 border border-emerald-200/50 shadow-sm w-full sm:w-auto">
+    <span class="material-symbols-outlined text-[16px]">lightbulb</span>
+    Panduan HPP
+</button>
 <a class="w-full sm:w-auto px-5 py-2.5 text-sm font-bold bg-surface-container-highest text-on-surface rounded-xl hover:bg-surface-container-high transition-colors text-center" href="{{ route('reports.index') }}">Lihat Laporan</a>
 </div>
 </div>
@@ -24,7 +30,7 @@
 Belum ada data produksi selesai untuk filter yang dipilih. Ubah produk atau periode untuk melihat perhitungan HPP.
 </div>
 @endunless
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+<div id="tour-hpp-metrics" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
 <div class="rounded-xl bg-white dark:bg-zinc-900 p-4 border border-slate-100 dark:border-zinc-800/60">
 <div class="text-xs uppercase tracking-wider text-slate-500 dark:text-zinc-400">Batch Selesai</div>
 <div class="text-2xl font-extrabold text-slate-800 dark:text-white mt-1">{{ number_format($doneBatches, 0, ',', '.') }}</div>
@@ -41,7 +47,7 @@ Belum ada data produksi selesai untuk filter yang dipilih. Ubah produk atau peri
 <!-- Bento Grid Layout -->
 <div class="grid grid-cols-12 gap-8">
 <!-- Summary Card -->
-<div class="col-span-12 lg:col-span-4 space-y-8">
+<div id="tour-hpp-distribution" class="col-span-12 lg:col-span-4 space-y-8">
 <!-- Distribution Chart (Simulated with CSS) -->
 <div class="bg-surface-container-lowest p-8 rounded-xl shadow-[0_12px_40px_rgba(0,80,80,0.06)] relative overflow-hidden">
 <h3 class="text-xs uppercase tracking-widest font-bold text-on-surface-variant mb-8">Distribusi Biaya</h3>
@@ -117,7 +123,7 @@ Belum ada data produksi selesai untuk filter yang dipilih. Ubah produk atau peri
 <!-- Detailed Ledger Content -->
 <div class="col-span-12 lg:col-span-8 space-y-8">
 <!-- Automatic Calculation Input Section -->
-<div class="bg-surface-container-low p-8 rounded-xl">
+<div id="tour-hpp-form" class="bg-surface-container-low p-8 rounded-xl">
 <form action="{{ route('hpp.index') }}" method="GET">
 <div class="flex items-center justify-between mb-8">
 <h3 class="text-lg font-bold text-on-surface">Input Variabel Produksi</h3>
@@ -262,4 +268,53 @@ Belum ada data produksi selesai untuk filter yang dipilih. Ubah produk atau peri
 </section>
 <!-- Signature Contextual FAB (Suppressed on Ledger/Details as per rules, but shown here for navigation context only if relevant) -->
 <!-- Suppressing FAB for this specific transactional/ledger screen to prioritize content canvas focus -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const btnStartTour = document.getElementById('btn-start-tour');
+        if (btnStartTour && window.driver) {
+            const driver = window.driver.js.driver;
+            const tour = driver({
+                showProgress: true,
+                animate: true,
+                nextBtnText: 'Lanjut →',
+                prevBtnText: '← Kembali',
+                doneBtnText: 'Selesai ✓',
+                popoverClass: 'driverjs-theme-emerald',
+                steps: [
+                    {
+                        element: '#tour-hpp-metrics',
+                        popover: {
+                            title: 'Metrik Produksi',
+                            description: 'Pantau jumlah batch selesai, unit yang diproduksi, dan tingkat kegagalan (reject rate) produk Anda.',
+                            side: 'bottom',
+                            align: 'center'
+                        }
+                    },
+                    {
+                        element: '#tour-hpp-distribution',
+                        popover: {
+                            title: 'Distribusi Biaya HPP',
+                            description: 'Lihat perbandingan antara biaya bahan baku, tenaga kerja, dan overhead (listrik/air/gas) dari setiap produk secara visual.',
+                            side: 'right',
+                            align: 'start'
+                        }
+                    },
+                    {
+                        element: '#tour-hpp-form',
+                        popover: {
+                            title: 'Simulasi Kalkulator',
+                            description: 'Ubah volume, tanggal produksi, dan persentase bahan terbuang di sini untuk melihat perubahan modal asli (HPP) secara real-time.',
+                            side: 'top',
+                            align: 'start'
+                        }
+                    }
+                ]
+            });
+
+            btnStartTour.addEventListener('click', () => {
+                tour.drive();
+            });
+        }
+    });
+</script>
 @endsection

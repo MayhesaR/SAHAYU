@@ -12,6 +12,13 @@
                 <p class="text-on-surface-variant max-w-md leading-relaxed text-sm">Pantau kesehatan finansial bisnis Anda dengan metrik real-time dan analisis mendalam.</p>
             </div>
             <div class="flex flex-wrap items-center gap-4 w-full lg:w-auto">
+                <!-- Guided Tour Button -->
+                <button type="button" id="btn-start-tour"
+                        class="bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 rounded-xl px-4 py-2.5 text-xs font-bold transition-all flex items-center justify-center gap-2 border border-emerald-200/50 shadow-sm w-full sm:w-auto">
+                    <span class="material-symbols-outlined text-[16px]">lightbulb</span>
+                    Panduan Analisis
+                </button>
+                
                 {{-- Quick Period Buttons --}}
                 <div class="flex flex-wrap items-center gap-2 bg-surface-container-low p-1.5 rounded-xl w-full sm:w-auto">
                     <a href="{{ route('reports.index', ['view_mode' => 'mingguan', 'specific_month' => $specificMonth]) }}"
@@ -102,7 +109,7 @@
     </div>
 
     <!-- Bento Grid - Key Metrics -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
+    <div id="tour-analysis-metrics" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
         <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800/50 hover:shadow-md transition-all duration-300 border-l-4 border-l-primary">
             <span class="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 mb-1">
                 <span>Nilai Barang Terjual</span>
@@ -175,7 +182,7 @@
     </div>
 
     <!-- Analysis Charts Section -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+    <div id="tour-analysis-charts" class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
         <!-- Growth Chart -->
         <div class="lg:col-span-2 bg-surface-container-lowest p-8 rounded-xl border border-gray-100 dark:border-zinc-800/50 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
@@ -236,7 +243,7 @@
     <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800/50 overflow-hidden w-full">
         <div class="px-4 sm:px-8 py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between bg-surface-container-high/50 border-b border-outline-variant/5 gap-4">
             <h3 class="text-lg font-bold text-on-surface">Rincian Performa ({{ ucfirst($activePeriod) }})</h3>
-            <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+            <div id="tour-analysis-export" class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                 <a href="{{ route('reports.export-pdf', ['view_mode' => $activePeriod, 'specific_month' => $specificMonth, 'week_number' => $weekNumber, 'filter_date' => $filterDate]) }}" target="_blank" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-surface-container-highest text-on-surface rounded-lg text-sm font-semibold hover:bg-surface-dim transition-all border border-outline-variant/20" title="Ekspor ke PDF">
                     <span class="material-symbols-outlined text-sm flex-shrink-0">picture_as_pdf</span> PDF
                 </a>
@@ -453,6 +460,55 @@
                         }
                     }
                 }
+            });
+        }
+    });
+
+    // Driver.js Guided Tour Initialization for Laporan Analisis
+    document.addEventListener('DOMContentLoaded', function () {
+        const btnStartTour = document.getElementById('btn-start-tour');
+        if (btnStartTour && window.driver) {
+            const driver = window.driver.js.driver;
+            const tour = driver({
+                showProgress: true,
+                animate: true,
+                nextBtnText: 'Lanjut →',
+                prevBtnText: '← Kembali',
+                doneBtnText: 'Selesai ✓',
+                popoverClass: 'driverjs-theme-emerald',
+                steps: [
+                    {
+                        element: '#tour-analysis-metrics',
+                        popover: {
+                            title: 'Ringkasan Laba Bersih',
+                            description: 'Pantau omzet kotor, modal yang keluar, dan keuntungan bersih bisnis Anda di deretan kartu ini.',
+                            side: 'bottom',
+                            align: 'center'
+                        }
+                    },
+                    {
+                        element: '#tour-analysis-charts',
+                        popover: {
+                            title: 'Grafik Visual',
+                            description: 'Bandingkan tren penjualan harian Anda secara visual dengan modal yang dikeluarkan untuk menganalisa arus kas.',
+                            side: 'top',
+                            align: 'start'
+                        }
+                    },
+                    {
+                        element: '#tour-analysis-export',
+                        popover: {
+                            title: 'Unduh Rekap Laporan',
+                            description: 'Butuh laporan cetak? Gunakan tombol ini untuk mengekspor data ke PDF, Excel, atau CSV untuk diarsipkan.',
+                            side: 'top',
+                            align: 'end'
+                        }
+                    }
+                ]
+            });
+
+            btnStartTour.addEventListener('click', () => {
+                tour.drive();
             });
         }
     });

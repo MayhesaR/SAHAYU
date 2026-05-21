@@ -14,12 +14,20 @@
                 Log operasional, penjualan, dan pembayaran terpusat untuk UMKM Anda.
             </p>
         </div>
-        
-        <!-- BACK TO DASHBOARD -->
-        <a href="{{ route('dashboard') }}" class="flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-zinc-900 text-slate-600 dark:text-white font-bold text-xs rounded-xl shadow-sm hover:shadow-md hover:text-primary transition-all border border-slate-100 dark:border-zinc-800/60 w-fit">
-            <span class="material-symbols-outlined text-sm">arrow_back</span>
-            Kembali ke Dashboard
-        </a>
+        <div class="flex items-center gap-3">
+            <!-- Guided Tour Button -->
+            <button type="button" id="btn-start-tour"
+                    class="bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 rounded-xl px-4 py-2.5 text-xs font-bold transition-all flex items-center gap-2 border border-emerald-200/50 shadow-sm">
+                <span class="material-symbols-outlined text-[16px]">lightbulb</span>
+                Panduan Riwayat
+            </button>
+            
+            <!-- BACK TO DASHBOARD -->
+            <a href="{{ route('dashboard') }}" class="flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-zinc-900 text-slate-600 dark:text-white font-bold text-xs rounded-xl shadow-sm hover:shadow-md hover:text-primary transition-all border border-slate-100 dark:border-zinc-800/60 w-fit">
+                <span class="material-symbols-outlined text-sm">arrow_back</span>
+                Kembali ke Dashboard
+            </a>
+        </div>
     </div>
 
     <!-- STATS CARDS -->
@@ -56,7 +64,7 @@
     </div>
 
     <!-- ADVANCED FILTERING BOARD -->
-    <div class="bg-white dark:bg-zinc-900 p-6 rounded-[2.5rem] border border-slate-100 dark:border-zinc-800/60 shadow-sm space-y-4" x-data="{ showAdvanced: {{ ($startDate || $endDate || $sortBy !== 'transaction_date' || $currentType !== 'all') ? 'true' : 'false' }} }">
+    <div id="tour-history-filter" class="bg-white dark:bg-zinc-900 p-6 rounded-[2.5rem] border border-slate-100 dark:border-zinc-800/60 shadow-sm space-y-4" x-data="{ showAdvanced: {{ ($startDate || $endDate || $sortBy !== 'transaction_date' || $currentType !== 'all') ? 'true' : 'false' }} }">
         <form method="GET" action="{{ route('history.index') }}" class="space-y-4">
             <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <!-- Text Search Input -->
@@ -160,7 +168,7 @@
     </div>
 
     <!-- FILTER & DATA TABLE CARD -->
-    <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] border border-slate-100 dark:border-zinc-800/60 shadow-sm overflow-hidden">
+    <div id="tour-history-table" class="bg-white dark:bg-zinc-900 rounded-[2.5rem] border border-slate-100 dark:border-zinc-800/60 shadow-sm overflow-hidden">
         
         <!-- Filter Tabs Header -->
         <div class="px-8 py-6 border-b border-slate-100 dark:border-zinc-800/60 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -340,6 +348,55 @@
                 // Redirect to the downloadable CSV stream route
                 const exportUrl = "{{ route('history.export') }}?" + params.toString();
                 window.location.href = exportUrl;
+            });
+        }
+    });
+
+    // Driver.js Guided Tour Initialization for Riwayat Transaksi
+    document.addEventListener('DOMContentLoaded', function () {
+        const btnStartTour = document.getElementById('btn-start-tour');
+        if (btnStartTour && window.driver) {
+            const driver = window.driver.js.driver;
+            const tour = driver({
+                showProgress: true,
+                animate: true,
+                nextBtnText: 'Lanjut →',
+                prevBtnText: '← Kembali',
+                doneBtnText: 'Selesai ✓',
+                popoverClass: 'driverjs-theme-emerald',
+                steps: [
+                    {
+                        element: '#tour-history-filter',
+                        popover: {
+                            title: 'Filter & Pencarian',
+                            description: 'Ketik nama pelanggan, nomor nota, atau gunakan filter tanggal untuk melacak transaksi lama dengan cepat.',
+                            side: 'bottom',
+                            align: 'start'
+                        }
+                    },
+                    {
+                        element: '#tour-history-table',
+                        popover: {
+                            title: 'Log Transaksi',
+                            description: 'Tabel ini mencatat otomatis semua uang masuk dari penjualan, piutang, dan pengeluaran Anda. Status sukses atau gagal akan terlihat jelas di sini.',
+                            side: 'top',
+                            align: 'start'
+                        }
+                    },
+                    {
+                        element: '#btn-export-transaksi',
+                        popover: {
+                            title: 'Ekspor ke Excel',
+                            description: 'Butuh laporan untuk pembukuan fisik? Klik tombol ini untuk mengunduh semua log transaksi dalam format Excel yang rapi.',
+                            side: 'bottom',
+                            align: 'start'
+                        }
+                    }
+                ]
+            });
+
+            btnStartTour.addEventListener('click', () => {
+                tour.drive();
             });
         }
     });

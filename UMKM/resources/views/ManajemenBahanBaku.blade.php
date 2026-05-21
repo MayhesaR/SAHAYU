@@ -19,6 +19,12 @@
             <a href="{{ route('materials.export', request()->all()) }}" class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-[#0b6e4f] dark:bg-emerald-600 text-white font-semibold text-sm hover:bg-[#09523b] transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/20" title="Ekspor ke Excel (.xlsx)">
                 <span class="material-symbols-outlined text-sm flex-shrink-0">download</span> Ekspor Excel
             </a>
+            <!-- Guided Tour Button -->
+            <button type="button" id="btn-start-tour"
+                    class="bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all flex items-center gap-2 border border-emerald-100/30 dark:border-emerald-900/30 shadow-sm hover:scale-[1.02] active:scale-[0.98]">
+                <span class="material-symbols-outlined text-[16px] font-bold">help</span>
+                <span class="hidden sm:inline">Panduan Gudang</span>
+            </button>
             @if(auth()->user()->isAdmin())
             <button class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-[#0b6e4f] dark:bg-emerald-600 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/30 hover:bg-[#09523b] hover:scale-[1.02] active:scale-95 transition-all" id="open-material-form" type="button">
                 <span class="material-symbols-outlined text-base flex-shrink-0">add_circle</span>
@@ -48,7 +54,7 @@
     @endif
 
     <!-- Bento Grid - Quick Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+    <div id="tour-material-stats" class="grid grid-cols-1 md:grid-cols-5 gap-6">
         <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800/50 hover:shadow-md transition-all duration-300">
             <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-zinc-400 mb-2">Total Kategori</p>
             <div class="flex items-baseline gap-2">
@@ -183,7 +189,7 @@
     />
 
     <!-- Main Data Table Container -->
-    <section class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-zinc-800/50">
+    <section id="tour-material-table" class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-zinc-800/50">
         <div class="px-8 py-6 bg-surface-container-high/50 flex justify-between items-center border-b border-outline-variant/5">
             <h3 class="text-sm font-bold uppercase tracking-widest text-on-surface-variant">Daftar Inventaris Bahan</h3>
             <span class="text-[10px] font-bold text-slate-400 dark:text-zinc-400 bg-white dark:bg-zinc-900 px-3 py-1 rounded-full border border-outline-variant/5">
@@ -670,5 +676,49 @@
     });
   };
 })();
+
+document.addEventListener('DOMContentLoaded', () => {
+    const btnStartTour = document.getElementById('btn-start-tour');
+    if (!btnStartTour) return;
+
+    btnStartTour.addEventListener('click', () => {
+        const driver = window.driver.js.driver;
+        
+        const driverObj = driver({
+            showProgress: true,
+            steps: [
+                {
+                    element: '#tour-material-stats',
+                    popover: {
+                        title: 'Metrik Ketersediaan',
+                        description: 'Pantau status bahan baku Anda dari panel ini. Perhatikan angka "Stok Menipis" untuk mengetahui item mana yang harus segera dibeli.',
+                        side: 'bottom',
+                        align: 'start'
+                    }
+                },
+                {
+                    element: '#tour-material-table',
+                    popover: {
+                        title: 'Daftar Inventaris',
+                        description: 'Tabel ini merangkum semua bahan baku beserta sisa stok dan valuasi uangnya. Stok kritis akan berkedip merah secara otomatis.',
+                        side: 'top',
+                        align: 'center'
+                    }
+                },
+                {
+                    element: '#open-material-form',
+                    popover: {
+                        title: 'Tambah Material',
+                        description: 'Klik tombol ini untuk memasukkan data stok barang baru dari supplier Anda beserta harga satuannya.',
+                        side: 'left',
+                        align: 'start'
+                    }
+                }
+            ]
+        });
+
+        driverObj.drive();
+    });
+});
 </script>
 @endsection

@@ -6,6 +6,15 @@
 <div class="bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 min-h-screen py-8 px-4 sm:px-6 lg:px-8">
     <div class="max-w-6xl mx-auto space-y-8">
         
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <h2 class="text-xl lg:text-2xl font-extrabold text-stone-850 dark:text-white tracking-tight break-words">Pengaturan & Konfigurasi Sistem</h2>
+            <!-- Guided Tour Button -->
+            <button type="button" id="btn-start-tour"
+                    class="bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 rounded-xl px-4 py-2.5 text-xs font-bold transition-all flex items-center justify-center gap-2 border border-emerald-200/50 shadow-sm w-full sm:w-auto">
+                <span class="material-symbols-outlined text-[16px]">lightbulb</span>
+                Panduan Pengaturan
+            </button>
+        </div>
         <!-- Flash Message Alerts -->
         @if (session('success'))
         <div class="rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-400 dark:text-emerald-300 border border-emerald-100 px-4 py-3.5 text-sm font-medium shadow-sm flex items-center gap-2">
@@ -32,7 +41,7 @@
             <div class="lg:col-span-2 space-y-8">
                 
                 <!-- Section 1: Informasi Toko -->
-                <section class="bg-white dark:bg-zinc-900 rounded-3xl p-6 shadow-xl shadow-emerald-900/5 border border-stone-100/85 dark:border-zinc-800/85">
+                <section id="tour-settings-store" class="bg-white dark:bg-zinc-900 rounded-3xl p-6 shadow-xl shadow-emerald-900/5 border border-stone-100/85 dark:border-zinc-800/85">
                     <div class="flex items-center justify-between border-b border-stone-100 dark:border-zinc-800/60 pb-4 mb-6">
                         <h3 class="text-base font-bold text-stone-850 dark:text-white flex items-center">
                             <span class="material-symbols-outlined mr-2.5 text-[#0b6e4f] dark:text-emerald-400 text-2xl">storefront</span> 
@@ -98,7 +107,7 @@
                 </section>
 
                 <!-- Section 2: Konfigurasi Printer POS -->
-                <section class="bg-white dark:bg-zinc-900 rounded-3xl p-6 shadow-xl shadow-emerald-900/5 border border-stone-100/85 dark:border-zinc-800/85">
+                <section id="tour-settings-printer" class="bg-white dark:bg-zinc-900 rounded-3xl p-6 shadow-xl shadow-emerald-900/5 border border-stone-100/85 dark:border-zinc-800/85">
                     <div class="flex items-center justify-between border-b border-stone-100 dark:border-zinc-800/60 pb-4 mb-6">
                         <h3 class="text-base font-bold text-stone-850 dark:text-white flex items-center">
                             <span class="material-symbols-outlined mr-2.5 text-[#0b6e4f] dark:text-emerald-400 text-2xl">print</span> 
@@ -133,7 +142,7 @@
                 </section>
 
                 <!-- Section 2.5: Keamanan Data & Sistem -->
-                <section class="bg-white dark:bg-zinc-900 rounded-3xl p-6 shadow-xl shadow-emerald-900/5 border border-stone-100/85 dark:border-zinc-800/85">
+                <section id="tour-settings-backup" class="bg-white dark:bg-zinc-900 rounded-3xl p-6 shadow-xl shadow-emerald-900/5 border border-stone-100/85 dark:border-zinc-800/85">
                     <div class="flex items-center justify-between border-b border-stone-100 dark:border-zinc-800/60 pb-4 mb-4">
                         <h3 class="text-base font-bold text-stone-850 dark:text-white flex items-center">
                             <span class="material-symbols-outlined mr-2.5 text-[#0b6e4f] dark:text-emerald-400 text-2xl">security</span> 
@@ -159,7 +168,7 @@
             <div class="space-y-8">
                 
                 <!-- Section 3: Ganti Password Pengguna -->
-                <section class="bg-white dark:bg-zinc-900 rounded-3xl p-6 shadow-xl shadow-emerald-900/5 border border-stone-100/85 dark:border-zinc-800/85">
+                <section id="tour-settings-password" class="bg-white dark:bg-zinc-900 rounded-3xl p-6 shadow-xl shadow-emerald-900/5 border border-stone-100/85 dark:border-zinc-800/85">
                     <div class="border-b border-stone-100 dark:border-zinc-800/60 pb-4 mb-6">
                         <h3 class="text-base font-bold text-stone-850 dark:text-white flex items-center">
                             <span class="material-symbols-outlined mr-2.5 text-[#0b6e4f] dark:text-emerald-400 text-2xl">lock</span> 
@@ -266,4 +275,67 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Driver.js Guided Tour Initialization for Pengaturan Toko
+    document.addEventListener('DOMContentLoaded', function () {
+        const btnStartTour = document.getElementById('btn-start-tour');
+        if (btnStartTour && window.driver) {
+            const driver = window.driver.js.driver;
+            
+            const steps = [
+                {
+                    element: '#tour-settings-store',
+                    popover: {
+                        title: 'Identitas Usaha',
+                        description: 'Lengkapi nama dan logo bisnis Anda di sini. Logo dan detail ini akan muncul pada struk kasir dan kop surat laporan PDF Anda.',
+                        side: 'bottom',
+                        align: 'start'
+                    }
+                },
+                {
+                    element: '#tour-settings-printer',
+                    popover: {
+                        title: 'Pengaturan Kertas Struk',
+                        description: 'Pastikan Anda memilih ukuran kertas yang sesuai (58mm atau 80mm) dengan printer bluetooth atau printer kasir Anda agar cetakan tidak terpotong.',
+                        side: 'top',
+                        align: 'start'
+                    }
+                },
+                {
+                    element: '#tour-settings-backup',
+                    popover: {
+                        title: 'Cadangkan (Backup) Database',
+                        description: 'Gunakan fitur ini secara rutin untuk mengunduh seluruh data Anda (penjualan, stok, dll.) sebagai perlindungan bila terjadi sesuatu pada perangkat Anda.',
+                        side: 'top',
+                        align: 'start'
+                    }
+                },
+                {
+                    element: '#tour-settings-password',
+                    popover: {
+                        title: 'Keamanan Akun',
+                        description: 'Ganti kata sandi Anda dan staf lainnya di panel manajemen akun ini secara berkala.',
+                        side: 'top',
+                        align: 'start'
+                    }
+                }
+            ];
+
+            const tour = driver({
+                showProgress: true,
+                animate: true,
+                nextBtnText: 'Lanjut →',
+                prevBtnText: '← Kembali',
+                doneBtnText: 'Selesai ✓',
+                popoverClass: 'driverjs-theme-emerald',
+                steps: steps
+            });
+
+            btnStartTour.addEventListener('click', () => {
+                tour.drive();
+            });
+        }
+    });
+</script>
 @endsection

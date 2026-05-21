@@ -28,6 +28,13 @@
                 </button>
             </form>
 
+            <!-- Guided Tour Button -->
+            <button type="button" id="btn-start-tour"
+                    class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 font-bold text-xs flex items-center justify-center gap-2 border border-emerald-200/50 shadow-sm transition-all">
+                <span class="material-symbols-outlined text-[16px]">lightbulb</span>
+                Panduan Operasional
+            </button>
+
             <!-- Export Excel Button -->
             <a href="{{ route('overhead.export', request()->all()) }}" 
                class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-[#0b6e4f] dark:bg-emerald-600 hover:bg-[#09523b] text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/30 hover:scale-[1.02] active:scale-95 transition-all">
@@ -51,7 +58,7 @@
     @endif
 
     <!-- Stats Bento -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <div id="tour-overhead-stats" class="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div class="md:col-span-1 bg-surface-container-lowest p-6 rounded-xl border border-gray-100 dark:border-zinc-800/50 shadow-sm hover:shadow-md transition-all duration-300">
             <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-zinc-400 mb-2">Total Biaya {{ $months[$selectedMonth] }}</p>
             <h3 class="text-2xl font-black text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400 leading-none">Rp {{ number_format($totalOverhead, 0, ',', '.') }}</h3>
@@ -136,7 +143,7 @@
     </aside>
 
     <!-- Table -->
-    <div class="bg-surface-container-lowest rounded-xl overflow-hidden border border-gray-100 dark:border-zinc-800/50 shadow-sm hover:shadow-md transition-all duration-300">
+    <div id="tour-overhead-table" class="bg-surface-container-lowest rounded-xl overflow-hidden border border-gray-100 dark:border-zinc-800/50 shadow-sm hover:shadow-md transition-all duration-300">
         <div class="px-8 py-5 bg-surface-container-high/50 border-b border-outline-variant/5">
             <h4 class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Rincian Pengeluaran Periode {{ $months[$selectedMonth] }} {{ $selectedYear }}</h4>
         </div>
@@ -204,8 +211,64 @@
 
     // Close when clicking outside
     document.addEventListener('click', (e) => {
-        if (sidebar && !sidebar.contains(e.target) && !openBtn.contains(e.target)) {
+        if (sidebar && !sidebar.contains(e.target) && openBtn && !openBtn.contains(e.target)) {
             sidebar.classList.add('translate-x-full');
+        }
+    });
+
+    // Driver.js Guided Tour Initialization for Manajemen Overhead
+    document.addEventListener('DOMContentLoaded', function () {
+        const btnStartTour = document.getElementById('btn-start-tour');
+        if (btnStartTour && window.driver) {
+            const driver = window.driver.js.driver;
+            
+            const steps = [
+                {
+                    element: '#tour-overhead-stats',
+                    popover: {
+                        title: 'Total Biaya Bulanan',
+                        description: 'Total seluruh biaya operasional bulan ini. Nilai ini sangat penting karena akan dibagikan sebagai beban ke HPP setiap produk Anda.',
+                        side: 'bottom',
+                        align: 'center'
+                    }
+                }
+            ];
+
+            if (document.getElementById('open-overhead-form')) {
+                steps.push({
+                    element: '#open-overhead-form',
+                    popover: {
+                        title: 'Catat Biaya Tetap',
+                        description: 'Klik tombol ini untuk memasukkan beban tetap seperti sewa ruko, gaji pokok bulanan, dan tagihan listrik/air setiap bulannya.',
+                        side: 'left',
+                        align: 'start'
+                    }
+                });
+            }
+
+            steps.push({
+                element: '#tour-overhead-table',
+                popover: {
+                    title: 'Rincian Operasional',
+                    description: 'Laporan lengkap seluruh pengeluaran operasional per kategori. Pantau di sini agar tidak ada tagihan terlewat.',
+                    side: 'top',
+                    align: 'start'
+                }
+            });
+
+            const tour = driver({
+                showProgress: true,
+                animate: true,
+                nextBtnText: 'Lanjut →',
+                prevBtnText: '← Kembali',
+                doneBtnText: 'Selesai ✓',
+                popoverClass: 'driverjs-theme-emerald',
+                steps: steps
+            });
+
+            btnStartTour.addEventListener('click', () => {
+                tour.drive();
+            });
         }
     });
 </script>

@@ -112,7 +112,13 @@
                     <h2 class="text-lg font-bold text-stone-850 dark:text-white tracking-tight">Kasir SAHAYU</h2>
                     <p class="text-xs font-semibold uppercase tracking-wider text-stone-400 dark:text-zinc-400 mt-0.5">Registrasi Penjualan & Tagihan</p>
                 </div>
-                <div>
+                <div class="flex items-center gap-2">
+                    <!-- Guided Tour Button -->
+                    <button type="button" id="btn-start-tour"
+                            class="bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 rounded-xl px-4 py-2 text-xs font-semibold transition-all flex items-center gap-2 border border-emerald-100/30 dark:border-emerald-900/30 shadow-sm hover:scale-[1.02] active:scale-[0.98] cursor-pointer">
+                        <span class="material-symbols-outlined text-[16px] font-bold">help</span>
+                        <span class="hidden sm:inline">Panduan Kasir</span>
+                    </button>
                     <button @click="isNewCustomerModalOpen = true" 
                             type="button" 
                             class="px-4 py-2 bg-emerald-50 text-[#0b6e4f] dark:text-emerald-400 border border-emerald-100 hover:bg-[#0b6e4f]/10 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-sm cursor-pointer">
@@ -130,7 +136,7 @@
                 <input type="hidden" name="product_id" x-model="selectedProductId" required />
 
                 <!-- 1. Product Grid & Filters -->
-                <div class="space-y-3">
+                <div id="tour-pos-catalog" class="space-y-3">
                     <div class="flex justify-between items-center">
                         <label class="block text-[10px] font-bold uppercase tracking-widest text-stone-400 dark:text-zinc-400">Pilih Produk Jadi (Sentuh Kartu)</label>
                         <span x-show="selectedProductId" class="text-[9px] font-black uppercase tracking-wider text-[#0b6e4f] dark:text-emerald-400 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100" x-cloak x-transition>
@@ -270,7 +276,7 @@
                     </div>
 
                     <!-- Customer Dropdown (7 Columns) -->
-                    <div class="md:col-span-7 space-y-2">
+                    <div id="tour-pos-customer" class="md:col-span-7 space-y-2">
                         <div class="flex justify-between items-center">
                             <label class="text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-zinc-300">Pilih Pelanggan</label>
                             <span x-show="paymentMethod === 'debt'" 
@@ -378,7 +384,7 @@
         <div class="lg:col-span-5 space-y-4">
             
             <!-- Real-time Cart Summary Card (Receipt Slip style) -->
-            <div class="bg-white dark:bg-zinc-900 rounded-[1.5rem] shadow-sm border border-stone-200/60 dark:border-zinc-800/80 overflow-hidden">
+            <div id="tour-pos-cart" class="bg-white dark:bg-zinc-900 rounded-[1.5rem] shadow-sm border border-stone-200/60 dark:border-zinc-800/80 overflow-hidden">
                 <div class="p-4 bg-stone-50/50 dark:bg-zinc-850/30 dark:bg-zinc-800/30 border-b border-stone-200/60 dark:border-zinc-800/80 flex justify-between items-center">
                     <h3 class="text-[10px] font-bold uppercase tracking-widest text-stone-500 dark:text-zinc-400">Rincian Pembelian</h3>
                     <span class="px-2.5 py-0.5 bg-emerald-50 text-[#0b6e4f] dark:text-emerald-400 text-[9px] font-bold rounded-full">Struk Pembayaran</span>
@@ -630,4 +636,52 @@
         border-radius: 20px;
     }
 </style>
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const btnStartTour = document.getElementById('btn-start-tour');
+        if (!btnStartTour) return;
+
+        btnStartTour.addEventListener('click', () => {
+            const driver = window.driver.js.driver;
+            
+            const driverObj = driver({
+                showProgress: true,
+                steps: [
+                    {
+                        element: '#tour-pos-catalog',
+                        popover: {
+                            title: 'Katalog Produk & Pencarian',
+                            description: 'Klik pada produk di daftar ini untuk menambahkannya ke keranjang. Anda bisa memfilter berdasarkan kategori atau mengetik nama produk untuk pencarian cepat.',
+                            side: 'right',
+                            align: 'start'
+                        }
+                    },
+                    {
+                        element: '#tour-pos-customer',
+                        popover: {
+                            title: 'Pelanggan Kasbon (Opsional)',
+                            description: 'Bila pelanggan Anda ingin bayar tempo, wajib pilih namanya di sini agar sistem bisa melacak sisa utang/kasbon mereka.',
+                            side: 'bottom',
+                            align: 'start'
+                        }
+                    },
+                    {
+                        element: '#tour-pos-cart',
+                        popover: {
+                            title: 'Cek Keranjang & Checkout',
+                            description: 'Rincian pesanan Anda muncul di struk virtual ini. Setelah semuanya benar, klik "Konfirmasi & Cetak Nota" di bagian paling bawah untuk menyelesaikan.',
+                            side: 'left',
+                            align: 'start'
+                        }
+                    }
+                ]
+            });
+
+            driverObj.drive();
+        });
+    });
+</script>
 @endsection

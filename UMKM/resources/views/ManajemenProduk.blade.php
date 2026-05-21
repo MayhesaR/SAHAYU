@@ -15,18 +15,26 @@
                 Kelola daftar produk jadi agar proses Produksi, Penjualan, dan perhitungan HPP tetap sinkron.
             </p>
         </div>
-        @if(auth()->user()->isAdmin())
-            <a class="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl py-3 px-5 shadow-md shadow-emerald-500/20 font-semibold hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-2 flex-shrink-0 text-xs sm:text-sm" 
-               href="#form-produk">
-                <span class="material-symbols-outlined text-base flex-shrink-0 font-bold">add_circle</span>
-                <span>Tambah Produk Baru</span>
-            </a>
-        @else
-            <button class="w-full sm:w-auto px-5 py-3 bg-stone-200 dark:bg-zinc-800 text-stone-400 dark:text-white text-xs font-bold rounded-xl cursor-not-allowed flex items-center justify-center gap-2 flex-shrink-0" type="button" disabled title="Hanya admin yang dapat menambah produk">
-                <span class="material-symbols-outlined text-base flex-shrink-0">lock</span>
-                <span>Tambah Produk Baru</span>
+        <div class="flex items-center gap-3 w-full sm:w-auto">
+            <!-- Guided Tour Button -->
+            <button type="button" id="btn-start-tour"
+                    class="bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 rounded-xl px-4 py-2.5 text-xs font-bold transition-all flex items-center justify-center gap-2 border border-emerald-200/50 shadow-sm w-full sm:w-auto">
+                <span class="material-symbols-outlined text-[16px]">lightbulb</span>
+                Panduan Produk
             </button>
-        @endif
+            @if(auth()->user()->isAdmin())
+                <a class="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl py-3 px-5 shadow-md shadow-emerald-500/20 font-semibold hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-2 flex-shrink-0 text-xs sm:text-sm" 
+                   href="#form-produk">
+                    <span class="material-symbols-outlined text-base flex-shrink-0 font-bold">add_circle</span>
+                    <span>Tambah Produk Baru</span>
+                </a>
+            @else
+                <button class="w-full sm:w-auto px-5 py-3 bg-stone-200 dark:bg-zinc-800 text-stone-400 dark:text-white text-xs font-bold rounded-xl cursor-not-allowed flex items-center justify-center gap-2 flex-shrink-0" type="button" disabled title="Hanya admin yang dapat menambah produk">
+                    <span class="material-symbols-outlined text-base flex-shrink-0">lock</span>
+                    <span>Tambah Produk Baru</span>
+                </button>
+            @endif
+        </div>
     </div>
 
     <!-- Sessions and Errors Alert -->
@@ -49,7 +57,7 @@
     @endif
 
     <!-- Stat Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div id="tour-product-stats" class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <article class="bg-white dark:bg-zinc-900 rounded-3xl p-5 shadow-lg shadow-emerald-900/5 border border-stone-100 dark:border-zinc-800/60 hover:-translate-y-0.5 hover:shadow-xl transition-all duration-200 flex items-center gap-4">
             <div class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 flex items-center justify-center flex-shrink-0">
                 <span class="material-symbols-outlined text-2xl font-bold">inventory_2</span>
@@ -158,7 +166,7 @@
             />
 
             <!-- Card Grid Layout -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 {{ auth()->user()->isAdmin() ? 'xl:grid-cols-3' : 'lg:grid-cols-4' }} gap-6">
+            <div id="tour-product-catalog" class="grid grid-cols-1 sm:grid-cols-2 {{ auth()->user()->isAdmin() ? 'xl:grid-cols-3' : 'lg:grid-cols-4' }} gap-6">
                 @forelse ($products as $product)
                     <div class="bg-white dark:bg-zinc-900 rounded-3xl p-5 shadow-lg shadow-emerald-900/5 border border-stone-100 dark:border-zinc-800/60 transition-all duration-200 hover:-translate-y-1 hover:shadow-xl flex flex-col justify-between relative overflow-hidden group">
                         
@@ -381,5 +389,61 @@
         editContent.classList.remove('scale-100', 'opacity-100');
         setTimeout(() => editModal.classList.add('hidden'), 300);
     }
+
+    // Driver.js Guided Tour Initialization for Manajemen Produk
+    document.addEventListener('DOMContentLoaded', function () {
+        const btnStartTour = document.getElementById('btn-start-tour');
+        if (btnStartTour && window.driver) {
+            const driver = window.driver.js.driver;
+            
+            const steps = [];
+            
+            if (document.getElementById('form-produk')) {
+                steps.push({
+                    element: '#form-produk',
+                    popover: {
+                        title: 'Buat Menu Baru',
+                        description: 'Masukkan nama kue/hidangan Anda dan tentukan harga jualnya. Form ini membangun katalog kasir Anda.',
+                        side: 'right',
+                        align: 'start'
+                    }
+                });
+            }
+            
+            steps.push({
+                element: '#tour-product-stats',
+                popover: {
+                    title: 'Ringkasan Produk',
+                    description: 'Lihat total nilai jual dari semua produk yang siap dijual di etalase Anda.',
+                    side: 'bottom',
+                    align: 'center'
+                }
+            });
+            
+            steps.push({
+                element: '#tour-product-catalog',
+                popover: {
+                    title: 'Katalog Kasir',
+                    description: 'Kumpulan kartu produk Anda. Admin dapat mengklik tanda edit untuk mengubah harga atau memperbarui foto produk kapan saja.',
+                    side: 'top',
+                    align: 'start'
+                }
+            });
+
+            const tour = driver({
+                showProgress: true,
+                animate: true,
+                nextBtnText: 'Lanjut →',
+                prevBtnText: '← Kembali',
+                doneBtnText: 'Selesai ✓',
+                popoverClass: 'driverjs-theme-emerald',
+                steps: steps
+            });
+
+            btnStartTour.addEventListener('click', () => {
+                tour.drive();
+            });
+        }
+    });
 </script>
 @endsection

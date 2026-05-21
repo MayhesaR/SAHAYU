@@ -10,6 +10,12 @@
                 <h2 class="text-lg sm:text-xl lg:text-2xl font-extrabold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400 tracking-tight break-words">Manajemen Pengguna</h2>
                 <p class="text-on-surface-variant font-body mt-1 max-w-xl text-sm sm:text-base">Kelola akun pegawai dan staf yang dapat mengakses sistem ini.</p>
             </div>
+            <!-- Guided Tour Button -->
+            <button type="button" id="btn-start-tour"
+                    class="bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 rounded-xl px-4 py-2.5 text-xs font-bold transition-all flex items-center justify-center gap-2 border border-emerald-200/50 shadow-sm w-full sm:w-auto">
+                <span class="material-symbols-outlined text-[16px]">lightbulb</span>
+                Panduan Akun
+            </button>
         </div>
 
         @if (session('success'))
@@ -27,7 +33,7 @@
         @endif
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            <section class="lg:col-span-4 bg-surface-container-lowest rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800/50 overflow-hidden hover:shadow-md transition-all duration-300">
+            <section id="tour-account-form" class="lg:col-span-4 bg-surface-container-lowest rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800/50 overflow-hidden hover:shadow-md transition-all duration-300">
                 <div class="px-6 py-5 bg-surface-container-low border-b border-gray-100 dark:border-zinc-800/50">
                     <h3 class="text-lg font-bold text-primary flex items-center">
                         <span class="material-symbols-outlined mr-2 text-primary flex-shrink-0">person_add</span> Tambah Pengguna
@@ -73,7 +79,7 @@
                 @endif
             </section>
 
-            <section class="lg:col-span-8 bg-surface-container-lowest rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800/50 overflow-hidden hover:shadow-md transition-all duration-300">
+            <section id="tour-account-table" class="lg:col-span-8 bg-surface-container-lowest rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800/50 overflow-hidden hover:shadow-md transition-all duration-300">
                 <div class="px-6 py-5 bg-surface-container-low border-b border-gray-100 dark:border-zinc-800/50 flex items-center justify-between">
                     <h3 class="text-lg font-bold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400 flex items-center">
                         <span class="material-symbols-outlined mr-2 text-emerald-600 dark:text-emerald-400 flex-shrink-0">group</span> Daftar Pengguna
@@ -126,4 +132,54 @@
             </section>
         </div>
     </div>
+
+<script>
+    // Driver.js Guided Tour Initialization for Manajemen Akun
+    document.addEventListener('DOMContentLoaded', function () {
+        const btnStartTour = document.getElementById('btn-start-tour');
+        if (btnStartTour && window.driver) {
+            const driver = window.driver.js.driver;
+            
+            const steps = [];
+
+            if (document.querySelector('#tour-account-form form')) {
+                steps.push({
+                    element: '#tour-account-form',
+                    popover: {
+                        title: 'Registrasi Pegawai',
+                        description: 'Tambahkan akun untuk karyawan Anda. Pilih hak akses "Staff" agar mereka hanya bisa memasukkan data tanpa bisa melihat margin atau mengubah harga.',
+                        side: 'right',
+                        align: 'start'
+                    }
+                });
+            }
+
+            steps.push({
+                element: '#tour-account-table',
+                popover: {
+                    title: 'Daftar Otorisasi',
+                    description: 'Lihat siapa saja yang memiliki akses ke kasir Anda. Anda dapat mencabut akses (menghapus akun) pegawai yang sudah tidak bekerja kapan saja.',
+                    side: 'top',
+                    align: 'start'
+                }
+            });
+
+            if(steps.length > 0) {
+                const tour = driver({
+                    showProgress: true,
+                    animate: true,
+                    nextBtnText: 'Lanjut →',
+                    prevBtnText: '← Kembali',
+                    doneBtnText: 'Selesai ✓',
+                    popoverClass: 'driverjs-theme-emerald',
+                    steps: steps
+                });
+
+                btnStartTour.addEventListener('click', () => {
+                    tour.drive();
+                });
+            }
+        }
+    });
+</script>
 @endsection

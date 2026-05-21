@@ -15,15 +15,24 @@
             </p>
         </div>
         
-        <!-- BACK TO DASHBOARD -->
-        <a href="{{ route('dashboard') }}" class="flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-zinc-900 text-slate-600 dark:text-white font-bold text-xs rounded-xl shadow-sm hover:shadow-md hover:text-primary transition-all border border-slate-100 dark:border-zinc-800/60 w-fit">
-            <span class="material-symbols-outlined text-sm">arrow_back</span>
-            Kembali ke Dashboard
-        </a>
+        <div class="flex items-center gap-3">
+            <!-- Guided Tour Button -->
+            <button type="button" id="btn-start-tour"
+                    class="bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 rounded-xl px-4 py-2.5 text-xs font-bold transition-all flex items-center justify-center gap-2 border border-emerald-200/50 shadow-sm w-full sm:w-auto">
+                <span class="material-symbols-outlined text-[16px]">lightbulb</span>
+                Panduan Pengeluaran
+            </button>
+            
+            <!-- BACK TO DASHBOARD -->
+            <a href="{{ route('dashboard') }}" class="flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-zinc-900 text-slate-600 dark:text-white font-bold text-xs rounded-xl shadow-sm hover:shadow-md hover:text-primary transition-all border border-slate-100 dark:border-zinc-800/60 w-fit">
+                <span class="material-symbols-outlined text-sm">arrow_back</span>
+                Kembali ke Dashboard
+            </a>
+        </div>
     </div>
 
     <!-- STATS CARDS -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div id="tour-expense-stats" class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Card 1: Hari Ini -->
         <div class="bg-white dark:bg-zinc-900 p-6 rounded-[1.5rem] border border-stone-200/60 dark:border-zinc-800/80 shadow-sm relative overflow-hidden group">
             <div class="w-10 h-10 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 rounded-xl flex items-center justify-center mb-4">
@@ -59,7 +68,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
         <!-- Left Side: Form to Record Expense (5 columns) -->
-        <div class="lg:col-span-5 bg-white dark:bg-zinc-900 p-6 sm:p-8 rounded-[1.5rem] border border-stone-200/60 dark:border-zinc-800/80 shadow-sm space-y-6">
+        <div id="tour-expense-form" class="lg:col-span-5 bg-white dark:bg-zinc-900 p-6 sm:p-8 rounded-[1.5rem] border border-stone-200/60 dark:border-zinc-800/80 shadow-sm space-y-6">
             <div class="space-y-1">
                 <h4 class="text-lg font-black text-slate-900 dark:text-white font-manrope">Catat Kas Keluar Baru</h4>
                 <p class="text-xs text-slate-400 dark:text-zinc-400">Masukkan detail pengeluaran operasional di bawah ini secara lengkap.</p>
@@ -173,7 +182,7 @@
         </div>
 
         <!-- Right Side: Recent Expenditures Table (7 columns) -->
-        <div class="lg:col-span-7 bg-white dark:bg-zinc-900 rounded-[1.5rem] border border-stone-200/60 dark:border-zinc-800/80 shadow-sm overflow-hidden flex flex-col">
+        <div id="tour-expense-table" class="lg:col-span-7 bg-white dark:bg-zinc-900 rounded-[1.5rem] border border-stone-200/60 dark:border-zinc-800/80 shadow-sm overflow-hidden flex flex-col">
             
             <!-- Table Header -->
             <div class="px-8 py-6 border-b border-stone-200/60 dark:border-zinc-800/80">
@@ -339,4 +348,54 @@
     @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
     body { font-family: 'Manrope', sans-serif; }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const btnStartTour = document.getElementById('btn-start-tour');
+        if (btnStartTour && window.driver) {
+            const driver = window.driver.js.driver;
+            const tour = driver({
+                showProgress: true,
+                animate: true,
+                nextBtnText: 'Lanjut →',
+                prevBtnText: '← Kembali',
+                doneBtnText: 'Selesai ✓',
+                popoverClass: 'driverjs-theme-emerald',
+                steps: [
+                    {
+                        element: '#tour-expense-stats',
+                        popover: {
+                            title: 'Ringkasan Kas Keluar',
+                            description: 'Pantau total uang kasir yang Anda pakai hari ini dan bulan ini untuk keperluan operasional toko.',
+                            side: 'bottom',
+                            align: 'center'
+                        }
+                    },
+                    {
+                        element: '#tour-expense-form',
+                        popover: {
+                            title: 'Catat Bon & Struk',
+                            description: 'Beli galon, bayar listrik, atau parkir? Segera catat di form ini agar uang kasir di dompet dan sistem tetap seimbang.',
+                            side: 'right',
+                            align: 'start'
+                        }
+                    },
+                    {
+                        element: '#tour-expense-table',
+                        popover: {
+                            title: 'Riwayat Pengeluaran',
+                            description: 'Lacak semua riwayat kas keluar harian secara transparan. Anda juga bisa mengunduh rekapitulasi ke Excel.',
+                            side: 'top',
+                            align: 'start'
+                        }
+                    }
+                ]
+            });
+
+            btnStartTour.addEventListener('click', () => {
+                tour.drive();
+            });
+        }
+    });
+</script>
 @endsection

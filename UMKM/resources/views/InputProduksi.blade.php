@@ -14,6 +14,13 @@
         <p class="text-on-surface-variant font-body mt-1 text-sm md:text-base">Catat batch produksi baru dan pantau penggunaan bahan baku secara real-time untuk akurasi HPP.</p>
     </div>
     <div class="flex flex-wrap items-center gap-2.5 w-full sm:w-auto justify-start sm:justify-end">
+        <!-- Guided Tour Button -->
+        <button type="button" id="btn-start-tour"
+                class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 font-bold text-xs flex items-center justify-center gap-2 border border-emerald-200/50 shadow-sm transition-all">
+            <span class="material-symbols-outlined text-[16px]">lightbulb</span>
+            Panduan Produksi
+        </button>
+
         <a href="{{ route('productions.export-pdf') }}" target="_blank" class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-surface-container-highest text-on-surface font-semibold text-sm hover:bg-surface-container-high transition-colors flex items-center justify-center gap-2 border border-outline-variant/10" title="Ekspor ke PDF">
             <span class="material-symbols-outlined text-sm flex-shrink-0">picture_as_pdf</span> PDF
         </a>
@@ -46,7 +53,7 @@
 @endforeach
 </div>
 @endif
-<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<div id="tour-production-stats" class="grid grid-cols-1 md:grid-cols-4 gap-4">
 <article class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-gray-100 dark:border-zinc-800/50 hover:shadow-md transition-all duration-300">
 <p class="text-xs uppercase tracking-widest text-slate-500 dark:text-zinc-400 font-semibold">Batch Hari Ini</p>
 <h3 class="mt-2 text-3xl font-extrabold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400">{{ $batchesToday }}</h3>
@@ -265,7 +272,7 @@
     {{ $runningProductions->total() }} batch ditemukan
 </span>
 </div>
-<div class="w-full overflow-x-auto border border-gray-100 dark:border-zinc-800/50 rounded-lg mb-4 bg-surface-container-lowest shadow-sm" style="-webkit-overflow-scrolling: touch; display: block; clear: both; touch-action: pan-x pan-y;">
+<div id="tour-production-table" class="w-full overflow-x-auto border border-gray-100 dark:border-zinc-800/50 rounded-lg mb-4 bg-surface-container-lowest shadow-sm" style="-webkit-overflow-scrolling: touch; display: block; clear: both; touch-action: pan-x pan-y;">
 <table class="min-w-[800px] w-full text-xs text-left border-collapse whitespace-nowrap">
 <thead>
 <tr class="bg-surface-container-high">
@@ -434,5 +441,61 @@
     rowsContainer.appendChild(template);
   });
 })();
+
+// Driver.js Guided Tour Initialization for Input Produksi
+document.addEventListener('DOMContentLoaded', function () {
+    const btnStartTour = document.getElementById('btn-start-tour');
+    if (btnStartTour && window.driver) {
+        const driver = window.driver.js.driver;
+        
+        const steps = [
+            {
+                element: '#tour-production-stats',
+                popover: {
+                    title: 'Indikator Dapur',
+                    description: 'Pantau jumlah batch, tingkat keberhasilan produk jadi, dan estimasi biaya per unit Anda hari ini.',
+                    side: 'bottom',
+                    align: 'center'
+                }
+            }
+        ];
+
+        if (document.getElementById('production-form')) {
+            steps.push({
+                element: '#production-form',
+                popover: {
+                    title: 'Mulai Masak / Produksi',
+                    description: 'Setiap kali Anda mulai memasak, masukkan resep dan jumlah porsi di sini. Sistem akan otomatis memotong stok bahan baku dan menghitung HPP-nya.',
+                    side: 'top',
+                    align: 'start'
+                }
+            });
+        }
+
+        steps.push({
+            element: '#tour-production-table',
+            popover: {
+                title: 'Riwayat Batch',
+                description: 'Pantau proses yang sedang berjalan di dapur. Setelah makanan siap dijual, pastikan untuk mengklik tombol "Selesai".',
+                side: 'top',
+                align: 'start'
+            }
+        });
+
+        const tour = driver({
+            showProgress: true,
+            animate: true,
+            nextBtnText: 'Lanjut →',
+            prevBtnText: '← Kembali',
+            doneBtnText: 'Selesai ✓',
+            popoverClass: 'driverjs-theme-emerald',
+            steps: steps
+        });
+
+        btnStartTour.addEventListener('click', () => {
+            tour.drive();
+        });
+    }
+});
 </script>
 @endsection

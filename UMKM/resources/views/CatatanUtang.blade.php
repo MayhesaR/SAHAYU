@@ -2,109 +2,6 @@
 @section('title', 'Piutang & Kasbon Pelanggan')
 @section('page_title', 'Piutang / Kasbon Pelanggan')
 
-@section('styles')
-    /* Driver.js Popover Premium Customizations */
-    .driver-popover {
-        background-color: #ffffff !important;
-        color: #1c1917 !important; /* stone-900 */
-        font-family: 'Inter', sans-serif !important;
-        border-radius: 1rem !important; /* rounded-2xl */
-        border: 1px solid rgba(16, 185, 129, 0.2) !important; /* Emerald-500 border with low opacity */
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
-        padding: 1.25rem !important;
-        max-width: 320px !important;
-    }
-    
-    .dark .driver-popover {
-        background-color: #18181b !important; /* zinc-900 */
-        color: #f4f4f5 !important; /* zinc-100 */
-        border: 1px solid rgba(16, 185, 129, 0.3) !important;
-    }
-
-    .driver-popover-title {
-        font-family: 'Manrope', sans-serif !important;
-        font-weight: 800 !important;
-        font-size: 0.95rem !important;
-        color: #065f46 !important; /* emerald-800 */
-        margin-bottom: 0.5rem !important;
-    }
-
-    .dark .driver-popover-title {
-        color: #34d399 !important; /* emerald-400 */
-    }
-
-    .driver-popover-description {
-        font-size: 0.8rem !important;
-        line-height: 1.4 !important;
-        color: #4b5563 !important; /* gray-600 */
-        font-weight: 500 !important;
-    }
-
-    .dark .driver-popover-description {
-        color: #d4d4d8 !important; /* zinc-300 */
-    }
-
-    .driver-popover-navigation-btns {
-        margin-top: 1rem !important;
-        gap: 0.5rem !important;
-        display: flex !important;
-        justify-content: flex-end !important;
-    }
-
-    .driver-popover-btn {
-        background-color: #f3f4f6 !important;
-        color: #374151 !important;
-        font-size: 0.75rem !important;
-        font-weight: 700 !important;
-        padding: 0.4rem 0.8rem !important;
-        border-radius: 0.5rem !important;
-        border: 1px solid #e5e7eb !important;
-        text-shadow: none !important;
-        transition: all 0.15s ease !important;
-    }
-
-    .driver-popover-btn:hover {
-        background-color: #e5e7eb !important;
-        color: #111827 !important;
-    }
-
-    .dark .driver-popover-btn {
-        background-color: #27272a !important; /* zinc-800 */
-        color: #e4e4e7 !important;
-        border: 1px solid #3f3f46 !important;
-    }
-
-    .dark .driver-popover-btn:hover {
-        background-color: #3f3f46 !important;
-        color: #ffffff !important;
-    }
-
-    .driver-popover-btn-next, .driver-popover-btn-done {
-        background-color: #10b981 !important; /* emerald-500 */
-        color: #ffffff !important;
-        border: 1px solid #10b981 !important;
-    }
-
-    .driver-popover-btn-next:hover, .driver-popover-btn-done:hover {
-        background-color: #059669 !important; /* emerald-600 */
-        color: #ffffff !important;
-        border: 1px solid #059669 !important;
-    }
-
-    .driver-popover-progress-text {
-        font-size: 0.75rem !important;
-        color: #9ca3af !important;
-        font-weight: 600 !important;
-    }
-    
-    .driver-popover-arrow {
-        border-color: #ffffff !important;
-    }
-    .dark .driver-popover-arrow {
-        border-color: #18181b !important;
-    }
-@endsection
-
 @section('content')
 <style>
     .custom-scrollbar::-webkit-scrollbar {
@@ -629,9 +526,6 @@
 @endsection
 
 @section('scripts')
-<!-- Driver.js Library CDN -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css">
-<script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const btnStartTour = document.getElementById('btn-start-tour');
