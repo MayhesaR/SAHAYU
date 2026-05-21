@@ -83,7 +83,15 @@
             </button>
         </div>
         <div class="p-6">
-            <form action="{{ route('overhead.store') }}" method="POST" class="space-y-5">
+            <form action="{{ route('overhead.store') }}" method="POST" class="space-y-5" x-data="{
+                rawCost: '',
+                displayCost: '',
+                updateCost(val) {
+                    let raw = val.replace(/\D/g, '');
+                    this.rawCost = raw ? parseInt(raw) : '';
+                    this.displayCost = this.rawCost ? new Intl.NumberFormat('id-ID').format(this.rawCost) : '';
+                }
+            }">
                 @csrf
                 <div class="space-y-1">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-zinc-400 ml-1">Kategori Biaya</label>
@@ -106,12 +114,19 @@
                 </div>
                 <div class="space-y-1">
                     <label class="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-zinc-400 ml-1">Nominal Biaya (Rp)</label>
-                    <input name="cost" type="number" required class="w-full bg-slate-50 dark:bg-zinc-850 dark:bg-zinc-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20" placeholder="0"/>
+                    <input id="cost_display" 
+                           x-model="displayCost"
+                           @input="updateCost($event.target.value)"
+                           type="text" 
+                           required 
+                           class="w-full bg-slate-50 dark:bg-zinc-850 dark:bg-zinc-800 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary/20 text-stone-850 dark:text-white font-bold font-mono" 
+                           placeholder="0"/>
+                    <input type="hidden" name="cost" :value="rawCost" />
                 </div>
                 <div class="pt-4">
                     <button class="w-full py-4 rounded-xl shadow-lg shadow-emerald-900/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2" 
-                            style="background-color: #0b6e4f !important; color: #ffffff !important; font-weight: 900;" 
-                            type="submit">
+                             style="background-color: #0b6e4f !important; color: #ffffff !important; font-weight: 900;" 
+                             type="submit">
                         <span class="material-symbols-outlined text-base">save</span>
                         <span>Simpan Pengeluaran</span>
                     </button>
@@ -162,9 +177,12 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="px-8 py-12 text-center text-slate-400 dark:text-white italic text-sm">
-                            <span class="material-symbols-outlined text-4xl block opacity-10 mb-2">account_balance_wallet</span>
-                            Tidak ada data biaya operasional untuk periode ini.
+                        <td colspan="5" class="px-8 py-16 text-center">
+                            <div class="flex flex-col items-center justify-center gap-2 max-w-sm mx-auto">
+                                <span class="material-symbols-outlined text-4xl text-stone-400 dark:text-zinc-500 font-light">account_balance_wallet</span>
+                                <p class="font-bold text-stone-700 dark:text-zinc-200">Belum ada biaya operasional</p>
+                                <p class="text-xs text-stone-400 dark:text-zinc-500">Tidak ada data biaya operasional untuk periode ini.</p>
+                            </div>
                         </td>
                     </tr>
                     @endforelse

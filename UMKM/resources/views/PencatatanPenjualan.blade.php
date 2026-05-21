@@ -172,7 +172,7 @@
 
                     <!-- Card Grid -->
                     <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3 max-h-[380px] overflow-y-auto pr-1 custom-scrollbar">
-                        @foreach ($products as $product)
+                        @forelse ($products as $product)
                             @php
                                 $isOutOfStock = $product->stock <= 0;
                             @endphp
@@ -192,7 +192,7 @@
                                 <div x-show="selectedProductId == '{{ $product->id }}'" 
                                      class="absolute top-2 left-2 z-20 bg-[#0b6e4f] dark:bg-emerald-600 text-white w-5 h-5 rounded-full flex items-center justify-center shadow-md"
                                      x-cloak x-transition>
-                                    <span class="material-symbols-outlined text-[12px] font-bold">check</span>
+                                     <span class="material-symbols-outlined text-[12px] font-bold">check</span>
                                 </div>
 
                                 <!-- Out of stock overlay badge -->
@@ -224,7 +224,15 @@
                                     <p class="text-[10px] font-bold text-[#0b6e4f] dark:text-emerald-400">Rp {{ number_format($product->selling_price, 0, ',', '.') }}</p>
                                 </div>
                             </div>
-                        @endforeach
+                        @empty
+                            <div class="col-span-full bg-white dark:bg-zinc-900 rounded-2xl p-8 text-stone-500 dark:text-zinc-300 border border-stone-200/60 dark:border-zinc-800/80 shadow-sm text-center">
+                                <div class="flex flex-col items-center justify-center gap-2">
+                                    <span class="material-symbols-outlined text-4xl text-stone-400 dark:text-zinc-500 font-light">inventory_2</span>
+                                    <p class="font-bold text-stone-700 dark:text-zinc-200">Katalog produk kosong</p>
+                                    <p class="text-[10px] text-stone-400 dark:text-zinc-500">Silakan tambahkan produk baru di menu Manajemen Produk terlebih dahulu.</p>
+                                </div>
+                            </div>
+                        @endforelse
                     </div>
                 </div>
 

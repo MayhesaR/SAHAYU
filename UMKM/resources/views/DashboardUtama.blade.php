@@ -335,12 +335,10 @@
                             <span class="text-xs font-bold text-stone-850 dark:text-white bg-stone-100/60 dark:bg-zinc-800/60 px-3 py-1 rounded-lg border border-stone-200/30 dark:border-zinc-800/30">{{ $activity['amount'] }}</span>
                         </div>
                     @empty
-                        <div class="py-12 text-center flex flex-col items-center justify-center">
-                            <div class="w-12 h-12 bg-stone-100 dark:bg-zinc-800 text-stone-400 dark:text-zinc-400 rounded-full flex items-center justify-center mb-4">
-                                <span class="material-symbols-outlined text-xl">hourglass_empty</span>
-                            </div>
-                            <p class="text-xs font-bold text-stone-800 dark:text-white">Belum ada aktivitas</p>
-                            <p class="text-[10px] text-stone-400 dark:text-zinc-400 mt-1">Aktivitas baru akan muncul di sini.</p>
+                        <div class="py-12 text-center flex flex-col items-center justify-center gap-2 max-w-sm mx-auto">
+                            <span class="material-symbols-outlined text-4xl text-stone-400 dark:text-zinc-500 font-light">hourglass_empty</span>
+                            <p class="font-bold text-stone-700 dark:text-zinc-200">Belum ada aktivitas</p>
+                            <p class="text-xs text-stone-400 dark:text-zinc-500">Aktivitas baru akan muncul di sini.</p>
                         </div>
                     @endforelse
                 </div>
@@ -389,12 +387,10 @@
                             </div>
                         </div>
                     @empty
-                        <div class="py-12 text-center flex flex-col items-center justify-center">
-                            <div class="w-12 h-12 bg-stone-100 dark:bg-zinc-800 text-stone-400 dark:text-zinc-400 rounded-full flex items-center justify-center mb-4">
-                                <span class="material-symbols-outlined text-xl">inventory</span>
-                            </div>
-                            <p class="text-xs font-bold text-stone-800 dark:text-white">Belum ada penjualan</p>
-                            <p class="text-[10px] text-stone-400 dark:text-zinc-400 mt-1">Data penjualan produk akan muncul di sini</p>
+                        <div class="py-12 text-center flex flex-col items-center justify-center gap-2 max-w-sm mx-auto">
+                            <span class="material-symbols-outlined text-4xl text-stone-400 dark:text-zinc-500 font-light">inventory</span>
+                            <p class="font-bold text-stone-700 dark:text-zinc-200">Belum ada penjualan</p>
+                            <p class="text-xs text-stone-400 dark:text-zinc-500">Data penjualan produk akan muncul di sini.</p>
                         </div>
                     @endforelse
                 </div>
@@ -564,12 +560,10 @@
                             </a>
                         </div>
                     @empty
-                        <div class="py-8 flex flex-col items-center justify-center">
-                            <div class="w-11 h-11 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-500 rounded-full flex items-center justify-center mb-3 shadow-inner">
-                                <span class="material-symbols-outlined text-xl font-bold">done_all</span>
-                            </div>
-                            <p class="text-xs font-bold text-stone-850 dark:text-white">Semua Stok Aman</p>
-                            <p class="text-[10px] text-stone-400 dark:text-zinc-400 mt-0.5">Bahan baku di atas batas minimum</p>
+                        <div class="py-8 text-center flex flex-col items-center justify-center gap-2 max-w-sm mx-auto">
+                            <span class="material-symbols-outlined text-4xl text-emerald-550 text-emerald-500 dark:text-emerald-400 font-light">done_all</span>
+                            <p class="font-bold text-stone-700 dark:text-zinc-200">Semua Stok Aman</p>
+                            <p class="text-xs text-stone-400 dark:text-zinc-500">Bahan baku di atas batas minimum.</p>
                         </div>
                     @endforelse
                 </div>

@@ -131,6 +131,28 @@
                         </div>
                     </form>
                 </section>
+
+                <!-- Section 2.5: Keamanan Data & Sistem -->
+                <section class="bg-white dark:bg-zinc-900 rounded-3xl p-6 shadow-xl shadow-emerald-900/5 border border-stone-100/85 dark:border-zinc-800/85">
+                    <div class="flex items-center justify-between border-b border-stone-100 dark:border-zinc-800/60 pb-4 mb-4">
+                        <h3 class="text-base font-bold text-stone-850 dark:text-white flex items-center">
+                            <span class="material-symbols-outlined mr-2.5 text-[#0b6e4f] dark:text-emerald-400 text-2xl">security</span> 
+                            Keamanan Data & Sistem
+                        </h3>
+                        <span class="text-[10px] uppercase font-bold text-stone-400 dark:text-zinc-400 tracking-wider">Cadangan</span>
+                    </div>
+                    <div class="space-y-4">
+                        <p class="text-xs text-stone-500 dark:text-zinc-400 leading-relaxed">
+                            Unduh salinan cadangan seluruh data transaksi, produk, dan laporan SAHAYU untuk disimpan di media eksternal aman.
+                        </p>
+                        <div class="pt-2">
+                            <a href="{{ route('settings.backup') }}" 
+                               class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-stone-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:bg-stone-50 dark:hover:bg-zinc-800 text-stone-700 dark:text-zinc-200 font-semibold shadow-sm hover:shadow active:scale-95 transition-all duration-200 text-sm">
+                                <span>📥</span> Cadangkan Data (.sql)
+                            </a>
+                        </div>
+                    </div>
+                </section>
             </div>
 
             <!-- Right Column: Account Password Management -->

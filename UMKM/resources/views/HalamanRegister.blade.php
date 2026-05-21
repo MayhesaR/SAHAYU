@@ -45,16 +45,14 @@
     </div>
     <main class="relative z-10 w-full max-w-md">
         <div class="flex flex-col items-center mb-10 space-y-2">
-            <div class="p-3 bg-surface-container-lowest rounded-full editorial-shadow mb-4">
-                <span class="material-symbols-outlined text-primary text-4xl">architecture</span>
-            </div>
-            <h1 class="text-3xl font-extrabold tracking-tight text-primary">Ledger</h1>
-            <p class="text-on-surface-variant font-medium tracking-wide font-headline text-sm uppercase opacity-70">SAHAYU</p>
+            <img src="{{ asset('logo.png') }}" alt="SAHAYU Logo" class="w-16 h-16 rounded-2xl shadow-md flex-shrink-0 object-cover mb-2" />
+            <h1 class="text-3xl font-extrabold tracking-tight text-primary">SAHAYU</h1>
+            <p class="text-on-surface-variant font-semibold tracking-widest font-headline text-xs uppercase opacity-70">Keuangan UMKM</p>
         </div>
         <div class="bg-surface-container-lowest p-8 md:p-10 rounded-xl editorial-shadow">
             <header class="mb-8">
-                <h2 class="text-2xl font-bold text-on-surface mb-2">Create Account</h2>
-                <p class="text-on-surface-variant text-sm leading-relaxed">Join SAHAYU to manage your architectural and business records.</p>
+                <h2 class="text-2xl font-bold text-on-surface mb-2">Daftar Akun Baru</h2>
+                <p class="text-on-surface-variant text-sm leading-relaxed">Daftar akun SAHAYU untuk mengelola keuangan dan pembukuan usaha kuliner Anda.</p>
             </header>
             <form action="{{ route('register') }}" class="space-y-4" method="POST">
                 @csrf

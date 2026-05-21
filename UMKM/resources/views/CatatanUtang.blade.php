@@ -2,6 +2,109 @@
 @section('title', 'Piutang & Kasbon Pelanggan')
 @section('page_title', 'Piutang / Kasbon Pelanggan')
 
+@section('styles')
+    /* Driver.js Popover Premium Customizations */
+    .driver-popover {
+        background-color: #ffffff !important;
+        color: #1c1917 !important; /* stone-900 */
+        font-family: 'Inter', sans-serif !important;
+        border-radius: 1rem !important; /* rounded-2xl */
+        border: 1px solid rgba(16, 185, 129, 0.2) !important; /* Emerald-500 border with low opacity */
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+        padding: 1.25rem !important;
+        max-width: 320px !important;
+    }
+    
+    .dark .driver-popover {
+        background-color: #18181b !important; /* zinc-900 */
+        color: #f4f4f5 !important; /* zinc-100 */
+        border: 1px solid rgba(16, 185, 129, 0.3) !important;
+    }
+
+    .driver-popover-title {
+        font-family: 'Manrope', sans-serif !important;
+        font-weight: 800 !important;
+        font-size: 0.95rem !important;
+        color: #065f46 !important; /* emerald-800 */
+        margin-bottom: 0.5rem !important;
+    }
+
+    .dark .driver-popover-title {
+        color: #34d399 !important; /* emerald-400 */
+    }
+
+    .driver-popover-description {
+        font-size: 0.8rem !important;
+        line-height: 1.4 !important;
+        color: #4b5563 !important; /* gray-600 */
+        font-weight: 500 !important;
+    }
+
+    .dark .driver-popover-description {
+        color: #d4d4d8 !important; /* zinc-300 */
+    }
+
+    .driver-popover-navigation-btns {
+        margin-top: 1rem !important;
+        gap: 0.5rem !important;
+        display: flex !important;
+        justify-content: flex-end !important;
+    }
+
+    .driver-popover-btn {
+        background-color: #f3f4f6 !important;
+        color: #374151 !important;
+        font-size: 0.75rem !important;
+        font-weight: 700 !important;
+        padding: 0.4rem 0.8rem !important;
+        border-radius: 0.5rem !important;
+        border: 1px solid #e5e7eb !important;
+        text-shadow: none !important;
+        transition: all 0.15s ease !important;
+    }
+
+    .driver-popover-btn:hover {
+        background-color: #e5e7eb !important;
+        color: #111827 !important;
+    }
+
+    .dark .driver-popover-btn {
+        background-color: #27272a !important; /* zinc-800 */
+        color: #e4e4e7 !important;
+        border: 1px solid #3f3f46 !important;
+    }
+
+    .dark .driver-popover-btn:hover {
+        background-color: #3f3f46 !important;
+        color: #ffffff !important;
+    }
+
+    .driver-popover-btn-next, .driver-popover-btn-done {
+        background-color: #10b981 !important; /* emerald-500 */
+        color: #ffffff !important;
+        border: 1px solid #10b981 !important;
+    }
+
+    .driver-popover-btn-next:hover, .driver-popover-btn-done:hover {
+        background-color: #059669 !important; /* emerald-600 */
+        color: #ffffff !important;
+        border: 1px solid #059669 !important;
+    }
+
+    .driver-popover-progress-text {
+        font-size: 0.75rem !important;
+        color: #9ca3af !important;
+        font-weight: 600 !important;
+    }
+    
+    .driver-popover-arrow {
+        border-color: #ffffff !important;
+    }
+    .dark .driver-popover-arrow {
+        border-color: #18181b !important;
+    }
+@endsection
+
 @section('content')
 <style>
     .custom-scrollbar::-webkit-scrollbar {
@@ -98,6 +201,7 @@
         selectedCustomerId: null,
         selectedDebtId: null,
         amountToPay: 0,
+        displayAmount: '',
         paymentMethod: 'cash',
         paymentDate: '{{ now()->toDateString() }}',
         showAdvancedFilters: false,
@@ -109,6 +213,9 @@
             if (first) {
                 this.selectCustomer(first.id);
             }
+            this.$watch('amountToPay', value => {
+                this.displayAmount = value ? new Intl.NumberFormat('id-ID').format(value) : '';
+            });
         },
         
         selectCustomer(id) {
@@ -191,6 +298,14 @@
             </p>
         </div>
         <div class="flex items-center gap-3">
+            @if (!$debts->isEmpty())
+                <!-- Guided Tour Button -->
+                <button type="button" id="btn-start-tour"
+                        class="bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 rounded-xl px-4 py-2 text-sm font-semibold transition-all flex items-center gap-2 border border-emerald-100/30 dark:border-emerald-900/30 shadow-sm hover:scale-[1.02] active:scale-[0.98]">
+                    <span class="material-symbols-outlined text-sm font-bold">help</span>
+                    <span>💡 Panduan Kasir</span>
+                </button>
+            @endif
             <a href="{{ route('sales.index') }}" 
                class="w-full sm:w-auto px-5 py-2.5 md:py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-500/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-emerald-900/10 transition-all duration-200 flex items-center justify-center gap-2">
                 <span class="material-symbols-outlined text-[16px]">add_shopping_cart</span>
@@ -283,230 +398,301 @@
         </div>
     </div>
 
-    <!-- MAIN POS SPLIT-SCREEN WORKSPACE -->
-    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        
-        <!-- LEFT PANEL: Customer List (60%) -->
-        <div class="lg:col-span-3 space-y-4">
+    @if ($debts->isEmpty())
+        <div class="bg-white dark:bg-zinc-900 rounded-3xl p-16 text-center border border-stone-200/60 dark:border-zinc-800/80 shadow-lg shadow-emerald-900/5 max-w-lg mx-auto mt-12">
+            <div class="flex flex-col items-center justify-center gap-3">
+                <span class="material-symbols-outlined text-5xl text-emerald-600 dark:text-emerald-400 font-light">check_circle</span>
+                <p class="text-lg font-bold text-stone-850 dark:text-white mt-2">Semua tagihan lunas!</p>
+                <p class="text-xs text-stone-400 dark:text-zinc-500 max-w-sm leading-relaxed">Luar biasa! Tidak ada catatan piutang atau kasbon pelanggan yang aktif/menggantung saat ini di dalam sistem Anda.</p>
+                <a href="{{ route('sales.index') }}" 
+                   class="mt-4 px-6 py-3 bg-[#0b6e4f] dark:bg-emerald-600 hover:bg-[#09523b] text-white font-bold text-sm rounded-xl shadow-md shadow-emerald-500/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-base">add_shopping_cart</span>
+                    <span>POS Penjualan Baru</span>
+                </a>
+            </div>
+        </div>
+    @else
+        <!-- MAIN POS SPLIT-SCREEN WORKSPACE -->
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
             
-            <!-- Quick Search Bar -->
-            <div class="relative">
-                <span class="material-symbols-outlined absolute left-4 top-3 text-stone-400 dark:text-zinc-400">search</span>
-                <input type="text" 
-                       x-model="searchQuery" 
-                       placeholder="Cari nama pelanggan..." 
-                       class="w-full pl-11 pr-4 py-3 bg-white dark:bg-zinc-900 border border-stone-200 dark:border-zinc-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 rounded-2xl text-xs font-semibold text-stone-800 dark:text-white outline-none transition-all placeholder-stone-400 shadow-sm" />
-            </div>
-
-            <!-- Customer Cards Container -->
-            <div class="lg:max-h-[580px] overflow-y-auto pr-2 space-y-3 custom-scrollbar">
-                <template x-for="cust in customers.filter(c => c.name.toLowerCase().includes(searchQuery.toLowerCase()))" :key="cust.id">
-                    <div @click="selectCustomer(cust.id)"
-                         class="p-4 bg-white dark:bg-zinc-900 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 duration-200"
-                         :class="selectedCustomerId === cust.id ? 'ring-2 ring-emerald-500 bg-emerald-50/20 dark:bg-emerald-950/20 border-emerald-200' : 'border-stone-200/60 dark:border-zinc-800/80'">
-                        
-                        <!-- Left Info -->
-                        <div class="flex items-center gap-3 min-w-0">
-                            <!-- Initials Avatar -->
-                            <div class="w-10 h-10 rounded-xl font-bold text-sm flex items-center justify-center flex-shrink-0 shadow-sm transition-all duration-200"
-                                 :class="selectedCustomerId === cust.id ? 'bg-emerald-500 text-white' : 'bg-stone-100 dark:bg-zinc-800 text-stone-700 dark:text-zinc-200'">
-                                <span x-text="cust.initials"></span>
-                            </div>
-                            <div class="min-w-0">
-                                <h4 class="font-bold text-stone-800 dark:text-white text-sm truncate" x-text="cust.name"></h4>
-                                <p class="text-[10px] text-stone-400 dark:text-zinc-400 font-semibold truncate mt-0.5" x-text="cust.phone"></p>
-                            </div>
-                        </div>
-
-                        <!-- Right Info -->
-                        <div class="text-right flex-shrink-0">
-                            <span class="inline-block px-3 py-1.5 bg-rose-50 dark:bg-rose-950/40 text-rose-500 dark:text-rose-400 rounded-full font-bold text-xs shadow-sm shadow-rose-900/5"
-                                  x-text="formatRupiah(cust.total_remaining)">
-                            </span>
-                            <p class="text-[9px] text-stone-400 dark:text-zinc-400 font-bold mt-1" x-text="cust.invoices.length + ' Nota Aktif'"></p>
-                        </div>
-                    </div>
-                </template>
-
-                <!-- No Results Empty State -->
-                <div x-show="customers.filter(c => c.name.toLowerCase().includes(searchQuery.toLowerCase())).length === 0"
-                     class="p-8 text-center text-stone-400 dark:text-zinc-400 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 rounded-2xl border border-dashed border-stone-200 dark:border-zinc-800">
-                    <span class="material-symbols-outlined text-3xl text-stone-300 mb-2">person_search</span>
-                    <p class="text-xs font-semibold">Tidak ada pelanggan dengan tagihan aktif.</p>
-                </div>
-            </div>
-
-            <!-- Laravel Pagination Links -->
-            <div class="pt-2">
-                {{ $debts->appends(request()->query())->links() }}
-            </div>
-        </div>
-
-        <!-- RIGHT PANEL: Checkout Panel (40%) -->
-        <div class="lg:col-span-2">
-            <div class="lg:sticky lg:top-[88px] space-y-4">
+            <!-- LEFT PANEL: Customer List (60%) -->
+            <div class="lg:col-span-3 space-y-4">
                 
-                <!-- No Customer Selected State -->
-                <div x-show="!selectedCustomerId" 
-                     class="bg-white dark:bg-zinc-900 p-8 rounded-3xl border border-stone-200/60 dark:border-zinc-800/80 shadow-lg shadow-emerald-900/5 text-center flex flex-col items-center justify-center h-96">
-                    <div class="w-16 h-16 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 rounded-full flex items-center justify-center text-stone-300 mb-4 shadow-inner">
-                        <span class="material-symbols-outlined text-4xl">payments</span>
-                    </div>
-                    <h3 class="text-sm font-bold text-stone-700 dark:text-zinc-50 dark:text-zinc-200">Pilih Pelanggan</h3>
-                    <p class="text-xs text-stone-400 dark:text-zinc-400 mt-1 max-w-[200px] leading-relaxed">Silakan pilih nama pelanggan di sebelah kiri untuk menginput nominal angsuran kasbon.</p>
+                <!-- Quick Search Bar -->
+                <div class="relative" id="tour-search-bar">
+                    <span class="material-symbols-outlined absolute left-4 top-3 text-stone-400 dark:text-zinc-400">search</span>
+                    <input type="text" 
+                           x-model="searchQuery" 
+                           placeholder="Cari nama pelanggan..." 
+                           class="w-full pl-11 pr-4 py-3 bg-white dark:bg-zinc-900 border border-stone-200 dark:border-zinc-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 rounded-2xl text-xs font-semibold text-stone-800 dark:text-white outline-none transition-all placeholder-stone-400 shadow-sm" />
                 </div>
 
-                <!-- Customer Selected & Active Checkout Panel -->
-                <div x-show="selectedCustomerId" 
-                     x-transition:enter="transition ease-out duration-300"
-                     x-transition:enter-start="opacity-0 translate-y-4"
-                     x-transition:enter-end="opacity-100 translate-y-0"
-                     class="bg-white dark:bg-zinc-900 p-6 rounded-3xl border border-stone-200/60 dark:border-zinc-800/80 shadow-lg shadow-emerald-900/5 space-y-5">
-                    
-                    <!-- Checkout Header Info -->
-                    <div class="pb-4 border-b border-stone-100 dark:border-zinc-800/60">
-                        <span class="text-[9px] font-bold tracking-widest text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-full uppercase">Detail Pembayaran</span>
-                        <h3 class="text-lg font-bold text-stone-800 dark:text-white mt-3" x-text="getActiveCustomer() ? getActiveCustomer().name : ''"></h3>
-                        <div class="flex justify-between items-center mt-3 p-3.5 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 rounded-2xl border border-stone-100 dark:border-zinc-800/60 shadow-inner">
-                            <span class="text-xs text-stone-500 dark:text-zinc-400 font-semibold">Total Tagihan Akumulatif:</span>
-                            <span class="text-base font-bold text-rose-500 dark:text-rose-400" x-text="getActiveCustomer() ? formatRupiah(getActiveCustomer().total_remaining) : 'Rp 0'"></span>
-                        </div>
-                    </div>
-
-                    <!-- Unpaid Invoice List -->
-                    <div class="space-y-2">
-                        <div class="flex justify-between items-center">
-                            <label class="text-[10px] font-bold uppercase tracking-wider text-stone-400 dark:text-zinc-400">Pilih Nota Invoice</label>
-                            <span class="text-[9px] text-stone-400 dark:text-zinc-400 font-bold" x-text="(getActiveCustomer() ? getActiveCustomer().invoices.length : 0) + ' nota belum lunas'"></span>
-                        </div>
-                        
-                        <div class="max-h-40 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
-                            <template x-for="inv in (getActiveCustomer() ? getActiveCustomer().invoices : [])" :key="inv.id">
-                                <div @click="selectInvoice(inv.id)"
-                                     class="p-3 bg-white dark:bg-zinc-900 border rounded-xl cursor-pointer transition-all flex items-center justify-between gap-3"
-                                     :class="selectedDebtId === inv.id ? 'border-emerald-500 bg-emerald-50/10 dark:bg-emerald-950/10 ring-1 ring-emerald-500' : 'border-stone-100 dark:border-zinc-800/60 hover:bg-stone-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800'">
-                                    <div class="min-w-0">
-                                        <div class="flex items-center gap-1.5 flex-wrap">
-                                            <span class="font-bold text-stone-700 dark:text-zinc-50 dark:text-white text-xs font-mono" x-text="'#' + String(inv.sale_id || inv.id).padStart(5, '0')"></span>
-                                            <!-- Status Badges -->
-                                            <span x-show="inv.is_overdue" class="text-[8px] bg-rose-100 text-rose-600 dark:text-rose-400 px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Terlambat</span>
-                                            <span x-show="!inv.is_overdue && inv.status === 'unpaid'" class="text-[8px] bg-amber-100 text-amber-700 dark:text-amber-400 px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Belum Bayar</span>
-                                            <span x-show="!inv.is_overdue && inv.status === 'partial'" class="text-[8px] bg-blue-100 dark:bg-blue-950/50 text-blue-700 dark:text-blue-400 px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Cicilan</span>
-                                        </div>
-                                        <p class="text-[10px] text-stone-400 dark:text-zinc-400 font-medium truncate mt-0.5" x-text="inv.description"></p>
-                                        <p class="text-[10px] mt-1" :class="inv.due_class" x-text="inv.due_text"></p>
-                                    </div>
-                                    <div class="text-right flex-shrink-0">
-                                        <p class="font-bold text-stone-800 dark:text-white text-xs" x-text="formatRupiah(inv.remaining_amount)"></p>
-                                        <p class="text-[8px] text-stone-400 dark:text-zinc-400 font-bold mt-0.5" x-text="'Dibuat: ' + inv.date"></p>
-                                    </div>
+                <!-- Customer Cards Container -->
+                <div id="tour-customer-list" class="lg:max-h-[580px] overflow-y-auto pr-2 space-y-3 custom-scrollbar">
+                    <template x-for="cust in customers.filter(c => c.name.toLowerCase().includes(searchQuery.toLowerCase()))" :key="cust.id">
+                        <div @click="selectCustomer(cust.id)"
+                             class="p-4 bg-white dark:bg-zinc-900 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 duration-200"
+                             :class="selectedCustomerId === cust.id ? 'ring-2 ring-emerald-500 bg-emerald-50/20 dark:bg-emerald-950/20 border-emerald-200' : 'border-stone-200/60 dark:border-zinc-800/80'">
+                            
+                            <!-- Left Info -->
+                            <div class="flex items-center gap-3 min-w-0">
+                                <!-- Initials Avatar -->
+                                <div class="w-10 h-10 rounded-xl font-bold text-sm flex items-center justify-center flex-shrink-0 shadow-sm transition-all duration-200"
+                                     :class="selectedCustomerId === cust.id ? 'bg-emerald-500 text-white' : 'bg-stone-100 dark:bg-zinc-800 text-stone-700 dark:text-zinc-200'">
+                                    <span x-text="cust.initials"></span>
                                 </div>
-                            </template>
+                                <div class="min-w-0">
+                                    <h4 class="font-bold text-stone-800 dark:text-white text-sm truncate" x-text="cust.name"></h4>
+                                    <p class="text-[10px] text-stone-400 dark:text-zinc-400 font-semibold truncate mt-0.5" x-text="cust.phone"></p>
+                                </div>
+                            </div>
 
-                            <!-- If customer has no unpaid invoices (i.e. all paid) -->
-                            <div x-show="getActiveCustomer() && getActiveCustomer().invoices.length === 0"
-                                 class="p-4 text-center text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl text-xs font-bold border border-emerald-100">
-                                <span class="material-symbols-outlined text-sm align-middle mr-1">check_circle</span>
-                                Semua tagihan customer ini telah lunas!
+                            <!-- Right Info -->
+                            <div class="text-right flex-shrink-0">
+                                <span class="inline-block px-3 py-1.5 bg-rose-50 dark:bg-rose-950/40 text-rose-500 dark:text-rose-400 rounded-full font-bold text-xs shadow-sm shadow-rose-900/5"
+                                      x-text="formatRupiah(cust.total_remaining)">
+                                </span>
+                                <p class="text-[9px] text-stone-400 dark:text-zinc-400 font-bold mt-1" x-text="cust.invoices.length + ' Nota Aktif'"></p>
                             </div>
                         </div>
+                    </template>
+
+                    <!-- No Results Empty State -->
+                    <div x-show="customers.filter(c => c.name.toLowerCase().includes(searchQuery.toLowerCase())).length === 0"
+                         class="p-8 text-center text-stone-400 dark:text-zinc-400 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 rounded-2xl border border-dashed border-stone-200 dark:border-zinc-800">
+                        <span class="material-symbols-outlined text-3xl text-stone-300 mb-2">person_search</span>
+                        <p class="text-xs font-semibold">Tidak ada pelanggan dengan tagihan aktif.</p>
+                    </div>
+                </div>
+
+                <!-- Laravel Pagination Links -->
+                <div class="pt-2">
+                    {{ $debts->appends(request()->query())->links() }}
+                </div>
+            </div>
+
+            <!-- RIGHT PANEL: Checkout Panel (40%) -->
+            <div class="lg:col-span-2">
+                <div class="lg:sticky lg:top-[88px] space-y-4">
+                    
+                    <!-- No Customer Selected State -->
+                    <div x-show="!selectedCustomerId" 
+                         class="bg-white dark:bg-zinc-900 p-8 rounded-3xl border border-stone-200/60 dark:border-zinc-800/80 shadow-lg shadow-emerald-900/5 text-center flex flex-col items-center justify-center h-96">
+                        <div class="w-16 h-16 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 rounded-full flex items-center justify-center text-stone-300 mb-4 shadow-inner">
+                            <span class="material-symbols-outlined text-4xl">payments</span>
+                        </div>
+                        <h3 class="text-sm font-bold text-stone-700 dark:text-zinc-50 dark:text-zinc-200">Pilih Pelanggan</h3>
+                        <p class="text-xs text-stone-400 dark:text-zinc-400 mt-1 max-w-[200px] leading-relaxed">Silakan pilih nama pelanggan di sebelah kiri untuk menginput nominal angsuran kasbon.</p>
                     </div>
 
-                    <!-- Payment Posting Form -->
-                    <form x-bind:action="getActiveInvoice() ? getActiveInvoice().pay_route : '#'" method="POST" class="space-y-4">
-                        @csrf
-
-                        <!-- Payment Amount Field -->
-                        <div class="space-y-1.5">
-                            <label class="text-[10px] font-bold uppercase tracking-wider text-stone-400 dark:text-zinc-400">Nominal Pembayaran</label>
-                            <div class="relative flex items-center">
-                                <span class="absolute left-4 text-stone-500 dark:text-white font-bold text-base">Rp</span>
-                                <input type="number" 
-                                       name="amount_paid" 
-                                       x-model.number="amountToPay"
-                                       x-bind:max="getActiveInvoice() ? getActiveInvoice().remaining_amount : 0"
-                                       min="1"
-                                       required 
-                                       class="w-full pl-11 pr-4 py-3 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 focus:bg-white dark:focus:bg-zinc-900 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 rounded-2xl text-lg font-bold text-stone-800 dark:text-white outline-none transition-all font-mono" />
+                    <!-- Customer Selected & Active Checkout Panel -->
+                    <div x-show="selectedCustomerId" 
+                         x-transition:enter="transition ease-out duration-300"
+                         x-transition:enter-start="opacity-0 translate-y-4"
+                         x-transition:enter-end="opacity-100 translate-y-0"
+                         class="bg-white dark:bg-zinc-900 p-6 rounded-3xl border border-stone-200/60 dark:border-zinc-800/80 shadow-lg shadow-emerald-900/5 space-y-5">
+                        
+                        <!-- Checkout Header Info -->
+                        <div class="pb-4 border-b border-stone-100 dark:border-zinc-800/60">
+                            <span class="text-[9px] font-bold tracking-widest text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-full uppercase">Detail Pembayaran</span>
+                            <h3 class="text-lg font-bold text-stone-800 dark:text-white mt-3" x-text="getActiveCustomer() ? getActiveCustomer().name : ''"></h3>
+                            <div class="flex justify-between items-center mt-3 p-3.5 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 rounded-2xl border border-stone-100 dark:border-zinc-800/60 shadow-inner">
+                                <span class="text-xs text-stone-500 dark:text-zinc-400 font-semibold">Total Tagihan Akumulatif:</span>
+                                <span class="text-base font-bold text-rose-500 dark:text-rose-400" x-text="getActiveCustomer() ? formatRupiah(getActiveCustomer().total_remaining) : 'Rp 0'"></span>
                             </div>
                         </div>
 
-                        <!-- Quick Cash Pills -->
-                        <div class="flex flex-wrap gap-1.5">
-                            <button type="button" @click="setQuickAmount('lunas')"
-                                    class="px-2.5 py-1.5 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 text-emerald-700 dark:text-emerald-400 rounded-lg text-[10px] font-bold transition-all shadow-sm border border-emerald-100">
-                                Bayar Semua (Lunas)
-                            </button>
-                            <button type="button" @click="setQuickAmount(50000)"
-                                    class="px-2.5 py-1.5 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 hover:bg-stone-100 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/80 text-stone-600 dark:text-white rounded-lg text-[10px] font-bold transition-all shadow-sm border border-stone-200/50 dark:border-zinc-850">
-                                50.000
-                            </button>
-                            <button type="button" @click="setQuickAmount(100000)"
-                                    class="px-2.5 py-1.5 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 hover:bg-stone-100 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/80 text-stone-600 dark:text-white rounded-lg text-[10px] font-bold transition-all shadow-sm border border-stone-200/50 dark:border-zinc-850">
-                                100.000
-                            </button>
-                            <button type="button" @click="setQuickAmount(250000)"
-                                    class="px-2.5 py-1.5 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 hover:bg-stone-100 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/80 text-stone-600 dark:text-white rounded-lg text-[10px] font-bold transition-all shadow-sm border border-stone-200/50 dark:border-zinc-850">
-                                250.000
-                            </button>
-                            <button type="button" @click="setQuickAmount(500000)"
-                                    class="px-2.5 py-1.5 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 hover:bg-stone-100 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/80 text-stone-600 dark:text-white rounded-lg text-[10px] font-bold transition-all shadow-sm border border-stone-200/50 dark:border-zinc-850">
-                                500.000
-                            </button>
-                        </div>
-
-                        <!-- Channel Selector Tabs -->
-                        <div class="space-y-1.5">
-                            <label class="text-[10px] font-bold uppercase tracking-wider text-stone-400 dark:text-zinc-400">Saluran Pembayaran</label>
-                            <div class="grid grid-cols-3 gap-2">
-                                <!-- Cash -->
-                                <label class="border rounded-xl p-2 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all"
-                                       :class="paymentMethod === 'cash' ? 'border-emerald-500 bg-emerald-50/10 dark:bg-emerald-950/10 text-emerald-700 dark:text-emerald-400 ring-1 ring-emerald-500' : 'border-stone-200 dark:border-zinc-800 text-stone-500 dark:text-zinc-400 hover:bg-stone-50/60'">
-                                    <input type="radio" name="payment_method" value="cash" x-model="paymentMethod" class="sr-only" required />
-                                    <span class="material-symbols-outlined text-lg">payments</span>
-                                    <span class="text-[10px] font-bold">Tunai</span>
-                                </label>
-                                <!-- Transfer -->
-                                <label class="border rounded-xl p-2 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all"
-                                       :class="paymentMethod === 'transfer' ? 'border-emerald-500 bg-emerald-50/10 dark:bg-emerald-950/10 text-emerald-700 dark:text-emerald-400 ring-1 ring-emerald-500' : 'border-stone-200 dark:border-zinc-800 text-stone-500 dark:text-zinc-400 hover:bg-stone-50/60'">
-                                    <input type="radio" name="payment_method" value="transfer" x-model="paymentMethod" class="sr-only" required />
-                                    <span class="material-symbols-outlined text-lg">account_balance</span>
-                                    <span class="text-[10px] font-bold">Transfer</span>
-                                </label>
-                                <!-- QRIS -->
-                                <label class="border rounded-xl p-2 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all"
-                                       :class="paymentMethod === 'qris' ? 'border-emerald-500 bg-emerald-50/10 dark:bg-emerald-950/10 text-emerald-700 dark:text-emerald-400 ring-1 ring-emerald-500' : 'border-stone-200 dark:border-zinc-800 text-stone-500 dark:text-zinc-400 hover:bg-stone-50/60'">
-                                    <input type="radio" name="payment_method" value="qris" x-model="paymentMethod" class="sr-only" required />
-                                    <span class="material-symbols-outlined text-lg">qr_code_scanner</span>
-                                    <span class="text-[10px] font-bold">QRIS</span>
-                                </label>
+                        <!-- 2. Invoice Selector -->
+                        <div id="tour-invoice-selector" class="space-y-2">
+                            <label class="text-[10px] font-bold uppercase tracking-wider text-stone-400 dark:text-zinc-400">Pilih Nota Tagihan</label>
+                            <div class="space-y-2 max-h-36 overflow-y-auto pr-1 custom-scrollbar">
+                                <template x-for="inv in (getActiveCustomer() ? getActiveCustomer().invoices : [])" :key="inv.id">
+                                    <div @click="selectInvoice(inv.id)"
+                                         class="p-2.5 rounded-xl border cursor-pointer transition-all flex items-center justify-between gap-3"
+                                         :class="selectedDebtId === inv.id ? 'border-emerald-500 bg-emerald-50/10 dark:bg-emerald-950/10' : 'border-stone-100 dark:border-zinc-800/60 hover:bg-stone-50/60'">
+                                        <div class="min-w-0">
+                                            <p class="text-[10px] font-bold text-stone-800 dark:text-white truncate" x-text="inv.invoice_number"></p>
+                                            <p class="text-[9px] text-stone-400 dark:text-zinc-400 font-semibold truncate mt-0.5" x-text="inv.description"></p>
+                                        </div>
+                                        <div class="text-right flex-shrink-0">
+                                            <p class="text-xs font-bold text-stone-700 dark:text-zinc-200" x-text="formatRupiah(inv.remaining_amount)"></p>
+                                            <span class="inline-block text-[8px] font-black uppercase tracking-widest mt-1 px-1.5 py-0.5 rounded"
+                                                  :class="inv.days_overdue > 0 ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-500' : 'bg-stone-100 dark:bg-zinc-800 text-stone-500 dark:text-zinc-300'"
+                                                  x-text="inv.due_label">
+                                            </span>
+                                        </div>
+                                    </div>
+                                </template>
                             </div>
                         </div>
 
-                        <!-- Date input -->
-                        <div class="space-y-1.5">
-                            <label class="text-[10px] font-bold uppercase tracking-wider text-stone-400 dark:text-zinc-400">Tanggal Transaksi</label>
-                            <input type="date" 
-                                   name="payment_date" 
-                                   x-model="paymentDate"
-                                   required
-                                   class="w-full bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 focus:bg-white dark:focus:bg-zinc-900 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 rounded-xl p-2.5 text-xs font-semibold text-stone-700 dark:text-zinc-50 dark:text-zinc-200 outline-none transition-all" />
-                        </div>
+                        <!-- Payment Posting Form -->
+                        <form x-bind:action="getActiveInvoice() ? getActiveInvoice().pay_route : '#'" method="POST" class="space-y-4">
+                            @csrf
 
-                        <!-- Submit Receipt Payment -->
-                        <button type="submit"
-                                x-bind:disabled="!getActiveInvoice() || amountToPay <= 0"
-                                class="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-stone-100 dark:disabled:bg-zinc-800 disabled:text-stone-400 dark:disabled:text-zinc-300 dark:disabled:text-white disabled:shadow-none text-white font-bold py-3.5 px-6 rounded-2xl shadow-md shadow-emerald-500/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-emerald-900/10 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 mt-2">
-                            <span class="material-symbols-outlined">receipt_long</span>
-                            <span class="text-sm">Terima Pembayaran</span>
-                        </button>
-                    </form>
+                            <!-- Payment Amount Field -->
+                            <div class="space-y-1.5">
+                                <label class="text-[10px] font-bold uppercase tracking-wider text-stone-400 dark:text-zinc-400">Nominal Pembayaran</label>
+                                <div class="relative flex items-center">
+                                    <span class="absolute left-4 text-stone-500 dark:text-white font-bold text-base">Rp</span>
+                                    <input type="text" 
+                                           id="amount_display"
+                                           x-model="displayAmount"
+                                           @input="
+                                               let raw = $event.target.value.replace(/\D/g, '');
+                                               amountToPay = raw ? parseInt(raw) : 0;
+                                               $event.target.value = amountToPay ? new Intl.NumberFormat('id-ID').format(amountToPay) : '';
+                                           "
+                                           required 
+                                           class="w-full pl-11 pr-4 py-3 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 focus:bg-white dark:focus:bg-zinc-900 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 rounded-2xl text-lg font-bold text-stone-800 dark:text-white outline-none transition-all font-mono" />
+                                    <input type="hidden" name="amount_paid" :value="amountToPay" />
+                                </div>
+                            </div>
+
+                            <!-- Quick Cash Pills -->
+                            <div id="tour-quick-amounts" class="flex flex-wrap gap-1.5">
+                                <button type="button" @click="setQuickAmount('lunas')"
+                                        class="px-2.5 py-1.5 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 text-emerald-700 dark:text-emerald-400 rounded-lg text-[10px] font-bold transition-all shadow-sm border border-emerald-100">
+                                    Bayar Semua (Lunas)
+                                </button>
+                                <button type="button" @click="setQuickAmount(50000)"
+                                        class="px-2.5 py-1.5 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 hover:bg-stone-100 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/80 text-stone-600 dark:text-white rounded-lg text-[10px] font-bold transition-all shadow-sm border border-stone-200/50 dark:border-zinc-850">
+                                    50.000
+                                </button>
+                                <button type="button" @click="setQuickAmount(100000)"
+                                        class="px-2.5 py-1.5 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 hover:bg-stone-100 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/80 text-stone-600 dark:text-white rounded-lg text-[10px] font-bold transition-all shadow-sm border border-stone-200/50 dark:border-zinc-850">
+                                    100.000
+                                </button>
+                                <button type="button" @click="setQuickAmount(250000)"
+                                        class="px-2.5 py-1.5 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 hover:bg-stone-100 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/80 text-stone-600 dark:text-white rounded-lg text-[10px] font-bold transition-all shadow-sm border border-stone-200/50 dark:border-zinc-850">
+                                    250.000
+                                </button>
+                                <button type="button" @click="setQuickAmount(500000)"
+                                        class="px-2.5 py-1.5 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 hover:bg-stone-100 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/80 text-stone-600 dark:text-white rounded-lg text-[10px] font-bold transition-all shadow-sm border border-stone-200/50 dark:border-zinc-850">
+                                    500.000
+                                </button>
+                            </div>
+
+                            <!-- Payment method selector -->
+                            <div class="space-y-1.5 pt-2">
+                                <label class="text-[10px] font-bold uppercase tracking-wider text-stone-400 dark:text-zinc-400">Metode Pembayaran</label>
+                                <div class="grid grid-cols-3 gap-2">
+                                    <label class="border rounded-xl p-2 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all"
+                                           :class="paymentMethod === 'cash' ? 'border-emerald-500 bg-emerald-50/10 dark:bg-emerald-950/10 text-emerald-700 dark:text-emerald-400 ring-1 ring-emerald-500' : 'border-stone-200 dark:border-zinc-800 text-stone-500 dark:text-zinc-400 hover:bg-stone-50/60'">
+                                        <input type="radio" name="payment_method" value="cash" x-model="paymentMethod" class="sr-only" required />
+                                        <span class="material-symbols-outlined text-lg">payments</span>
+                                        <span class="text-[10px] font-bold">Tunai</span>
+                                    </label>
+                                    <label class="border rounded-xl p-2 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all"
+                                           :class="paymentMethod === 'transfer' ? 'border-emerald-500 bg-emerald-50/10 dark:bg-emerald-950/10 text-emerald-700 dark:text-emerald-400 ring-1 ring-emerald-500' : 'border-stone-200 dark:border-zinc-800 text-stone-500 dark:text-zinc-400 hover:bg-stone-50/60'">
+                                        <input type="radio" name="payment_method" value="transfer" x-model="paymentMethod" class="sr-only" required />
+                                        <span class="material-symbols-outlined text-lg">account_balance</span>
+                                        <span class="text-[10px] font-bold">Transfer</span>
+                                    </label>
+                                    <label class="border rounded-xl p-2 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all"
+                                           :class="paymentMethod === 'qris' ? 'border-emerald-500 bg-emerald-50/10 dark:bg-emerald-950/10 text-emerald-700 dark:text-emerald-400 ring-1 ring-emerald-500' : 'border-stone-200 dark:border-zinc-800 text-stone-500 dark:text-zinc-400 hover:bg-stone-50/60'">
+                                        <input type="radio" name="payment_method" value="qris" x-model="paymentMethod" class="sr-only" required />
+                                        <span class="material-symbols-outlined text-lg">qr_code_scanner</span>
+                                        <span class="text-[10px] font-bold">QRIS</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Date input -->
+                            <div class="space-y-1.5">
+                                <label class="text-[10px] font-bold uppercase tracking-wider text-stone-400 dark:text-zinc-400">Tanggal Transaksi</label>
+                                <input type="date" 
+                                       name="payment_date" 
+                                       x-model="paymentDate"
+                                       required
+                                       class="w-full bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 focus:bg-white dark:focus:bg-zinc-900 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 rounded-xl p-2.5 text-xs font-semibold text-stone-700 dark:text-zinc-50 dark:text-zinc-200 outline-none transition-all" />
+                            </div>
+
+                            <!-- Submit Receipt Payment -->
+                            <button type="submit"
+                                    id="tour-submit-button"
+                                    x-bind:disabled="!getActiveInvoice() || amountToPay <= 0"
+                                    class="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-stone-100 dark:disabled:bg-zinc-800 disabled:text-stone-400 dark:disabled:text-zinc-300 dark:disabled:text-white disabled:shadow-none text-white font-bold py-3.5 px-6 rounded-2xl shadow-md shadow-emerald-500/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-emerald-900/10 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 mt-2">
+                                <span class="material-symbols-outlined">receipt_long</span>
+                                <span class="text-sm">Terima Pembayaran</span>
+                            </button>
+                        </form>
+                    </div>
+                    
                 </div>
-                
             </div>
-        </div>
 
-    </div>
+        </div>
+    @endif
 
 </div>
+@endsection
+
+@section('scripts')
+<!-- Driver.js Library CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css">
+<script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const btnStartTour = document.getElementById('btn-start-tour');
+        if (!btnStartTour) return;
+
+        btnStartTour.addEventListener('click', () => {
+            const driver = window.driver.js.driver;
+            
+            const driverObj = driver({
+                showProgress: true,
+                steps: [
+                    {
+                        element: '#tour-search-bar',
+                        popover: {
+                            title: 'Cari Pelanggan',
+                            description: 'Ketik nama pelanggan katering atau kasbon di sini untuk memfilter kartu secara instan.',
+                            side: 'bottom',
+                            align: 'start'
+                        }
+                    },
+                    {
+                        element: '#tour-customer-list',
+                        popover: {
+                            title: 'Pilih Kartu Tagihan',
+                            description: 'Klik salah satu kartu pelanggan untuk memunculkan detail invoices dan nominal sisa utang di panel kanan.',
+                            side: 'right',
+                            align: 'start'
+                        }
+                    },
+                    {
+                        element: '#tour-invoice-selector',
+                        popover: {
+                            title: 'Pilih Invoice Spesifik',
+                            description: 'Jika pelanggan memiliki banyak kasbon menggantung, Anda bisa memilih invoice mana yang ingin dicicil secara spesifik.',
+                            side: 'left',
+                            align: 'start'
+                        }
+                    },
+                    {
+                        element: '#tour-quick-amounts',
+                        popover: {
+                            title: 'Tombol Uang Pas',
+                            description: 'Klik tombol cepat ini untuk mengisi nominal pembayaran instan tanpa perlu mengetik angka nol manual.',
+                            side: 'left',
+                            align: 'start'
+                        }
+                    },
+                    {
+                        element: '#tour-submit-button',
+                        popover: {
+                            title: 'Selesai & Cetak Struk',
+                            description: 'Klik tombol hijau raksasa ini untuk memproses cicilan uang masuk ke dalam pembukuan kas sistem.',
+                            side: 'top',
+                            align: 'center'
+                        }
+                    }
+                ]
+            });
+
+            driverObj.drive();
+        });
+    });
+</script>
 @endsection

@@ -73,7 +73,20 @@
                 </div>
             @endif
 
-            <form action="{{ route('expenses.store') }}" method="POST" class="space-y-4">
+            <form action="{{ route('expenses.store') }}" method="POST" class="space-y-4" x-data="{
+                rawAmount: '{{ old('amount') ?: '' }}',
+                displayAmount: '',
+                init() {
+                    if (this.rawAmount) {
+                        this.displayAmount = new Intl.NumberFormat('id-ID').format(this.rawAmount);
+                    }
+                },
+                updateAmount(val) {
+                    let raw = val.replace(/\D/g, '');
+                    this.rawAmount = raw ? parseInt(raw) : '';
+                    this.displayAmount = this.rawAmount ? new Intl.NumberFormat('id-ID').format(this.rawAmount) : '';
+                }
+            }">
                 @csrf
                 
                 <!-- Tanggal -->
@@ -117,18 +130,17 @@
 
                 <!-- Nominal -->
                 <div class="space-y-2">
-                    <label for="amount" class="block text-[10px] font-black uppercase tracking-wider text-stone-450 dark:text-zinc-400">Nominal Pengeluaran (Rupiah)</label>
+                    <label for="amount_display" class="block text-[10px] font-black uppercase tracking-wider text-stone-450 dark:text-zinc-400">Nominal Pengeluaran (Rupiah)</label>
                     <div class="relative">
                         <span class="absolute left-4 top-3.5 text-stone-400 dark:text-white text-sm font-black">Rp</span>
-                        <input type="number" 
-                               id="amount" 
-                               name="amount" 
-                               placeholder="Contoh: 15000" 
-                               value="{{ old('amount') }}" 
+                        <input type="text" 
+                               id="amount_display" 
+                               x-model="displayAmount"
+                               @input="updateAmount($event.target.value)"
+                               placeholder="Contoh: 15.000" 
                                required 
-                               min="0"
-                               step="0.01"
-                               class="w-full bg-slate-50/70 dark:bg-zinc-850/70 dark:bg-zinc-800/70 border border-stone-200/60 dark:border-zinc-800/80 rounded-2xl pl-12 pr-4 py-3.5 text-sm font-semibold text-slate-800 dark:text-white focus:bg-white dark:focus:bg-zinc-900 focus:border-[#0b6e4f] dark:focus:border-emerald-500 focus:ring-4 focus:ring-[#0b6e4f]/10 dark:focus:ring-emerald-500/10 transition-all outline-none" />
+                               class="w-full bg-slate-50/70 dark:bg-zinc-850/70 dark:bg-zinc-800/70 border border-stone-200/60 dark:border-zinc-800/80 rounded-2xl pl-12 pr-4 py-3.5 text-sm font-semibold text-slate-800 dark:text-white focus:bg-white dark:focus:bg-zinc-900 focus:border-[#0b6e4f] dark:focus:border-emerald-500 focus:ring-4 focus:ring-[#0b6e4f]/10 dark:focus:ring-emerald-500/10 transition-all outline-none font-mono" />
+                        <input type="hidden" name="amount" :value="rawAmount" />
                     </div>
                     @error('amount')
                         <p class="text-rose-600 dark:text-rose-400 text-[10px] font-bold">{{ $message }}</p>
@@ -300,12 +312,12 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="py-16 text-center text-slate-400 dark:text-zinc-400">
-                                    <div class="w-16 h-16 bg-slate-50 dark:bg-zinc-850 dark:bg-zinc-800 text-slate-300 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-100 dark:border-zinc-800/60">
-                                        <span class="material-symbols-outlined text-3xl">receipt_long</span>
+                                <td colspan="5" class="py-16 text-center">
+                                    <div class="flex flex-col items-center justify-center gap-2 max-w-sm mx-auto">
+                                        <span class="material-symbols-outlined text-4xl text-stone-400 dark:text-zinc-500 font-light">receipt_long</span>
+                                        <p class="font-bold text-stone-700 dark:text-zinc-200">Belum ada pengeluaran</p>
+                                        <p class="text-xs text-stone-400 dark:text-zinc-500">Gunakan form di samping untuk mencatat kas keluar harian operasional.</p>
                                     </div>
-                                    <p class="text-sm font-black text-slate-800 dark:text-white">Belum Ada Pengeluaran</p>
-                                    <p class="text-xs text-slate-400 dark:text-zinc-400 mt-1">Silakan gunakan form di samping untuk mencatat kas keluar harian.</p>
                                 </td>
                             </tr>
                         @endforelse

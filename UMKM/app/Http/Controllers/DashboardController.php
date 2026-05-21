@@ -15,6 +15,10 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
+        if (!auth()->check()) {
+            return view('welcome');
+        }
+
         $targetDateString = $request->input('date', Carbon::today()->toDateString());
         $isTimeTravel = $request->filled('date');
 

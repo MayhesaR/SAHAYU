@@ -3,7 +3,7 @@
 <html class="light" lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Login | ArchitectLedger</title>
+<title>Masuk | SAHAYU</title>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
@@ -98,16 +98,14 @@
 </div>
 <main class="relative z-10 w-full max-w-md">
 <div class="flex flex-col items-center mb-10 space-y-2">
-<div class="p-3 bg-surface-container-lowest rounded-full editorial-shadow mb-4">
-<span class="material-symbols-outlined text-primary text-4xl" data-icon="architecture">architecture</span>
-</div>
-<h1 class="text-3xl font-extrabold tracking-tight text-primary">Ledger</h1>
-<p class="text-on-surface-variant font-medium tracking-wide font-headline text-sm uppercase opacity-70">SAHAYU</p>
+    <img src="{{ asset('logo.png') }}" alt="SAHAYU Logo" class="w-16 h-16 rounded-2xl shadow-md flex-shrink-0 object-cover mb-2" />
+    <h1 class="text-3xl font-extrabold tracking-tight text-primary">SAHAYU</h1>
+    <p class="text-on-surface-variant font-semibold tracking-widest font-headline text-xs uppercase opacity-70">Keuangan UMKM</p>
 </div>
 <div class="bg-surface-container-lowest p-8 md:p-10 rounded-xl editorial-shadow">
 <header class="mb-8">
-<h2 class="text-2xl font-bold text-on-surface mb-2">Welcome Back</h2>
-<p class="text-on-surface-variant text-sm leading-relaxed">Enter your credentials to access your architectural ledger and business workspace.</p>
+<h2 class="text-2xl font-bold text-on-surface mb-2">Selamat Datang Kembali</h2>
+<p class="text-on-surface-variant text-sm leading-relaxed">Masuk ke akun Anda untuk mengelola keuangan dan operasional bisnis UMKM.</p>
 </header>
 <form action="{{ route('login') }}" class="space-y-6" method="POST">
 @csrf

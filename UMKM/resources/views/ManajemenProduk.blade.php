@@ -283,11 +283,11 @@
 
                     </div>
                 @empty
-                    <div class="col-span-full bg-white dark:bg-zinc-900 rounded-3xl p-10 text-stone-500 dark:text-white border border-stone-100 dark:border-zinc-800/60 shadow-lg shadow-emerald-900/5 text-center">
-                        <div class="flex flex-col items-center justify-center gap-2">
-                            <span class="material-symbols-outlined text-4xl text-slate-400 dark:text-zinc-400">inventory_2</span>
-                            <p class="font-bold text-stone-700 dark:text-zinc-50 dark:text-zinc-200">Belum ada produk.</p>
-                            <p class="text-xs text-stone-400 dark:text-zinc-400">Tambahkan produk pertama agar modul Produksi dan Penjualan bisa dipakai.</p>
+                    <div class="col-span-full bg-white dark:bg-zinc-900 rounded-3xl p-12 text-stone-500 dark:text-zinc-300 border border-stone-150 dark:border-zinc-800/60 shadow-lg shadow-emerald-900/5 text-center">
+                        <div class="flex flex-col items-center justify-center gap-2 max-w-sm mx-auto">
+                            <span class="material-symbols-outlined text-4xl text-stone-400 dark:text-zinc-500 font-light">inventory_2</span>
+                            <p class="font-bold text-stone-700 dark:text-zinc-200">Katalog masih kosong</p>
+                            <p class="text-xs text-stone-400 dark:text-zinc-500">Klik tombol tambah di atas untuk memasukkan data baru.</p>
                         </div>
                     </div>
                 @endforelse

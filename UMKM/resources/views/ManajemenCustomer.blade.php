@@ -220,16 +220,17 @@
                                         </div>
                                     </td>
                                 </tr>
-                            @empty
+                             @empty
                                 <tr>
-                                    <td class="px-6 py-10 text-slate-500 dark:text-white text-center" colspan="5">
-                                        <div class="flex flex-col items-center justify-center gap-2">
-                                            <span class="material-symbols-outlined text-4xl text-slate-400 dark:text-zinc-400 font-light">group_off</span>
-                                            <p class="font-semibold">Belum ada customer terdaftar.</p>
+                                    <td class="px-6 py-12 text-center" colspan="5">
+                                        <div class="flex flex-col items-center justify-center gap-2 max-w-sm mx-auto">
+                                            <span class="material-symbols-outlined text-4xl text-stone-400 dark:text-zinc-500 font-light">group_off</span>
+                                            <p class="font-bold text-stone-700 dark:text-zinc-200">Database customer kosong</p>
+                                            <p class="text-xs text-stone-400 dark:text-zinc-500">Mulai daftarkan customer baru untuk mengaktifkan fitur piutang dan pencatatan riwayat.</p>
                                         </div>
                                     </td>
                                 </tr>
-                            @endforelse
+                             @endforelse
                         </tbody>
                     </table>
                 </div>

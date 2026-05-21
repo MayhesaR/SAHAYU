@@ -27,9 +27,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register')->middleware('guest');
 Route::post('/register', [RegisterController::class, 'register'])->middleware('guest');
 
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
 // Main Authenticated Workspace Routes
 Route::middleware('auth')->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/export', [DashboardController::class, 'exportExcel'])->name('dashboard.export');
 
     // Profil Saya
@@ -141,4 +142,5 @@ Route::middleware('auth')->group(function () {
     Route::post('/settings/company', [SettingsController::class, 'updateCompany'])->name('settings.company');
     Route::post('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.password');
     Route::post('/settings/printer', [SettingsController::class, 'updatePrinter'])->name('settings.printer');
+    Route::get('/settings/backup', [SettingsController::class, 'downloadBackup'])->name('settings.backup');
 });

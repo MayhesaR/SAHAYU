@@ -256,14 +256,17 @@
                             </button>
                         </td>
                     </tr>
-                    @empty
-                    <tr>
-                        <td class="px-8 py-10 text-center text-on-surface-variant" colspan="7">
-                            <span class="material-symbols-outlined text-4xl opacity-10 mb-2 block">inventory_2</span>
-                            Belum ada data bahan baku.
-                        </td>
-                    </tr>
-                    @endforelse
+                     @empty
+                     <tr>
+                         <td class="px-8 py-16 text-center" colspan="7">
+                             <div class="flex flex-col items-center justify-center gap-2 max-w-sm mx-auto">
+                                 <span class="material-symbols-outlined text-4xl text-stone-400 dark:text-zinc-500 font-light">inventory_2</span>
+                                 <p class="font-bold text-stone-700 dark:text-zinc-200">Katalog bahan baku kosong</p>
+                                 <p class="text-xs text-stone-400 dark:text-zinc-500">Klik tombol tambah di atas untuk memasukkan data baru.</p>
+                             </div>
+                         </td>
+                     </tr>
+                     @endforelse
                 </tbody>
             </table>
         </div>

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 
 class SettingsController extends Controller
 {
@@ -98,5 +99,88 @@ class SettingsController extends Controller
         $company->update($validated);
 
         return back()->with('success', 'Konfigurasi printer thermal berhasil disimpan.');
+    }
+
+    public function downloadBackup(Request $request)
+    {
+        return response()->streamDownload(function() {
+            $pdo = DB::connection()->getPdo();
+            $driver = DB::getDriverName();
+            
+            echo "-- SAHAYU Database Backup\n";
+            echo "-- Generated: " . date('Y-m-d H:i:s') . "\n";
+            echo "-- Driver: " . $driver . "\n\n";
+
+            if ($driver === 'sqlite') {
+                echo "PRAGMA foreign_keys = OFF;\n\n";
+            } else {
+                echo "SET FOREIGN_KEY_CHECKS=0;\n\n";
+            }
+
+            // Get tables
+            $tables = [];
+            if ($driver === 'sqlite') {
+                $rows = DB::select("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'");
+                foreach ($rows as $row) {
+                    $tables[] = $row->name;
+                }
+            } else {
+                $rows = DB::select('SHOW TABLES');
+                foreach ($rows as $row) {
+                    $tables[] = reset($row);
+                }
+            }
+
+            foreach ($tables as $tableName) {
+                // Schema
+                if ($driver === 'sqlite') {
+                    $schemaQuery = DB::select("SELECT sql FROM sqlite_master WHERE type='table' AND name = ?", [$tableName]);
+                    $createSql = $schemaQuery[0]->sql ?? '';
+                } else {
+                    $schemaQuery = DB::select("SHOW CREATE TABLE `{$tableName}`");
+                    $createSql = $schemaQuery[0]->{'Create Table'} ?? '';
+                }
+
+                echo "-- ------------------------------------------------------\n";
+                echo "-- Table structure for `{$tableName}`\n";
+                echo "-- ------------------------------------------------------\n";
+                echo "DROP TABLE IF EXISTS `{$tableName}`;\n";
+                echo $createSql . ";\n\n";
+
+                echo "-- ------------------------------------------------------\n";
+                echo "-- Dumping data for table `{$tableName}`\n";
+                echo "-- ------------------------------------------------------\n";
+
+                $offset = 0;
+                $limit = 500;
+                while (true) {
+                    $rows = DB::table($tableName)->offset($offset)->limit($limit)->get();
+                    if ($rows->isEmpty()) {
+                        break;
+                    }
+                    foreach ($rows as $row) {
+                        $columns = [];
+                        $values = [];
+                        foreach ((array)$row as $column => $value) {
+                            $columns[] = "`{$column}`";
+                            if (is_null($value)) {
+                                $values[] = 'NULL';
+                            } else {
+                                $values[] = $pdo->quote($value);
+                            }
+                        }
+                        echo "INSERT INTO `{$tableName}` (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $values) . ");\n";
+                    }
+                    $offset += $limit;
+                }
+                echo "\n";
+            }
+
+            if ($driver === 'sqlite') {
+                echo "PRAGMA foreign_keys = ON;\n";
+            } else {
+                echo "SET FOREIGN_KEY_CHECKS=1;\n";
+            }
+        }, 'SAHAYU_Backup_' . date('Y-m-d_H-i-s') . '.sql');
     }
 }
