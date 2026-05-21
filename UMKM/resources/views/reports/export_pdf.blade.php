@@ -294,7 +294,7 @@
                     {{ $row['growth'] >= 0 ? '+' : '' }}{{ number_format($row['growth'], 1) }}%
                 </td>
                 <td class="text-center">
-                    <span class="badge {{ $row['status'] === 'Exceeded' ? 'badge-success' : ($row['status'] 'Near Target' 'badge-warning' 'badge-danger') }}">
+                    <span class="badge {{ $row['status'] === 'Exceeded' ? 'badge-success' : ($row['status'] === 'Near Target' ? 'badge-warning' : 'badge-danger') }}">
                         {{ $row['status'] }}
                     </span>
                 </td>

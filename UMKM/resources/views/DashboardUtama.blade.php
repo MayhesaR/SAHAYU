@@ -14,7 +14,7 @@
                 Selamat Datang, <span class="bg-gradient-to-r from-emerald-600 to-emerald-500 bg-clip-text text-transparent">{{ $companyName }}</span> 👋
             </h1>
             <p class="text-stone-500 dark:text-white font-bold text-xs flex items-center flex-wrap gap-2">
-                <span class="material-symbols-outlined text-sm text-stone-400 dark:text-white">calendar_today</span>
+                <span class="material-symbols-outlined text-sm text-stone-400 dark:text-zinc-400">calendar_today</span>
                 <span>{{ \Carbon\Carbon::parse($targetDate)->translatedFormat('l, d F Y') }}</span>
                 @if($isTimeTravel)
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20 animate-pulse">
@@ -35,22 +35,22 @@
                                name="date"
                                value="{{ $targetDate }}"
                                onchange="this.form.submit()"
-                               class="border-none bg-stone-100/60 dark:bg-zinc-800/60 hover:bg-stone-100 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/80 rounded-xl p-2 text-xs font-semibold text-stone-700 dark:text-zinc-50 dark:text-white focus:ring-0 outline-none cursor-pointer transition-all" />
+                               class="border-none bg-stone-100/60 dark:bg-zinc-800/60 hover:bg-stone-100 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/80 rounded-xl p-2 text-xs font-semibold text-stone-700 dark:text-zinc-50 dark:text-zinc-200 focus:ring-0 outline-none cursor-pointer transition-all" />
                     </div>
 
                     <div class="h-6 w-px bg-stone-200 dark:bg-zinc-800"></div>
 
                     <div class="flex items-center gap-1 pr-1">
                         <a href="{{ route('dashboard', ['range' => '1']) }}"
-                           class="px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all duration-200 {{ $currentFilter == '1' && !$isTimeTravel ? 'bg-[#0b6e4f] dark:bg-emerald-600 text-white shadow-sm' : 'text-stone-500 dark:text-white hover:bg-stone-50 dark:hover:bg-zinc-800' }}">
+                           class="px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all duration-200 {{ $currentFilter == '1' && !$isTimeTravel ? 'bg-[#0b6e4f] dark:bg-emerald-600 text-white shadow-sm' : 'text-stone-500 dark:text-zinc-400 hover:bg-stone-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800' }}">
                             Hari Ini
                         </a>
                         <a href="{{ route('dashboard', ['range' => '7']) }}"
-                           class="px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all duration-200 {{ $currentFilter == '7' && !$isTimeTravel ? 'bg-[#0b6e4f] dark:bg-emerald-600 text-white shadow-sm' : 'text-stone-500 dark:text-white hover:bg-stone-50 dark:hover:bg-zinc-800' }}">
+                           class="px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all duration-200 {{ $currentFilter == '7' && !$isTimeTravel ? 'bg-[#0b6e4f] dark:bg-emerald-600 text-white shadow-sm' : 'text-stone-500 dark:text-zinc-400 hover:bg-stone-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800' }}">
                             7 Hari
                         </a>
                         <a href="{{ route('dashboard', ['range' => '30']) }}"
-                           class="px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all duration-200 {{ $currentFilter == '30' && !$isTimeTravel ? 'bg-[#0b6e4f] dark:bg-emerald-600 text-white shadow-sm' : 'text-stone-500 dark:text-white hover:bg-stone-50 dark:hover:bg-zinc-800' }}">
+                           class="px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all duration-200 {{ $currentFilter == '30' && !$isTimeTravel ? 'bg-[#0b6e4f] dark:bg-emerald-600 text-white shadow-sm' : 'text-stone-500 dark:text-zinc-400 hover:bg-stone-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800' }}">
                             30 Hari
                         </a>
                     </div>
@@ -59,8 +59,8 @@
 
             <!-- Export Excel Button (Secondary) -->
             <a href="{{ route('dashboard.export', array_merge(request()->all(), ['date' => $targetDate, 'range' => $currentFilter])) }}"
-               class="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-zinc-900 border border-stone-200/60 dark:border-zinc-800/80 hover:bg-stone-50 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 text-stone-700 dark:text-zinc-50 dark:text-white rounded-xl text-xs font-semibold shadow-sm transition-all duration-200">
-                <span class="material-symbols-outlined text-[16px] text-stone-500 dark:text-white">download</span>
+               class="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-zinc-900 border border-stone-200/60 dark:border-zinc-800/80 hover:bg-stone-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 text-stone-700 dark:text-zinc-50 dark:text-white rounded-xl text-xs font-semibold shadow-sm transition-all duration-200">
+                <span class="material-symbols-outlined text-[16px] text-stone-500 dark:text-zinc-400">download</span>
                 <span>Ekspor</span>
             </a>
 
@@ -115,10 +115,10 @@
                         <div class="w-10 h-10 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 rounded-xl flex items-center justify-center mb-4">
                             <span class="material-symbols-outlined text-lg">shopping_cart</span>
                         </div>
-                        <p class="text-[9px] font-bold text-stone-450 dark:text-white uppercase tracking-widest flex items-center gap-1.5">
+                        <p class="text-[9px] font-bold text-stone-450 dark:text-zinc-400 uppercase tracking-widest flex items-center gap-1.5">
                             <span>Arus Kas Keluar Tunai</span>
                             <span class="relative inline-block group/tooltip">
-                                <button type="button" class="text-stone-400 dark:text-white hover:text-stone-600 dark:hover:text-zinc-300 dark:hover:text-white transition-colors focus:outline-none flex items-center">
+                                <button type="button" class="text-stone-400 dark:text-white hover:text-stone-600 dark:hover:text-zinc-400 transition-colors focus:outline-none flex items-center">
                                     <span class="material-symbols-outlined text-[13px]">info</span>
                                 </button>
                                 <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-stone-900 dark:bg-zinc-800 text-white text-[9px] rounded-xl shadow-xl opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 transition-opacity duration-300 z-50 text-center font-medium font-sans normal-case tracking-normal leading-normal">
@@ -130,7 +130,7 @@
                         <h3 class="text-2xl font-black text-stone-850 dark:text-white tracking-tight mt-1">Rp {{ number_format($totalExpenses, 0, ',', '.') }}</h3>
                     </div>
                     <div class="mt-6 pt-4 border-t border-stone-200/50 dark:border-zinc-850 flex items-center justify-between">
-                        <span class="text-[9px] text-stone-400 dark:text-white font-bold uppercase tracking-wider">Growth vs Lalu</span>
+                        <span class="text-[9px] text-stone-400 dark:text-zinc-400 font-bold uppercase tracking-wider">Growth vs Lalu</span>
                         <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold {{ $expenseGrowth <= 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600' }}">
                             <span class="material-symbols-outlined text-xs">{{ $expenseGrowth <= 0 ? 'trending_down' : 'trending_up' }}</span>
                             {{ abs(round($expenseGrowth, 1)) }}%
@@ -149,10 +149,10 @@
                         <div class="w-10 h-10 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center mb-4">
                             <span class="material-symbols-outlined text-lg">account_balance_wallet</span>
                         </div>
-                        <p class="text-[9px] font-bold text-stone-455 dark:text-white uppercase tracking-widest flex items-center gap-1.5">
+                        <p class="text-[9px] font-bold text-stone-455 dark:text-zinc-400 uppercase tracking-widest flex items-center gap-1.5">
                             <span>Sisa Arus Kas (Net)</span>
                             <span class="relative inline-block group/tooltip">
-                                <button type="button" class="text-stone-400 dark:text-white hover:text-stone-600 dark:hover:text-zinc-300 dark:hover:text-white transition-colors focus:outline-none flex items-center">
+                                <button type="button" class="text-stone-400 dark:text-white hover:text-stone-600 dark:hover:text-zinc-400 transition-colors focus:outline-none flex items-center">
                                     <span class="material-symbols-outlined text-[13px]">info</span>
                                 </button>
                                 <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-stone-900 dark:bg-zinc-800 text-white text-[9px] rounded-xl shadow-xl opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 transition-opacity duration-300 z-50 text-center font-medium font-sans normal-case tracking-normal leading-normal">
@@ -164,7 +164,7 @@
                         <h3 class="text-2xl font-black {{ $profit >= 0 ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400' }} tracking-tight mt-1">Rp {{ number_format($profit, 0, ',', '.') }}</h3>
                     </div>
                     <div class="mt-6 pt-4 border-t border-stone-200/50 dark:border-zinc-850 flex items-center justify-between">
-                        <span class="text-[9px] text-stone-400 dark:text-white font-bold uppercase tracking-wider">Status Neraca</span>
+                        <span class="text-[9px] text-stone-400 dark:text-zinc-400 font-bold uppercase tracking-wider">Status Neraca</span>
                         <span class="inline-flex items-center px-2 py-0.5 rounded-lg text-[10px] font-bold {{ $profit >= 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600' }}">
                             {{ $profit >= 0 ? 'Surplus' : 'Defisit' }}
                         </span>
@@ -213,10 +213,10 @@
                         <div class="w-10 h-10 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 rounded-xl flex items-center justify-center mb-4">
                             <span class="material-symbols-outlined text-lg">shopping_cart</span>
                         </div>
-                        <p class="text-[9px] font-bold text-stone-450 dark:text-white uppercase tracking-widest flex items-center gap-1.5">
+                        <p class="text-[9px] font-bold text-stone-450 dark:text-zinc-400 uppercase tracking-widest flex items-center gap-1.5">
                             <span>Arus Kas Keluar Tunai</span>
                             <span class="relative inline-block group/tooltip">
-                                <button type="button" class="text-stone-400 dark:text-white hover:text-stone-600 dark:hover:text-zinc-300 dark:hover:text-white transition-colors focus:outline-none flex items-center">
+                                <button type="button" class="text-stone-400 dark:text-white hover:text-stone-600 dark:hover:text-zinc-400 transition-colors focus:outline-none flex items-center">
                                     <span class="material-symbols-outlined text-[13px]">info</span>
                                 </button>
                                 <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2.5 bg-stone-900 dark:bg-zinc-800 text-white text-[9px] rounded-xl shadow-xl opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-focus/tooltip:opacity-100 transition-opacity duration-300 z-50 text-center font-medium font-sans normal-case tracking-normal leading-normal">
@@ -228,7 +228,7 @@
                         <h3 class="text-2xl font-black text-stone-850 dark:text-white tracking-tight mt-1">Rp {{ number_format($totalExpenses, 0, ',', '.') }}</h3>
                     </div>
                     <div class="mt-6 pt-4 border-t border-stone-200/50 dark:border-zinc-850 flex items-center justify-between">
-                        <span class="text-[9px] text-stone-400 dark:text-white font-bold uppercase tracking-wider">Growth vs Lalu</span>
+                        <span class="text-[9px] text-stone-400 dark:text-zinc-400 font-bold uppercase tracking-wider">Growth vs Lalu</span>
                         <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold {{ $expenseGrowth <= 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600' }}">
                             <span class="material-symbols-outlined text-xs">{{ $expenseGrowth <= 0 ? 'trending_down' : 'trending_up' }}</span>
                             {{ abs(round($expenseGrowth, 1)) }}%
@@ -244,11 +244,11 @@
                         <div class="w-10 h-10 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center mb-4">
                             <span class="material-symbols-outlined text-lg">precision_manufacturing</span>
                         </div>
-                        <p class="text-[9px] font-bold text-stone-450 dark:text-white uppercase tracking-widest">Produksi Selesai</p>
-                        <h3 class="text-2xl font-black text-stone-850 dark:text-white tracking-tight mt-1">{{ number_format($totalProduction, 0, ',', '.') }} <span class="text-xs text-stone-455 dark:text-white font-semibold">Unit</span></h3>
+                        <p class="text-[9px] font-bold text-stone-450 dark:text-zinc-400 uppercase tracking-widest">Produksi Selesai</p>
+                        <h3 class="text-2xl font-black text-stone-850 dark:text-white tracking-tight mt-1">{{ number_format($totalProduction, 0, ',', '.') }} <span class="text-xs text-stone-455 dark:text-zinc-400 font-semibold">Unit</span></h3>
                     </div>
                     <div class="mt-6 pt-4 border-t border-stone-200/50 dark:border-zinc-850 flex items-center justify-between">
-                        <span class="text-[9px] text-stone-400 dark:text-white font-bold uppercase tracking-wider">Periode Ini</span>
+                        <span class="text-[9px] text-stone-400 dark:text-zinc-400 font-bold uppercase tracking-wider">Periode Ini</span>
                         <span class="inline-flex items-center px-2 py-0.5 rounded-lg text-[9px] font-bold bg-indigo-50 dark:bg-indigo-950/40 text-indigo-750">Aktif</span>
                     </div>
                 </div>
@@ -261,11 +261,11 @@
                         <div class="w-10 h-10 {{ $lowStock > 0 ? 'bg-amber-50 text-amber-600' : 'bg-emerald-50 text-emerald-600' }} rounded-xl flex items-center justify-center mb-4">
                             <span class="material-symbols-outlined text-lg">{{ $lowStock > 0 ? 'inventory_2' : 'check_circle' }}</span>
                         </div>
-                        <p class="text-[9px] font-bold text-stone-455 dark:text-white uppercase tracking-widest">Kesehatan Stok</p>
-                        <h3 class="text-2xl font-black text-stone-850 dark:text-white tracking-tight mt-1">{{ $stockSafePercent }}% <span class="text-xs text-stone-455 dark:text-white font-semibold">Aman</span></h3>
+                        <p class="text-[9px] font-bold text-stone-455 dark:text-zinc-400 uppercase tracking-widest">Kesehatan Stok</p>
+                        <h3 class="text-2xl font-black text-stone-850 dark:text-white tracking-tight mt-1">{{ $stockSafePercent }}% <span class="text-xs text-stone-455 dark:text-zinc-400 font-semibold">Aman</span></h3>
                     </div>
                     <div class="mt-6 pt-4 border-t border-stone-200/50 dark:border-zinc-850 flex items-center justify-between">
-                        <span class="text-[9px] text-stone-400 dark:text-white font-bold uppercase tracking-wider">Status Bahan</span>
+                        <span class="text-[9px] text-stone-400 dark:text-zinc-400 font-bold uppercase tracking-wider">Status Bahan</span>
                         <span class="inline-flex items-center px-2 py-0.5 rounded-lg text-[9px] font-bold {{ $lowStock > 0 ? 'bg-amber-50 text-amber-750' : 'bg-emerald-50 text-emerald-750' }}">
                             {{ $lowStock > 0 ? $lowStock . 'Kritis' : 'Aman' }}
                         </span>
@@ -285,11 +285,11 @@
                 <div class="flex items-center justify-between mb-8">
                     <h4 class="text-sm font-bold text-stone-800 dark:text-white font-manrope">Tren Arus Kas</h4>
                     <div class="flex items-center gap-3">
-                        <span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-stone-500 dark:text-white">
+                        <span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-stone-500 dark:text-zinc-400">
                             <span class="w-2.5 h-2.5 rounded-full bg-[#0b6e4f] dark:bg-emerald-600 shadow-sm shadow-[#0b6e4f]/25 dark:shadow-emerald-950/15"></span>
                             Arus Masuk
                         </span>
-                        <span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-stone-500 dark:text-white">
+                        <span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-stone-500 dark:text-zinc-400">
                             <span class="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-sm shadow-rose-500/25"></span>
                             Arus Keluar
                         </span>
@@ -305,9 +305,9 @@
                 <div class="flex items-center justify-between mb-6">
                     <div>
                         <h4 class="text-sm font-bold text-stone-800 dark:text-white font-manrope">Aktivitas Terbaru</h4>
-                        <p class="text-xs text-stone-400 dark:text-white font-medium mt-0.5">Catatan transaksi dan kegiatan produksi terakhir</p>
+                        <p class="text-xs text-stone-400 dark:text-zinc-400 font-medium mt-0.5">Catatan transaksi dan kegiatan produksi terakhir</p>
                     </div>
-                    <span class="text-stone-450 dark:text-white"><span class="material-symbols-outlined text-xl">history</span></span>
+                    <span class="text-stone-450 dark:text-zinc-400"><span class="material-symbols-outlined text-xl">history</span></span>
                 </div>
 
                 <div class="divide-y divide-stone-100 dark:divide-zinc-800/60">
@@ -321,7 +321,7 @@
                             if ($activity['color'] === 'sky') $bgCol = 'bg-sky-50 text-sky-600';
                             if ($activity['color'] === 'amber') $bgCol = 'bg-amber-50 text-amber-600';
                         @endphp
-                        <div class="flex items-center justify-between py-3.5 hover:bg-stone-50/50 dark:hover:bg-zinc-800/30 dark:hover:bg-transparent px-1 transition-all duration-200">
+                        <div class="flex items-center justify-between py-3.5 hover:bg-stone-50/50 dark:hover:bg-zinc-850/30 dark:hover:bg-zinc-800/30 dark:hover:bg-transparent px-1 transition-all duration-200">
                             <div class="flex items-center gap-4">
                                 <!-- Circular initial/icon badge -->
                                 <div class="w-9 h-9 {{ $bgCol }} rounded-full flex items-center justify-center font-bold text-xs shadow-sm flex-shrink-0">
@@ -329,18 +329,18 @@
                                 </div>
                                 <div>
                                     <p class="text-xs font-bold text-stone-850 dark:text-white">{{ $activity['title'] }}</p>
-                                    <p class="text-[9px] text-stone-400 dark:text-white font-bold mt-0.5">{{ $activity['time']->diffForHumans() }}</p>
+                                    <p class="text-[9px] text-stone-400 dark:text-zinc-400 font-bold mt-0.5">{{ $activity['time']->diffForHumans() }}</p>
                                 </div>
                             </div>
                             <span class="text-xs font-bold text-stone-850 dark:text-white bg-stone-100/60 dark:bg-zinc-800/60 px-3 py-1 rounded-lg border border-stone-200/30 dark:border-zinc-800/30">{{ $activity['amount'] }}</span>
                         </div>
                     @empty
                         <div class="py-12 text-center flex flex-col items-center justify-center">
-                            <div class="w-12 h-12 bg-stone-100 dark:bg-zinc-800 text-stone-400 dark:text-white rounded-full flex items-center justify-center mb-4">
+                            <div class="w-12 h-12 bg-stone-100 dark:bg-zinc-800 text-stone-400 dark:text-zinc-400 rounded-full flex items-center justify-center mb-4">
                                 <span class="material-symbols-outlined text-xl">hourglass_empty</span>
                             </div>
                             <p class="text-xs font-bold text-stone-800 dark:text-white">Belum ada aktivitas</p>
-                            <p class="text-[10px] text-stone-400 dark:text-white mt-1">Aktivitas baru akan muncul di sini</p>
+                            <p class="text-[10px] text-stone-400 dark:text-zinc-400 mt-1">Aktivitas baru akan muncul di sini.</p>
                         </div>
                     @endforelse
                 </div>
@@ -351,9 +351,9 @@
                 <div class="flex items-center justify-between mb-6">
                     <div>
                         <h4 class="text-sm font-bold text-stone-800 dark:text-white font-manrope">Produk Terlaris</h4>
-                        <p class="text-xs text-stone-400 dark:text-white font-medium mt-0.5">Produk dengan performa penjualan tertinggi</p>
+                        <p class="text-xs text-stone-400 dark:text-zinc-400 font-medium mt-0.5">Produk dengan performa penjualan tertinggi</p>
                     </div>
-                    <span class="text-stone-450 dark:text-white"><span class="material-symbols-outlined text-xl">workspace_premium</span></span>
+                    <span class="text-stone-450 dark:text-zinc-400"><span class="material-symbols-outlined text-xl">workspace_premium</span></span>
                 </div>
 
                 <div class="space-y-5">
@@ -380,7 +380,7 @@
                                 </div>
                                 <div class="text-right">
                                     <span class="text-xs font-extrabold text-stone-850 dark:text-white">{{ $prod->total_qty }} unit</span>
-                                    <span class="text-[9px] text-stone-400 dark:text-white font-bold block">Rp {{ number_format($prod->total_revenue, 0, ',', '.') }}</span>
+                                    <span class="text-[9px] text-stone-400 dark:text-zinc-400 font-bold block">Rp {{ number_format($prod->total_revenue, 0, ',', '.') }}</span>
                                 </div>
                             </div>
                             <!-- Progress Bar -->
@@ -390,11 +390,11 @@
                         </div>
                     @empty
                         <div class="py-12 text-center flex flex-col items-center justify-center">
-                            <div class="w-12 h-12 bg-stone-100 dark:bg-zinc-800 text-stone-400 dark:text-white rounded-full flex items-center justify-center mb-4">
+                            <div class="w-12 h-12 bg-stone-100 dark:bg-zinc-800 text-stone-400 dark:text-zinc-400 rounded-full flex items-center justify-center mb-4">
                                 <span class="material-symbols-outlined text-xl">inventory</span>
                             </div>
                             <p class="text-xs font-bold text-stone-800 dark:text-white">Belum ada penjualan</p>
-                            <p class="text-[10px] text-stone-400 dark:text-white mt-1">Data penjualan produk akan muncul di sini</p>
+                            <p class="text-[10px] text-stone-400 dark:text-zinc-400 mt-1">Data penjualan produk akan muncul di sini</p>
                         </div>
                     @endforelse
                 </div>
@@ -408,60 +408,60 @@
             <div class="bg-white dark:bg-zinc-900 p-6 sm:p-8 rounded-[1.5rem] border border-stone-200/60 dark:border-zinc-800/80 shadow-sm">
                 <div class="mb-5">
                     <h4 class="text-sm font-bold text-stone-800 dark:text-white font-manrope">Pintasan Aksi</h4>
-                    <p class="text-xs text-stone-400 dark:text-white font-medium mt-0.5">Akses cepat menu operasional utama</p>
+                    <p class="text-xs text-stone-400 dark:text-zinc-400 font-medium mt-0.5">Akses cepat menu operasional utama</p>
                 </div>
                 <div class="space-y-3">
                     <!-- Kasir POS -->
-                    <a href="{{ route('sales.index') }}" class="group flex items-center justify-between p-4 bg-white dark:bg-zinc-900 border border-stone-200/60 dark:border-zinc-800/80 hover:border-emerald-500/40 hover:bg-stone-50/40 dark:hover:bg-zinc-800/40 rounded-2xl shadow-sm transition-all duration-200">
+                    <a href="{{ route('sales.index') }}" class="group flex items-center justify-between p-4 bg-white dark:bg-zinc-900 border border-stone-200/60 dark:border-zinc-800/80 hover:border-emerald-500/40 hover:bg-stone-50/40 dark:hover:bg-zinc-850/40 dark:hover:bg-zinc-800/40 rounded-2xl shadow-sm transition-all duration-200">
                         <div class="flex items-center gap-3.5">
                             <div class="w-9 h-9 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center border border-emerald-100 shadow-sm">
                                 <span class="material-symbols-outlined text-base font-bold">add_shopping_cart</span>
                             </div>
                             <div>
-                                <p class="text-xs font-bold text-stone-800 dark:text-white group-hover:text-[#0b6e4f] dark:group-hover:text-emerald-400 transition-colors">Catat Penjualan</p>
-                                <p class="text-[9px] font-bold text-stone-400 dark:text-white uppercase tracking-wider mt-0.5">Kasir POS</p>
+                                <p class="text-xs font-bold text-stone-800 dark:text-white group-hover:text-[#0b6e4f] dark:group-hover:text-white transition-colors">Catat Penjualan</p>
+                                <p class="text-[9px] font-bold text-stone-400 dark:text-zinc-400 uppercase tracking-wider mt-0.5">Kasir POS</p>
                             </div>
                         </div>
                         <span class="material-symbols-outlined text-stone-400 dark:text-white group-hover:text-[#0b6e4f] dark:group-hover:text-emerald-400 group-hover:translate-x-1 transition-all text-sm">chevron_right</span>
                     </a>
 
                     <!-- Input Stok -->
-                    <a href="{{ route('materials.index') }}" class="group flex items-center justify-between p-4 bg-white dark:bg-zinc-900 border border-stone-200/60 dark:border-zinc-800/80 hover:border-sky-500/40 hover:bg-stone-50/40 dark:hover:bg-zinc-800/40 rounded-2xl shadow-sm transition-all duration-200">
+                    <a href="{{ route('materials.index') }}" class="group flex items-center justify-between p-4 bg-white dark:bg-zinc-900 border border-stone-200/60 dark:border-zinc-800/80 hover:border-sky-500/40 hover:bg-stone-50/40 dark:hover:bg-zinc-850/40 dark:hover:bg-zinc-800/40 rounded-2xl shadow-sm transition-all duration-200">
                         <div class="flex items-center gap-3.5">
                             <div class="w-9 h-9 bg-sky-50 text-sky-600 rounded-xl flex items-center justify-center border border-sky-100 shadow-sm">
                                 <span class="material-symbols-outlined text-base font-bold">inventory_2</span>
                             </div>
                             <div>
                                 <p class="text-xs font-bold text-stone-800 dark:text-white group-hover:text-sky-600 transition-colors">Input Stok Bahan</p>
-                                <p class="text-[9px] font-bold text-stone-400 dark:text-white uppercase tracking-wider mt-0.5">Stok Bahan</p>
+                                <p class="text-[9px] font-bold text-stone-400 dark:text-zinc-400 uppercase tracking-wider mt-0.5">Stok Bahan</p>
                             </div>
                         </div>
                         <span class="material-symbols-outlined text-stone-400 dark:text-white group-hover:text-sky-600 group-hover:translate-x-1 transition-all text-sm">chevron_right</span>
                     </a>
 
                     <!-- Mulai Produksi -->
-                    <a href="{{ route('productions.index') }}" class="group flex items-center justify-between p-4 bg-white dark:bg-zinc-900 border border-stone-200/60 dark:border-zinc-800/80 hover:border-indigo-500/40 hover:bg-stone-50/40 dark:hover:bg-zinc-800/40 rounded-2xl shadow-sm transition-all duration-200">
+                    <a href="{{ route('productions.index') }}" class="group flex items-center justify-between p-4 bg-white dark:bg-zinc-900 border border-stone-200/60 dark:border-zinc-800/80 hover:border-indigo-500/40 hover:bg-stone-50/40 dark:hover:bg-zinc-850/40 dark:hover:bg-zinc-800/40 rounded-2xl shadow-sm transition-all duration-200">
                         <div class="flex items-center gap-3.5">
                             <div class="w-9 h-9 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center border border-indigo-100 shadow-sm">
                                 <span class="material-symbols-outlined text-base font-bold">precision_manufacturing</span>
                             </div>
                             <div>
-                                <p class="text-xs font-bold text-stone-800 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">Mulai Produksi</p>
-                                <p class="text-[9px] font-bold text-stone-400 dark:text-white uppercase tracking-wider mt-0.5">Manufaktur</p>
+                                <p class="text-xs font-bold text-stone-800 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-white transition-colors">Mulai Produksi</p>
+                                <p class="text-[9px] font-bold text-stone-400 dark:text-zinc-400 uppercase tracking-wider mt-0.5">Manufaktur</p>
                             </div>
                         </div>
                         <span class="material-symbols-outlined text-stone-400 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 group-hover:translate-x-1 transition-all text-sm">chevron_right</span>
                     </a>
 
                     <!-- Tanya AI -->
-                    <a href="{{ route('ai.index') }}" class="group flex items-center justify-between p-4 bg-white dark:bg-zinc-900 border border-stone-200/60 dark:border-zinc-800/80 hover:border-fuchsia-500/40 hover:bg-stone-50/40 dark:hover:bg-zinc-800/40 rounded-2xl shadow-sm transition-all duration-200">
+                    <a href="{{ route('ai.index') }}" class="group flex items-center justify-between p-4 bg-white dark:bg-zinc-900 border border-stone-200/60 dark:border-zinc-800/80 hover:border-fuchsia-500/40 hover:bg-stone-50/40 dark:hover:bg-zinc-850/40 dark:hover:bg-zinc-800/40 rounded-2xl shadow-sm transition-all duration-200">
                         <div class="flex items-center gap-3.5">
                             <div class="w-9 h-9 bg-fuchsia-50 text-fuchsia-600 rounded-xl flex items-center justify-center border border-fuchsia-100 shadow-sm">
                                 <span class="material-symbols-outlined text-base font-bold">psychology</span>
                             </div>
                             <div>
                                 <p class="text-xs font-bold text-stone-800 dark:text-white group-hover:text-fuchsia-600 transition-colors">Tanya AI Assistant</p>
-                                <p class="text-[9px] font-bold text-stone-400 dark:text-white uppercase tracking-wider mt-0.5">Kecerdasan Buatan</p>
+                                <p class="text-[9px] font-bold text-stone-400 dark:text-zinc-400 uppercase tracking-wider mt-0.5">Kecerdasan Buatan</p>
                             </div>
                         </div>
                         <span class="material-symbols-outlined text-stone-400 dark:text-white group-hover:text-fuchsia-600 group-hover:translate-x-1 transition-all text-sm">chevron_right</span>
@@ -501,7 +501,7 @@
                         </div>
                         <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none mt-4">
                             <span class="text-xl font-bold text-stone-800 dark:text-white tracking-tight">100%</span>
-                            <span class="text-[8px] font-bold text-stone-400 dark:text-white uppercase tracking-widest mt-0.5">Total HPP</span>
+                            <span class="text-[8px] font-bold text-stone-400 dark:text-zinc-400 uppercase tracking-widest mt-0.5">Total HPP</span>
                         </div>
                     </div>
                 </div>
@@ -510,7 +510,7 @@
                     <div class="flex items-center justify-between text-xs">
                         <div class="flex items-center gap-2.5">
                             <span class="w-2.5 h-2.5 rounded-full bg-[#0b6e4f] dark:bg-emerald-600 shadow-sm"></span>
-                            <span class="font-bold text-stone-500 dark:text-white">Bahan Baku</span>
+                            <span class="font-bold text-stone-500 dark:text-zinc-400">Bahan Baku</span>
                         </div>
                         <span class="font-bold text-stone-850 dark:text-white">Rp {{ number_format($costDist['material'], 0, ',', '.') }}</span>
                     </div>
@@ -518,7 +518,7 @@
                     <div class="flex items-center justify-between text-xs">
                         <div class="flex items-center gap-2.5">
                             <span class="w-2.5 h-2.5 rounded-full bg-amber-600/90 shadow-sm"></span>
-                            <span class="font-bold text-stone-500 dark:text-white">Tenaga Kerja</span>
+                            <span class="font-bold text-stone-500 dark:text-zinc-400">Tenaga Kerja</span>
                         </div>
                         <span class="font-bold text-stone-850 dark:text-white">Rp {{ number_format($costDist['labor'], 0, ',', '.') }}</span>
                     </div>
@@ -526,7 +526,7 @@
                     <div class="flex items-center justify-between text-xs">
                         <div class="flex items-center gap-2.5">
                             <span class="w-2.5 h-2.5 rounded-full bg-[#0284c7]/95 shadow-sm"></span>
-                            <span class="font-bold text-stone-500 dark:text-white">Overhead</span>
+                            <span class="font-bold text-stone-500 dark:text-zinc-400">Overhead</span>
                         </div>
                         <span class="font-bold text-stone-850 dark:text-white">Rp {{ number_format($costDist['overhead'], 0, ',', '.') }}</span>
                     </div>
@@ -538,7 +538,7 @@
                 <div class="flex items-center justify-between mb-6">
                     <div>
                         <h4 class="text-sm font-bold text-stone-800 dark:text-white font-manrope">Peringatan Stok</h4>
-                        <p class="text-xs text-stone-400 dark:text-white font-medium mt-0.5">Bahan baku di bawah batas minimum</p>
+                        <p class="text-xs text-stone-400 dark:text-zinc-400 font-medium mt-0.5">Bahan baku di bawah batas minimum</p>
                     </div>
                     <span class="inline-flex p-2 rounded-xl {{ $lowStock > 0 ? 'bg-amber-50 text-amber-600' : 'bg-emerald-50 text-emerald-600' }}">
                         <span class="material-symbols-outlined text-xl">
@@ -556,7 +556,7 @@
                                 </div>
                                 <div>
                                     <p class="text-xs font-bold text-stone-850 dark:text-white truncate max-w-[100px]">{{ $mat->name }}</p>
-                                    <p class="text-[9px] text-stone-400 dark:text-white font-bold mt-0.5">Stok: <span class="text-amber-600 dark:text-amber-400">{{ $mat->stock }} {{ $mat->unit }}</span></p>
+                                    <p class="text-[9px] text-stone-400 dark:text-zinc-400 font-bold mt-0.5">Stok: <span class="text-amber-600 dark:text-amber-400">{{ $mat->stock }} {{ $mat->unit }}</span></p>
                                 </div>
                             </div>
                             <a href="{{ route('materials.index') }}" class="text-[9px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400 bg-white dark:bg-zinc-900 hover:bg-amber-600 hover:text-white px-2.5 py-1.5 rounded-lg border border-amber-500/10 shadow-sm transition-all duration-200">
@@ -569,7 +569,7 @@
                                 <span class="material-symbols-outlined text-xl font-bold">done_all</span>
                             </div>
                             <p class="text-xs font-bold text-stone-850 dark:text-white">Semua Stok Aman</p>
-                            <p class="text-[10px] text-stone-400 dark:text-white mt-0.5">Bahan baku di atas batas minimum</p>
+                            <p class="text-[10px] text-stone-400 dark:text-zinc-400 mt-0.5">Bahan baku di atas batas minimum</p>
                         </div>
                     @endforelse
                 </div>

@@ -160,7 +160,7 @@
 
     <!-- Alerts and Notifications -->
     @if(session('success'))
-        <div class="p-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 text-emerald-800 dark:text-emerald-300 rounded-2xl flex items-center gap-3 shadow-sm animate-fade-in">
+        <div class="p-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 text-emerald-800 dark:text-emerald-400 rounded-2xl flex items-center gap-3 shadow-sm animate-fade-in">
             <span class="material-symbols-outlined text-emerald-600 dark:text-emerald-400">check_circle</span>
             <span class="font-bold text-sm">{{ session('success') }}</span>
         </div>
@@ -207,7 +207,7 @@
                 <span class="material-symbols-outlined text-xl">account_balance_wallet</span>
             </div>
             <div class="min-w-0">
-                <p class="text-[9px] md:text-[10px] font-bold text-stone-400 dark:text-white uppercase tracking-widest truncate">Total Piutang</p>
+                <p class="text-[9px] md:text-[10px] font-bold text-stone-400 dark:text-zinc-400 uppercase tracking-widest truncate">Total Piutang</p>
                 <h4 class="text-xs md:text-base lg:text-lg font-bold text-stone-800 dark:text-white mt-0.5 tracking-tight truncate">
                     Rp {{ number_format($totalOutstanding, 0, ',', '.') }}
                 </h4>
@@ -220,7 +220,7 @@
                 <span class="material-symbols-outlined text-xl font-bold">event_busy</span>
             </div>
             <div class="min-w-0">
-                <p class="text-[9px] md:text-[10px] font-bold text-stone-400 dark:text-white uppercase tracking-widest truncate {{ $overdueCount > 0 ? 'text-rose-500 dark:text-rose-400' : '' }}">Jatuh Tempo</p>
+                <p class="text-[9px] md:text-[10px] font-bold text-stone-400 dark:text-zinc-400 uppercase tracking-widest truncate {{ $overdueCount > 0 ? 'text-rose-500 dark:text-rose-400' : '' }}">Jatuh Tempo</p>
                 <h4 class="text-xs md:text-base lg:text-lg font-bold {{ $overdueCount > 0 ? 'text-rose-500 dark:text-rose-400' : 'text-stone-800 dark:text-white' }} mt-0.5 tracking-tight truncate">
                     {{ $overdueCount }} Debitur
                 </h4>
@@ -231,7 +231,7 @@
     <!-- Advanced Filter Trigger Bar -->
     <div class="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-stone-200/60 dark:border-zinc-800/80 shadow-sm flex flex-col gap-3">
         <div class="flex items-center justify-between">
-            <h3 class="text-xs font-bold uppercase tracking-widest text-stone-400 dark:text-white flex items-center gap-2">
+            <h3 class="text-xs font-bold uppercase tracking-widest text-stone-400 dark:text-zinc-400 flex items-center gap-2">
                 <span class="material-symbols-outlined text-sm">tune</span>
                 Pencarian & Penyaringan Lanjutan
             </h3>
@@ -247,8 +247,8 @@
             <form action="{{ route('debts.index') }}" method="GET" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 <!-- Status -->
                 <div class="space-y-1.5">
-                    <label class="text-[9px] font-bold uppercase text-stone-400 dark:text-white">Pilih Status</label>
-                    <select name="status" class="w-full bg-stone-50 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl px-3 py-2 text-xs font-semibold text-stone-700 dark:text-zinc-50 dark:text-white focus:outline-none focus:border-emerald-500">
+                    <label class="text-[9px] font-bold uppercase text-stone-400 dark:text-zinc-400">Pilih Status</label>
+                    <select name="status" class="w-full bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl px-3 py-2 text-xs font-semibold text-stone-700 dark:text-zinc-50 dark:text-zinc-200 focus:outline-none focus:border-emerald-500">
                         <option value="">-- Semua Status --</option>
                         <option value="unpaid" {{ request()->query('status') === 'unpaid' ? 'selected' : '' }}>Belum Dibayar (Unpaid)</option>
                         <option value="partial" {{ request()->query('status') === 'partial' ? 'selected' : '' }}>Cicilan Aktif (Partial)</option>
@@ -258,16 +258,16 @@
 
                 <!-- Start Due Date -->
                 <div class="space-y-1.5">
-                    <label class="text-[9px] font-bold uppercase text-stone-400 dark:text-white">Jatuh Tempo Dari</label>
+                    <label class="text-[9px] font-bold uppercase text-stone-400 dark:text-zinc-400">Jatuh Tempo Dari</label>
                     <input type="date" name="start_due_date" value="{{ request()->query('start_due_date') }}"
-                           class="w-full bg-stone-50 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl px-3 py-2 text-xs font-semibold text-stone-700 dark:text-zinc-50 dark:text-white focus:outline-none focus:border-emerald-500" />
+                           class="w-full bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl px-3 py-2 text-xs font-semibold text-stone-700 dark:text-zinc-50 dark:text-zinc-200 focus:outline-none focus:border-emerald-500" />
                 </div>
 
                 <!-- End Due Date -->
                 <div class="space-y-1.5">
-                    <label class="text-[9px] font-bold uppercase text-stone-400 dark:text-white">Jatuh Tempo Hingga</label>
+                    <label class="text-[9px] font-bold uppercase text-stone-400 dark:text-zinc-400">Jatuh Tempo Hingga</label>
                     <input type="date" name="end_due_date" value="{{ request()->query('end_due_date') }}"
-                           class="w-full bg-stone-50 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl px-3 py-2 text-xs font-semibold text-stone-700 dark:text-zinc-50 dark:text-white focus:outline-none focus:border-emerald-500" />
+                           class="w-full bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl px-3 py-2 text-xs font-semibold text-stone-700 dark:text-zinc-50 dark:text-zinc-200 focus:outline-none focus:border-emerald-500" />
                 </div>
 
                 <!-- Actions -->
@@ -291,7 +291,7 @@
             
             <!-- Quick Search Bar -->
             <div class="relative">
-                <span class="material-symbols-outlined absolute left-4 top-3 text-stone-400 dark:text-white">search</span>
+                <span class="material-symbols-outlined absolute left-4 top-3 text-stone-400 dark:text-zinc-400">search</span>
                 <input type="text" 
                        x-model="searchQuery" 
                        placeholder="Cari nama pelanggan..." 
@@ -309,12 +309,12 @@
                         <div class="flex items-center gap-3 min-w-0">
                             <!-- Initials Avatar -->
                             <div class="w-10 h-10 rounded-xl font-bold text-sm flex items-center justify-center flex-shrink-0 shadow-sm transition-all duration-200"
-                                 :class="selectedCustomerId === cust.id ? 'bg-emerald-500 text-white' : 'bg-stone-100 text-stone-700 dark:text-zinc-50'">
+                                 :class="selectedCustomerId === cust.id ? 'bg-emerald-500 text-white' : 'bg-stone-100 dark:bg-zinc-800 text-stone-700 dark:text-zinc-200'">
                                 <span x-text="cust.initials"></span>
                             </div>
                             <div class="min-w-0">
                                 <h4 class="font-bold text-stone-800 dark:text-white text-sm truncate" x-text="cust.name"></h4>
-                                <p class="text-[10px] text-stone-400 dark:text-white font-semibold truncate mt-0.5" x-text="cust.phone"></p>
+                                <p class="text-[10px] text-stone-400 dark:text-zinc-400 font-semibold truncate mt-0.5" x-text="cust.phone"></p>
                             </div>
                         </div>
 
@@ -323,14 +323,14 @@
                             <span class="inline-block px-3 py-1.5 bg-rose-50 dark:bg-rose-950/40 text-rose-500 dark:text-rose-400 rounded-full font-bold text-xs shadow-sm shadow-rose-900/5"
                                   x-text="formatRupiah(cust.total_remaining)">
                             </span>
-                            <p class="text-[9px] text-stone-400 dark:text-white font-bold mt-1" x-text="cust.invoices.length + ' Nota Aktif'"></p>
+                            <p class="text-[9px] text-stone-400 dark:text-zinc-400 font-bold mt-1" x-text="cust.invoices.length + ' Nota Aktif'"></p>
                         </div>
                     </div>
                 </template>
 
                 <!-- No Results Empty State -->
                 <div x-show="customers.filter(c => c.name.toLowerCase().includes(searchQuery.toLowerCase())).length === 0"
-                     class="p-8 text-center text-stone-400 dark:text-white bg-stone-50 dark:bg-zinc-800 rounded-2xl border border-dashed border-stone-200 dark:border-zinc-800">
+                     class="p-8 text-center text-stone-400 dark:text-zinc-400 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 rounded-2xl border border-dashed border-stone-200 dark:border-zinc-800">
                     <span class="material-symbols-outlined text-3xl text-stone-300 mb-2">person_search</span>
                     <p class="text-xs font-semibold">Tidak ada pelanggan dengan tagihan aktif.</p>
                 </div>
@@ -349,11 +349,11 @@
                 <!-- No Customer Selected State -->
                 <div x-show="!selectedCustomerId" 
                      class="bg-white dark:bg-zinc-900 p-8 rounded-3xl border border-stone-200/60 dark:border-zinc-800/80 shadow-lg shadow-emerald-900/5 text-center flex flex-col items-center justify-center h-96">
-                    <div class="w-16 h-16 bg-stone-50 dark:bg-zinc-800 rounded-full flex items-center justify-center text-stone-300 mb-4 shadow-inner">
+                    <div class="w-16 h-16 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 rounded-full flex items-center justify-center text-stone-300 mb-4 shadow-inner">
                         <span class="material-symbols-outlined text-4xl">payments</span>
                     </div>
-                    <h3 class="text-sm font-bold text-stone-700 dark:text-zinc-50 dark:text-white">Pilih Pelanggan</h3>
-                    <p class="text-xs text-stone-400 dark:text-white mt-1 max-w-[200px] leading-relaxed">Silakan pilih nama pelanggan di sebelah kiri untuk menginput nominal angsuran kasbon.</p>
+                    <h3 class="text-sm font-bold text-stone-700 dark:text-zinc-50 dark:text-zinc-200">Pilih Pelanggan</h3>
+                    <p class="text-xs text-stone-400 dark:text-zinc-400 mt-1 max-w-[200px] leading-relaxed">Silakan pilih nama pelanggan di sebelah kiri untuk menginput nominal angsuran kasbon.</p>
                 </div>
 
                 <!-- Customer Selected & Active Checkout Panel -->
@@ -367,8 +367,8 @@
                     <div class="pb-4 border-b border-stone-100 dark:border-zinc-800/60">
                         <span class="text-[9px] font-bold tracking-widest text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-full uppercase">Detail Pembayaran</span>
                         <h3 class="text-lg font-bold text-stone-800 dark:text-white mt-3" x-text="getActiveCustomer() ? getActiveCustomer().name : ''"></h3>
-                        <div class="flex justify-between items-center mt-3 p-3.5 bg-stone-50 dark:bg-zinc-800 rounded-2xl border border-stone-100 dark:border-zinc-800/60 shadow-inner">
-                            <span class="text-xs text-stone-500 dark:text-white font-semibold">Total Tagihan Akumulatif:</span>
+                        <div class="flex justify-between items-center mt-3 p-3.5 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 rounded-2xl border border-stone-100 dark:border-zinc-800/60 shadow-inner">
+                            <span class="text-xs text-stone-500 dark:text-zinc-400 font-semibold">Total Tagihan Akumulatif:</span>
                             <span class="text-base font-bold text-rose-500 dark:text-rose-400" x-text="getActiveCustomer() ? formatRupiah(getActiveCustomer().total_remaining) : 'Rp 0'"></span>
                         </div>
                     </div>
@@ -376,15 +376,15 @@
                     <!-- Unpaid Invoice List -->
                     <div class="space-y-2">
                         <div class="flex justify-between items-center">
-                            <label class="text-[10px] font-bold uppercase tracking-wider text-stone-400 dark:text-white">Pilih Nota Invoice</label>
-                            <span class="text-[9px] text-stone-400 dark:text-white font-bold" x-text="(getActiveCustomer() ? getActiveCustomer().invoices.length : 0) + ' nota belum lunas'"></span>
+                            <label class="text-[10px] font-bold uppercase tracking-wider text-stone-400 dark:text-zinc-400">Pilih Nota Invoice</label>
+                            <span class="text-[9px] text-stone-400 dark:text-zinc-400 font-bold" x-text="(getActiveCustomer() ? getActiveCustomer().invoices.length : 0) + ' nota belum lunas'"></span>
                         </div>
                         
                         <div class="max-h-40 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
                             <template x-for="inv in (getActiveCustomer() ? getActiveCustomer().invoices : [])" :key="inv.id">
                                 <div @click="selectInvoice(inv.id)"
                                      class="p-3 bg-white dark:bg-zinc-900 border rounded-xl cursor-pointer transition-all flex items-center justify-between gap-3"
-                                     :class="selectedDebtId === inv.id ? 'border-emerald-500 bg-emerald-50/10 dark:bg-emerald-950/10 ring-1 ring-emerald-500' : 'border-stone-100 dark:border-zinc-800/60 hover:bg-stone-50 dark:hover:bg-zinc-800'">
+                                     :class="selectedDebtId === inv.id ? 'border-emerald-500 bg-emerald-50/10 dark:bg-emerald-950/10 ring-1 ring-emerald-500' : 'border-stone-100 dark:border-zinc-800/60 hover:bg-stone-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800'">
                                     <div class="min-w-0">
                                         <div class="flex items-center gap-1.5 flex-wrap">
                                             <span class="font-bold text-stone-700 dark:text-zinc-50 dark:text-white text-xs font-mono" x-text="'#' + String(inv.sale_id || inv.id).padStart(5, '0')"></span>
@@ -393,12 +393,12 @@
                                             <span x-show="!inv.is_overdue && inv.status === 'unpaid'" class="text-[8px] bg-amber-100 text-amber-700 dark:text-amber-400 px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Belum Bayar</span>
                                             <span x-show="!inv.is_overdue && inv.status === 'partial'" class="text-[8px] bg-blue-100 dark:bg-blue-950/50 text-blue-700 dark:text-blue-400 px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider">Cicilan</span>
                                         </div>
-                                        <p class="text-[10px] text-stone-400 dark:text-white font-medium truncate mt-0.5" x-text="inv.description"></p>
+                                        <p class="text-[10px] text-stone-400 dark:text-zinc-400 font-medium truncate mt-0.5" x-text="inv.description"></p>
                                         <p class="text-[10px] mt-1" :class="inv.due_class" x-text="inv.due_text"></p>
                                     </div>
                                     <div class="text-right flex-shrink-0">
                                         <p class="font-bold text-stone-800 dark:text-white text-xs" x-text="formatRupiah(inv.remaining_amount)"></p>
-                                        <p class="text-[8px] text-stone-400 dark:text-white font-bold mt-0.5" x-text="'Dibuat: ' + inv.date"></p>
+                                        <p class="text-[8px] text-stone-400 dark:text-zinc-400 font-bold mt-0.5" x-text="'Dibuat: ' + inv.date"></p>
                                     </div>
                                 </div>
                             </template>
@@ -418,7 +418,7 @@
 
                         <!-- Payment Amount Field -->
                         <div class="space-y-1.5">
-                            <label class="text-[10px] font-bold uppercase tracking-wider text-stone-400 dark:text-white">Nominal Pembayaran</label>
+                            <label class="text-[10px] font-bold uppercase tracking-wider text-stone-400 dark:text-zinc-400">Nominal Pembayaran</label>
                             <div class="relative flex items-center">
                                 <span class="absolute left-4 text-stone-500 dark:text-white font-bold text-base">Rp</span>
                                 <input type="number" 
@@ -427,7 +427,7 @@
                                        x-bind:max="getActiveInvoice() ? getActiveInvoice().remaining_amount : 0"
                                        min="1"
                                        required 
-                                       class="w-full pl-11 pr-4 py-3 bg-stone-50 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 rounded-2xl text-lg font-bold text-stone-800 dark:text-white outline-none transition-all font-mono" />
+                                       class="w-full pl-11 pr-4 py-3 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 focus:bg-white dark:focus:bg-zinc-900 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 rounded-2xl text-lg font-bold text-stone-800 dark:text-white outline-none transition-all font-mono" />
                             </div>
                         </div>
 
@@ -438,44 +438,44 @@
                                 Bayar Semua (Lunas)
                             </button>
                             <button type="button" @click="setQuickAmount(50000)"
-                                    class="px-2.5 py-1.5 bg-stone-50 dark:bg-zinc-800 hover:bg-stone-100 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/80 text-stone-600 dark:text-white rounded-lg text-[10px] font-bold transition-all shadow-sm border border-stone-200/50 dark:border-zinc-850">
+                                    class="px-2.5 py-1.5 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 hover:bg-stone-100 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/80 text-stone-600 dark:text-white rounded-lg text-[10px] font-bold transition-all shadow-sm border border-stone-200/50 dark:border-zinc-850">
                                 50.000
                             </button>
                             <button type="button" @click="setQuickAmount(100000)"
-                                    class="px-2.5 py-1.5 bg-stone-50 dark:bg-zinc-800 hover:bg-stone-100 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/80 text-stone-600 dark:text-white rounded-lg text-[10px] font-bold transition-all shadow-sm border border-stone-200/50 dark:border-zinc-850">
+                                    class="px-2.5 py-1.5 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 hover:bg-stone-100 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/80 text-stone-600 dark:text-white rounded-lg text-[10px] font-bold transition-all shadow-sm border border-stone-200/50 dark:border-zinc-850">
                                 100.000
                             </button>
                             <button type="button" @click="setQuickAmount(250000)"
-                                    class="px-2.5 py-1.5 bg-stone-50 dark:bg-zinc-800 hover:bg-stone-100 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/80 text-stone-600 dark:text-white rounded-lg text-[10px] font-bold transition-all shadow-sm border border-stone-200/50 dark:border-zinc-850">
+                                    class="px-2.5 py-1.5 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 hover:bg-stone-100 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/80 text-stone-600 dark:text-white rounded-lg text-[10px] font-bold transition-all shadow-sm border border-stone-200/50 dark:border-zinc-850">
                                 250.000
                             </button>
                             <button type="button" @click="setQuickAmount(500000)"
-                                    class="px-2.5 py-1.5 bg-stone-50 dark:bg-zinc-800 hover:bg-stone-100 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/80 text-stone-600 dark:text-white rounded-lg text-[10px] font-bold transition-all shadow-sm border border-stone-200/50 dark:border-zinc-850">
+                                    class="px-2.5 py-1.5 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 hover:bg-stone-100 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/80 text-stone-600 dark:text-white rounded-lg text-[10px] font-bold transition-all shadow-sm border border-stone-200/50 dark:border-zinc-850">
                                 500.000
                             </button>
                         </div>
 
                         <!-- Channel Selector Tabs -->
                         <div class="space-y-1.5">
-                            <label class="text-[10px] font-bold uppercase tracking-wider text-stone-400 dark:text-white">Saluran Pembayaran</label>
+                            <label class="text-[10px] font-bold uppercase tracking-wider text-stone-400 dark:text-zinc-400">Saluran Pembayaran</label>
                             <div class="grid grid-cols-3 gap-2">
                                 <!-- Cash -->
                                 <label class="border rounded-xl p-2 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all"
-                                       :class="paymentMethod === 'cash' ? 'border-emerald-500 bg-emerald-50/10 dark:bg-emerald-950/10 text-emerald-700 dark:text-emerald-400 ring-1 ring-emerald-500' : 'border-stone-200 dark:border-zinc-800 text-stone-500 dark:text-white hover:bg-stone-50/60'">
+                                       :class="paymentMethod === 'cash' ? 'border-emerald-500 bg-emerald-50/10 dark:bg-emerald-950/10 text-emerald-700 dark:text-emerald-400 ring-1 ring-emerald-500' : 'border-stone-200 dark:border-zinc-800 text-stone-500 dark:text-zinc-400 hover:bg-stone-50/60'">
                                     <input type="radio" name="payment_method" value="cash" x-model="paymentMethod" class="sr-only" required />
                                     <span class="material-symbols-outlined text-lg">payments</span>
                                     <span class="text-[10px] font-bold">Tunai</span>
                                 </label>
                                 <!-- Transfer -->
                                 <label class="border rounded-xl p-2 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all"
-                                       :class="paymentMethod === 'transfer' ? 'border-emerald-500 bg-emerald-50/10 dark:bg-emerald-950/10 text-emerald-700 dark:text-emerald-400 ring-1 ring-emerald-500' : 'border-stone-200 dark:border-zinc-800 text-stone-500 dark:text-white hover:bg-stone-50/60'">
+                                       :class="paymentMethod === 'transfer' ? 'border-emerald-500 bg-emerald-50/10 dark:bg-emerald-950/10 text-emerald-700 dark:text-emerald-400 ring-1 ring-emerald-500' : 'border-stone-200 dark:border-zinc-800 text-stone-500 dark:text-zinc-400 hover:bg-stone-50/60'">
                                     <input type="radio" name="payment_method" value="transfer" x-model="paymentMethod" class="sr-only" required />
                                     <span class="material-symbols-outlined text-lg">account_balance</span>
                                     <span class="text-[10px] font-bold">Transfer</span>
                                 </label>
                                 <!-- QRIS -->
                                 <label class="border rounded-xl p-2 flex flex-col items-center justify-center gap-1 cursor-pointer transition-all"
-                                       :class="paymentMethod === 'qris' ? 'border-emerald-500 bg-emerald-50/10 dark:bg-emerald-950/10 text-emerald-700 dark:text-emerald-400 ring-1 ring-emerald-500' : 'border-stone-200 dark:border-zinc-800 text-stone-500 dark:text-white hover:bg-stone-50/60'">
+                                       :class="paymentMethod === 'qris' ? 'border-emerald-500 bg-emerald-50/10 dark:bg-emerald-950/10 text-emerald-700 dark:text-emerald-400 ring-1 ring-emerald-500' : 'border-stone-200 dark:border-zinc-800 text-stone-500 dark:text-zinc-400 hover:bg-stone-50/60'">
                                     <input type="radio" name="payment_method" value="qris" x-model="paymentMethod" class="sr-only" required />
                                     <span class="material-symbols-outlined text-lg">qr_code_scanner</span>
                                     <span class="text-[10px] font-bold">QRIS</span>
@@ -485,18 +485,18 @@
 
                         <!-- Date input -->
                         <div class="space-y-1.5">
-                            <label class="text-[10px] font-bold uppercase tracking-wider text-stone-400 dark:text-white">Tanggal Transaksi</label>
+                            <label class="text-[10px] font-bold uppercase tracking-wider text-stone-400 dark:text-zinc-400">Tanggal Transaksi</label>
                             <input type="date" 
                                    name="payment_date" 
                                    x-model="paymentDate"
                                    required
-                                   class="w-full bg-stone-50 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 rounded-xl p-2.5 text-xs font-semibold text-stone-700 dark:text-zinc-50 dark:text-white outline-none transition-all" />
+                                   class="w-full bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 focus:bg-white dark:focus:bg-zinc-900 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 rounded-xl p-2.5 text-xs font-semibold text-stone-700 dark:text-zinc-50 dark:text-zinc-200 outline-none transition-all" />
                         </div>
 
                         <!-- Submit Receipt Payment -->
                         <button type="submit"
                                 x-bind:disabled="!getActiveInvoice() || amountToPay <= 0"
-                                class="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-stone-100 dark:disabled:bg-zinc-800 disabled:text-stone-400 dark:disabled:text-white disabled:shadow-none text-white font-bold py-3.5 px-6 rounded-2xl shadow-md shadow-emerald-500/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-emerald-900/10 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 mt-2">
+                                class="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-stone-100 dark:disabled:bg-zinc-800 disabled:text-stone-400 dark:disabled:text-zinc-300 dark:disabled:text-white disabled:shadow-none text-white font-bold py-3.5 px-6 rounded-2xl shadow-md shadow-emerald-500/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-emerald-900/10 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 mt-2">
                             <span class="material-symbols-outlined">receipt_long</span>
                             <span class="text-sm">Terima Pembayaran</span>
                         </button>

@@ -60,3 +60,32 @@
     --color-secondary-fixed: #cce8e7;
     --color-tertiary: #70371a;
 }
+
+/* Premium Dark Mode Token Overrides for Deep Forest & Charcoal Spirit */
+.dark {
+    --color-background: #09090b;
+    --color-surface: #09090b;
+    
+    --color-surface-container-lowest: #18181b; /* Zinc-900: cards background */
+    --color-surface-container-low: #202024;    /* Slightly lighter: section headers */
+    --color-surface-container: #27272a;       /* Zinc-800: borders, divider lines */
+    --color-surface-container-high: #3f3f46;
+    --color-surface-container-highest: #27272a; /* Zinc-800: input fields bg */
+    --color-zinc-850: #202024;                 /* Zinc-850 custom token */
+    
+    --color-on-surface: #ffffff;               /* Crisp white text */
+    --color-on-surface-variant: #d4d4d8;       /* Zinc-300: secondary text */
+    --color-on-background: #ffffff;
+    
+    --color-primary: #10b981;                  /* Emerald-500 brand accent */
+    --color-primary-container: #064e3b;        /* Emerald-900 bg */
+    --color-on-primary-container: #a7f3d0;
+    
+    --color-secondary: #71717a;
+    --color-secondary-container: #27272a;
+    --color-on-secondary-container: #e4e4e7;
+    
+    --color-outline: #52525b;
+    --color-outline-variant: #3f3f46;
+    --color-surface-variant: #27272a;
+}

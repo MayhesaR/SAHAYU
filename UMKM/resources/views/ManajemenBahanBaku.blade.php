@@ -9,7 +9,7 @@
     <!-- Page Header Section -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div class="space-y-1 w-full">
-            <h2 class="text-lg sm:text-xl lg:text-2xl font-extrabold tracking-tight text-emerald-900 dark:text-emerald-200 dark:text-emerald-250 break-words leading-tight">Manajemen Bahan Baku</h2>
+            <h2 class="text-lg sm:text-xl lg:text-2xl font-extrabold tracking-tight text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400 break-words leading-tight">Manajemen Bahan Baku</h2>
             <p class="text-sm sm:text-base text-on-surface-variant font-body">Pantau ketersediaan stok dan biaya unit inventaris Anda secara real-time.</p>
         </div>
         <div class="flex flex-wrap items-center gap-2.5 w-full sm:w-auto justify-start sm:justify-end">
@@ -29,7 +29,7 @@
     </div>
 
     @if (session('success'))
-    <div class="rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-100 px-4 py-3 text-sm font-medium flex items-center gap-3 animate-in fade-in slide-in-from-top-4">
+    <div class="rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-400 dark:text-emerald-300 border border-emerald-100 px-4 py-3 text-sm font-medium flex items-center gap-3 animate-in fade-in slide-in-from-top-4">
         <span class="material-symbols-outlined text-emerald-600 dark:text-emerald-400">check_circle</span>
         {{ session('success') }}
     </div>
@@ -50,9 +50,9 @@
     <!-- Bento Grid - Quick Stats -->
     <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
         <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800/50 hover:shadow-md transition-all duration-300">
-            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-white mb-2">Total Kategori</p>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-zinc-400 mb-2">Total Kategori</p>
             <div class="flex items-baseline gap-2">
-                <span class="text-2xl font-black text-emerald-900 dark:text-emerald-200 dark:text-emerald-250 leading-none">{{ $totalCategories }}</span>
+                <span class="text-2xl font-black text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400 leading-none">{{ $totalCategories }}</span>
                 <span class="text-xs font-medium text-emerald-600 dark:text-emerald-400">kategori aktif</span>
             </div>
         </div>
@@ -60,30 +60,30 @@
             @if($lowStockCount > 0)
             <div class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full m-3 animate-ping"></div>
             @endif
-            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-white mb-2">Stok Menipis</p>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-zinc-400 mb-2">Stok Menipis</p>
             <div class="flex items-baseline gap-2">
                 <span class="text-2xl font-black text-error leading-none">{{ $lowStockCount }}</span>
-                <span class="text-xs font-medium text-slate-400 dark:text-white">item butuh restock</span>
+                <span class="text-xs font-medium text-slate-400 dark:text-zinc-400">item butuh restock</span>
             </div>
         </div>
         <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800/50 hover:shadow-md transition-all duration-300">
-            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-white mb-2">Valuasi Gudang</p>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-zinc-400 mb-2">Valuasi Gudang</p>
             <div class="flex items-baseline gap-2">
-                <span class="text-2xl font-black text-emerald-900 dark:text-emerald-200 dark:text-emerald-250 leading-none">Rp {{ number_format($inventoryValue, 0, ',', '.') }}</span>
+                <span class="text-2xl font-black text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400 leading-none">Rp {{ number_format($inventoryValue, 0, ',', '.') }}</span>
             </div>
         </div>
         <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800/50 hover:shadow-md transition-all duration-300">
-            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-white mb-2">Stok Masuk Hari Ini</p>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-zinc-400 mb-2">Stok Masuk Hari Ini</p>
             <div class="flex items-baseline gap-2">
-                <span class="text-2xl font-black text-emerald-900 dark:text-emerald-200 dark:text-emerald-250 leading-none">{{ number_format($stockInToday, 0, ',', '.') }}</span>
-                <span class="text-xs font-medium text-slate-400 dark:text-white">unit</span>
+                <span class="text-2xl font-black text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400 leading-none">{{ number_format($stockInToday, 0, ',', '.') }}</span>
+                <span class="text-xs font-medium text-slate-400 dark:text-zinc-400">unit</span>
             </div>
         </div>
         <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800/50 hover:shadow-md transition-all duration-300">
-            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-white mb-2">Stok Keluar Hari Ini</p>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-zinc-400 mb-2">Stok Keluar Hari Ini</p>
             <div class="flex items-baseline gap-2">
                 <span class="text-2xl font-black text-error leading-none">{{ number_format($stockOutToday, 0, ',', '.') }}</span>
-                <span class="text-xs font-medium text-slate-400 dark:text-white">unit</span>
+                <span class="text-xs font-medium text-slate-400 dark:text-zinc-400">unit</span>
             </div>
         </div>
     </div>
@@ -94,7 +94,7 @@
             <h3 class="text-lg font-bold text-primary flex items-center" id="sidebar-title">
                 <span class="material-symbols-outlined mr-2 text-primary">inventory_2</span> Tambah Material
             </h3>
-            <button id="close-material-form" class="text-slate-400 dark:text-white hover:text-emerald-900 dark:hover:text-emerald-200 transition-colors" type="button">
+            <button id="close-material-form" class="text-slate-400 dark:text-white hover:text-emerald-900 dark:hover:text-emerald-300 dark:hover:text-zinc-400 transition-colors" type="button">
                 <span class="material-symbols-outlined text-lg">close</span>
             </button>
         </div>
@@ -110,7 +110,7 @@
                 <div class="space-y-2 w-full">
                     <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider w-full">Kategori</label>
                     <div class="flex gap-2">
-                        <select class="block flex-1 bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all font-bold text-slate-700 dark:text-zinc-50 dark:text-white" name="raw_material_category_id" id="form-category" required>
+                        <select class="block flex-1 bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all font-bold text-slate-700 dark:text-zinc-50 dark:text-zinc-200" name="raw_material_category_id" id="form-category" required>
                             <option value="" disabled selected>-- Pilih Kategori --</option>
                             @foreach($rawMaterialCategories as $cat)
                                 <option value="{{ $cat->id }}">{{ $cat->name }}</option>
@@ -154,7 +154,7 @@
                 </div>
             </form>
             @else
-            <div class="py-8 text-center text-slate-500 dark:text-white">
+            <div class="py-8 text-center text-slate-500 dark:text-zinc-400">
                 <span class="material-symbols-outlined text-4xl mb-2 opacity-20">lock</span>
                 <p class="text-sm font-semibold">Hanya admin yang dapat menambah/mengubah material.</p>
             </div>
@@ -186,7 +186,7 @@
     <section class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-zinc-800/50">
         <div class="px-8 py-6 bg-surface-container-high/50 flex justify-between items-center border-b border-outline-variant/5">
             <h3 class="text-sm font-bold uppercase tracking-widest text-on-surface-variant">Daftar Inventaris Bahan</h3>
-            <span class="text-[10px] font-bold text-slate-400 dark:text-white bg-white dark:bg-zinc-900 px-3 py-1 rounded-full border border-outline-variant/5">
+            <span class="text-[10px] font-bold text-slate-400 dark:text-zinc-400 bg-white dark:bg-zinc-900 px-3 py-1 rounded-full border border-outline-variant/5">
                 {{ $materials->total() }} item ditemukan
             </span>
         </div>
@@ -213,7 +213,7 @@
                                 </div>
                                 <div class="flex flex-col">
                                     <span class="font-bold text-on-surface text-[11px] md:text-sm">{{ $material->name }}</span>
-                                    <span class="text-[10px] text-slate-400 dark:text-white uppercase tracking-tighter">{{ $material->unit }}</span>
+                                    <span class="text-[10px] text-slate-400 dark:text-zinc-400 uppercase tracking-tighter">{{ $material->unit }}</span>
                                 </div>
                             </div>
                         </td>
@@ -221,7 +221,7 @@
                             @php
                                 $catName = $material->rawMaterialCategory?->name ?? $material->category;
                             @endphp
-                            <span class="px-2 sm:px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest border {{ $catName === 'Struktur' ? 'bg-indigo-50 text-indigo-700 border-indigo-100' : ($catName 'Dasar' 'bg-emerald-50 text-emerald-700 dark:text-emerald-400 border-emerald-100' 'Finishing' 'bg-amber-50 text-amber-700 dark:text-amber-400 border-amber-100' 'bg-slate-50 dark:bg-zinc-800 text-slate-700 dark:text-zinc-50 dark:text-white border-slate-100 dark:border-zinc-800/60')) }}">{{ $catName }}</span>
+                            <span class="px-2 sm:px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest border {{ $catName === 'Struktur' ? 'bg-indigo-50 text-indigo-700 border-indigo-100' : ($catName === 'Dasar' ? 'bg-emerald-50 text-emerald-700 dark:text-emerald-400 border-emerald-100' : ($catName === 'Finishing' ? 'bg-amber-50 text-amber-700 dark:text-amber-400 border-amber-100' : 'bg-slate-50 dark:bg-zinc-850 dark:bg-zinc-800 text-slate-700 dark:text-zinc-50 dark:text-zinc-200 border-slate-100 dark:border-zinc-800/60')) }}">{{ $catName }}</span>
                         </td>
                         <td class="px-2 sm:px-8 py-3 sm:py-5">
                             <div class="flex flex-col">
@@ -233,16 +233,16 @@
                                     <span class="material-symbols-outlined text-error text-sm flex-shrink-0" title="Stok kritis!">warning</span>
                                     @endif
                                 </div>
-                                <span class="text-[10px] text-slate-400 dark:text-white">Tersedia di gudang</span>
+                                <span class="text-[10px] text-slate-400 dark:text-zinc-400">Tersedia di gudang</span>
                             </div>
                         </td>
                         <td class="px-2 sm:px-8 py-3 sm:py-5 font-bold text-[11px] md:text-sm text-on-surface-variant">{{ number_format($material->minimum_stock, 0, ',', '.') }}</td>
-                        <td class="px-2 sm:px-8 py-3 sm:py-5 font-bold text-[11px] md:text-sm text-emerald-900 dark:text-emerald-200 dark:text-emerald-250">Rp {{ number_format($material->price, 0, ',', '.') }}</td>
+                        <td class="px-2 sm:px-8 py-3 sm:py-5 font-bold text-[11px] md:text-sm text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400">Rp {{ number_format($material->price, 0, ',', '.') }}</td>
                         <td class="px-2 sm:px-8 py-3 sm:py-5">
                             <div class="text-[11px] md:text-sm font-semibold text-on-surface">{{ $material->default_supplier ?: '-' }}</div>
-                            <div class="text-[10px] text-slate-400 dark:text-white">Lead time: {{ $material->supplier_lead_time_days ?? '0' }} hr</div>
+                            <div class="text-[10px] text-slate-400 dark:text-zinc-400">Lead time: {{ $material->supplier_lead_time_days ?? '0' }} hr</div>
                         <td class="px-2 sm:px-8 py-3 sm:py-5 text-right">
-                            <button class="p-2 hover:bg-surface-container-highest rounded-full transition-all text-slate-400 dark:text-white hover:text-primary open-quick-action" 
+                            <button class="p-2 hover:bg-surface-container-highest rounded-full transition-all text-slate-400 dark:text-zinc-400 hover:text-primary open-quick-action" 
                                     data-id="{{ $material->id }}"
                                     data-name="{{ $material->name }}"
                                     data-category_id="{{ $material->raw_material_category_id }}"
@@ -293,7 +293,7 @@
         <div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-zinc-800/50">
             <div class="px-8 py-6 bg-surface-container-high/50 border-b border-outline-variant/5 flex justify-between items-center">
                 <h3 class="text-sm font-bold uppercase tracking-widest text-on-surface-variant">Audit Trail: Log Pergerakan Stok</h3>
-                <span class="text-[10px] font-bold text-slate-400 dark:text-white bg-white dark:bg-zinc-900 px-3 py-1 rounded-full border border-outline-variant/5">{{ $recentMovements->total() }} log ditemukan</span>
+                <span class="text-[10px] font-bold text-slate-400 dark:text-zinc-400 bg-white dark:bg-zinc-900 px-3 py-1 rounded-full border border-outline-variant/5">{{ $recentMovements->total() }} log ditemukan</span>
             </div>
             <div class="w-full overflow-x-auto overflow-y-hidden border border-gray-100 dark:border-zinc-800/50 rounded-lg mb-4" style="-webkit-overflow-scrolling: touch; display: block; clear: both; touch-action: pan-x pan-y;">
                 <table class="min-w-[800px] w-full text-xs text-left border-collapse whitespace-nowrap">
@@ -309,7 +309,7 @@
                     </thead>
                     <tbody class="divide-y divide-surface-container-low">
                         @forelse ($recentMovements as $movement)
-                        <tr class="hover:bg-slate-50 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 transition-colors">
+                        <tr class="hover:bg-slate-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 transition-colors">
                             <td class="px-8 py-4">
                                 <div class="flex flex-col">
                                     <span class="text-xs font-bold text-on-surface">{{ \Carbon\Carbon::parse($movement->transaction_date)->translatedFormat('d M Y') }}</span>
@@ -319,22 +319,22 @@
                                     </span>
                                 </div>
                             </td>
-                            <td class="px-8 py-4 font-bold text-sm text-emerald-900 dark:text-emerald-200 dark:text-emerald-250">{{ $movement->material?->name ?? '-' }}</td>
+                            <td class="px-8 py-4 font-bold text-sm text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400">{{ $movement->material?->name ?? '-' }}</td>
                             <td class="px-8 py-4">
-                                <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest {{ $movement->type === 'in' ? 'bg-emerald-100 text-emerald-700' : ($movement->type 'out' 'bg-amber-100 text-amber-700' 'bg-slate-100 text-slate-700 dark:text-zinc-50') }}">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest {{ $movement->type === 'in' ? 'bg-emerald-100 text-emerald-700 dark:text-emerald-400' : ($movement->type === 'out' ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-700 dark:text-zinc-200') }}">
                                     {{ $movement->type === 'in' ? 'Masuk' : ($movement->type === 'out' ? 'Keluar' : 'Adj') }}
                                 </span>
                             </td>
                             <td class="px-8 py-4 text-center font-black text-sm {{ $movement->type === 'in' ? 'text-emerald-600 dark:text-emerald-400' : 'text-error' }}">
                                 {{ $movement->type === 'in' ? '+' : '-' }}{{ number_format($movement->quantity, 0, ',', '.') }}
                             </td>
-                            <td class="px-8 py-4 text-[11px] font-medium text-slate-500 dark:text-white">
+                            <td class="px-8 py-4 text-[11px] font-medium text-slate-500 dark:text-zinc-400">
                                 {{ number_format($movement->stock_before, 0, ',', '.') }} <span class="mx-1">→</span> {{ number_format($movement->stock_after, 0, ',', '.') }}
                             </td>
                             <td class="px-8 py-4 text-xs text-on-surface-variant italic">
                                 {{ $movement->reference ?: '-' }}
                                 @if($movement->note)
-                                <div class="text-[10px] text-slate-400 dark:text-white not-italic">{{ $movement->note }}</div>
+                                <div class="text-[10px] text-slate-400 dark:text-zinc-400 not-italic">{{ $movement->note }}</div>
                                 @endif
                             </td>
                         </tr>
@@ -356,20 +356,20 @@
     <!-- Modal Opsi Cepat (Quick Action Modal) -->
     <div id="quick-action-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-zinc-900/60 backdrop-blur-sm z-[60] flex items-center justify-center hidden">
         <div class="bg-white dark:bg-zinc-900 rounded-[2rem] w-full max-w-md shadow-2xl p-8 transform scale-95 opacity-0 transition-all duration-300 modal-content relative">
-            <button class="absolute top-6 right-6 text-slate-400 dark:text-white hover:text-error transition-colors" onclick="closeQuickAction()">
+            <button class="absolute top-6 right-6 text-slate-400 dark:text-zinc-400 hover:text-error transition-colors" onclick="closeQuickAction()">
                 <span class="material-symbols-outlined">close</span>
             </button>
 
             <div class="mb-8">
                 <span class="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400 mb-1 block">Opsi Cepat Material</span>
-                <h3 class="text-xl font-black text-emerald-900 dark:text-emerald-200 dark:text-emerald-250 leading-tight" id="modal-material-name">-</h3>
-                <p class="text-xs text-slate-400 dark:text-white mt-1" id="modal-material-unit">-</p>
+                <h3 class="text-xl font-black text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400 leading-tight" id="modal-material-name">-</h3>
+                <p class="text-xs text-slate-400 dark:text-zinc-400 mt-1" id="modal-material-unit">-</p>
             </div>
 
             <div class="space-y-6">
                 @if(auth()->user()->isAdmin())
                 <!-- Edit Action -->
-                <button class="w-full group flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-zinc-800 hover:bg-primary hover:text-white transition-all text-left" onclick="handleQuickEdit()">
+                <button class="w-full group flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-zinc-850 dark:bg-zinc-800 hover:bg-primary hover:text-white transition-all text-left" onclick="handleQuickEdit()">
                     <div class="flex items-center gap-4">
                         <div class="p-2 bg-white dark:bg-zinc-900 rounded-xl text-primary group-hover:bg-primary-container">
                             <span class="material-symbols-outlined">edit_note</span>
@@ -431,7 +431,7 @@
                     </button>
                 </form>
                 @else
-                <div class="py-12 text-center text-slate-400 dark:text-white">
+                <div class="py-12 text-center text-slate-400 dark:text-zinc-400">
                     <span class="material-symbols-outlined text-4xl mb-2 opacity-20">lock</span>
                     <p class="text-sm italic">Hanya Admin yang dapat mengelola stok.</p>
                 </div>
@@ -443,7 +443,7 @@
     <!-- ADD RAW MATERIAL CATEGORY MODAL -->
     <div id="add-category-modal" class="fixed inset-0 bg-slate-900/60 dark:bg-zinc-900/60 backdrop-blur-sm z-[70] flex items-center justify-center hidden animate-fade-in">
         <div class="bg-white dark:bg-zinc-900 rounded-[2rem] w-full max-w-md shadow-2xl p-8 transform scale-95 opacity-0 transition-all duration-300 modal-content relative">
-            <button class="absolute top-6 right-6 text-slate-400 dark:text-white hover:text-error transition-colors" type="button" onclick="closeAddCategoryModal()">
+            <button class="absolute top-6 right-6 text-slate-400 dark:text-zinc-400 hover:text-error transition-colors" type="button" onclick="closeAddCategoryModal()">
                 <span class="material-symbols-outlined">close</span>
             </button>
             
@@ -453,14 +453,14 @@
                 </div>
                 <div>
                     <span class="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400 block">Kategori Baru</span>
-                    <h3 class="text-lg font-black text-emerald-900 dark:text-emerald-200 dark:text-emerald-250 leading-tight">Tambah Kategori Bahan</h3>
+                    <h3 class="text-lg font-black text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400 leading-tight">Tambah Kategori Bahan</h3>
                 </div>
             </div>
 
             <div class="space-y-4">
                 <div class="space-y-1.5">
                     <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Nama Kategori</label>
-                    <input type="text" id="new-category-name" placeholder="Contoh: Tepung & Pati" class="block w-full bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-800 rounded-xl p-3 text-sm font-bold focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 transition-all"/>
+                    <input type="text" id="new-category-name" placeholder="Contoh: Tepung & Pati" class="block w-full bg-slate-50 dark:bg-zinc-850 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-800 rounded-xl p-3 text-sm font-bold focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 transition-all"/>
                 </div>
                 
                 <div class="flex items-center justify-end gap-3 pt-4">

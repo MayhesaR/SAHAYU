@@ -1,24 +1,24 @@
 <header class="sticky top-0 z-40 bg-white dark:bg-zinc-900 border-b border-stone-200/60 dark:border-zinc-800/80 flex items-center justify-between px-6 md:px-8 h-16 w-full xl:sticky xl:top-4 xl:mt-4 xl:mb-2 xl:mx-8 xl:w-auto xl:bg-white/80 xl:backdrop-blur-md dark:xl:bg-zinc-900/85 xl:border xl:border-stone-200/50 dark:xl:border-zinc-850 dark:xl:border-zinc-800/65 xl:rounded-[1.25rem] xl:shadow-sm xl:shadow-stone-200/5 transition-all duration-300">
     <div class="flex items-center gap-4">
         <!-- Hamburger Menu Button (Mobile) -->
-        <button @click="sidebarOpen = true" class="p-2 rounded-xl text-stone-500 dark:text-white hover:text-[#0b6e4f] dark:hover:text-emerald-400 hover:bg-stone-50 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 transition-all duration-200 xl:hidden">
+        <button @click="sidebarOpen = true" class="p-2 rounded-xl text-stone-500 dark:text-white hover:text-[#0b6e4f] dark:hover:text-zinc-400 hover:bg-stone-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 transition-all duration-200 xl:hidden">
             <span class="material-symbols-outlined text-2xl">menu</span>
         </button>
         
         <!-- Search bar (Always shown or based on section) -->
         <div class="relative group hidden md:block">
             <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 dark:text-white group-focus-within:text-[#0b6e4f] dark:group-focus-within:text-emerald-400 transition-colors text-base">search</span>
-            <input class="pl-9 pr-12 py-1.5 bg-stone-100/60 dark:bg-zinc-800/60 border border-stone-200/40 dark:border-zinc-800/40 dark:border-zinc-700/40 rounded-xl text-xs focus:ring-4 focus:ring-[#0b6e4f]/5 dark:focus:ring-emerald-500/10 focus:border-[#0b6e4f] dark:focus:border-emerald-500 w-64 transition-all duration-200 font-medium placeholder-stone-400 dark:placeholder-zinc-500 text-stone-700 dark:text-zinc-50 dark:text-white outline-none" 
+            <input class="pl-9 pr-12 py-1.5 bg-stone-100/60 dark:bg-zinc-800/60 border border-stone-200/40 dark:border-zinc-800/40 dark:border-zinc-700/40 rounded-xl text-xs focus:ring-4 focus:ring-[#0b6e4f]/5 dark:focus:ring-emerald-500/10 focus:border-[#0b6e4f] dark:focus:border-emerald-500 w-64 transition-all duration-200 font-medium placeholder-stone-400 dark:placeholder-zinc-500 text-stone-700 dark:text-zinc-50 dark:text-zinc-200 outline-none" 
                    placeholder="Cari transaksi atau data..." 
                    type="text"/>
-            <span class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] font-bold text-stone-400 dark:text-white bg-stone-200/60 dark:bg-zinc-800 px-1.5 py-0.5 rounded-md select-none pointer-events-none">⌘ K</span>
+            <span class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] font-bold text-stone-400 dark:text-zinc-400 bg-stone-200/60 dark:bg-zinc-800 px-1.5 py-0.5 rounded-md select-none pointer-events-none">⌘ K</span>
         </div>
     </div>
     
     <div class="flex items-center space-x-3.5">
         <!-- Theme Toggle Button -->
         <button @click="darkMode = !darkMode" 
-                class="text-stone-500 dark:text-white hover:text-[#0b6e4f] dark:hover:text-emerald-400 hover:bg-stone-50 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 p-2 rounded-xl transition-all duration-200 flex items-center justify-center cursor-pointer animate-fade-in" 
+                class="text-stone-500 dark:text-white hover:text-[#0b6e4f] dark:hover:text-zinc-400 hover:bg-stone-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 p-2 rounded-xl transition-all duration-200 flex items-center justify-center cursor-pointer animate-fade-in" 
                 title="Ganti Tema">
             <!-- Sun Icon (Active in Dark Mode) -->
             <svg x-show="darkMode" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" x-cloak>
@@ -32,7 +32,7 @@
 
         <!-- Mail Button & Dropdown -->
         <div class="relative flex items-center" x-data="{ open: false }">
-            <button @click="open = !open" class="text-stone-500 dark:text-white hover:text-[#0b6e4f] dark:hover:text-emerald-400 hover:bg-stone-50 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 p-2 rounded-xl transition-all duration-200 relative hidden sm:block" title="Pesan">
+            <button @click="open = !open" class="text-stone-500 dark:text-white hover:text-[#0b6e4f] dark:hover:text-zinc-400 hover:bg-stone-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 p-2 rounded-xl transition-all duration-200 relative hidden sm:block" title="Pesan">
                 <span class="material-symbols-outlined text-xl">mail</span>
                 <span class="absolute top-2 right-2 w-1.5 h-1.5 bg-[#0b6e4f] dark:bg-emerald-600 rounded-full border border-white"></span>
             </button>
@@ -57,13 +57,13 @@
                 <div class="space-y-3 max-h-60 overflow-y-auto">
                     @foreach($activities as $act)
                     <div class="flex items-start gap-3 text-left">
-                        <div class="w-7 h-7 rounded-lg bg-stone-50 dark:bg-zinc-800 flex items-center justify-center text-stone-600 dark:text-white shrink-0">
+                        <div class="w-7 h-7 rounded-lg bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 flex items-center justify-center text-stone-600 dark:text-zinc-300 shrink-0">
                             <span class="material-symbols-outlined text-base">{{ $act['icon'] }}</span>
                         </div>
                         <div class="space-y-0.5 col-span-1 min-w-0">
                             <p class="text-[10px] text-stone-750 dark:text-zinc-50 dark:text-white font-medium leading-snug break-words">{{ $act['message'] }}</p>
-                            <p class="text-[9px] text-stone-400 dark:text-white flex items-center gap-1">
-                                <span class="font-semibold text-stone-500 dark:text-white">{{ $act['user'] }}</span>
+                            <p class="text-[9px] text-stone-400 dark:text-zinc-400 flex items-center gap-1">
+                                <span class="font-semibold text-stone-500 dark:text-zinc-400">{{ $act['user'] }}</span>
                                 <span>&bull;</span>
                                 <span>{{ $act['time'] }}</span>
                             </p>
@@ -76,7 +76,7 @@
 
         <!-- Notifications Button & Dropdown -->
         <div class="relative flex items-center" x-data="{ open: false }">
-            <button @click="open = !open" class="text-stone-500 dark:text-white hover:text-[#0b6e4f] dark:hover:text-emerald-400 hover:bg-stone-50 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 p-2 rounded-xl transition-all duration-200 relative hidden sm:block" title="Notifikasi">
+            <button @click="open = !open" class="text-stone-500 dark:text-white hover:text-[#0b6e4f] dark:hover:text-zinc-400 hover:bg-stone-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 p-2 rounded-xl transition-all duration-200 relative hidden sm:block" title="Notifikasi">
                 <span class="material-symbols-outlined text-xl">notifications</span>
                 <span class="absolute top-2 right-2 w-1.5 h-1.5 bg-rose-500 rounded-full border border-white"></span>
                 <span class="absolute top-2 right-2 w-1.5 h-1.5 bg-rose-500 rounded-full border border-white animate-ping"></span>
@@ -116,7 +116,7 @@
         </div>
         
         <!-- Settings Button -->
-        <a href="{{ route('settings.index') }}" class="text-stone-500 dark:text-white hover:text-[#0b6e4f] dark:hover:text-emerald-400 hover:bg-stone-50 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 p-2 rounded-xl transition-all duration-200 hidden sm:block" title="Pengaturan">
+        <a href="{{ route('settings.index') }}" class="text-stone-500 dark:text-white hover:text-[#0b6e4f] dark:hover:text-zinc-400 hover:bg-stone-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 p-2 rounded-xl transition-all duration-200 hidden sm:block" title="Pengaturan">
             <span class="material-symbols-outlined text-xl">settings</span>
         </a>
 
@@ -128,7 +128,7 @@
             @if(auth()->check())
             <div class="hidden md:block text-right leading-none">
                 <p class="text-xs font-semibold text-stone-850 dark:text-white">{{ auth()->user()->name }}</p>
-                <p class="text-[8px] font-bold text-stone-400 dark:text-white uppercase tracking-wider mt-0.5">{{ auth()->user()->role === 'admin' ? 'Administrator' : 'Staff Kasir' }}</p>
+                <p class="text-[8px] font-bold text-stone-400 dark:text-zinc-400 uppercase tracking-wider mt-0.5">{{ auth()->user()->role === 'admin' ? 'Administrator' : 'Staff Kasir' }}</p>
             </div>
             <div class="w-8.5 h-8.5 rounded-full bg-gradient-to-tr from-[#0b6e4f] to-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-sm shadow-[#0b6e4f]/10 dark:shadow-emerald-950/15">
                 {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}

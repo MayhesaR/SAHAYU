@@ -7,7 +7,7 @@
 <div class="px-4 py-6 sm:px-8 max-w-7xl mx-auto space-y-8">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="w-full">
-            <h2 class="text-lg sm:text-xl lg:text-2xl font-extrabold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250 tracking-tight break-words">Manajemen Customer & CRM</h2>
+            <h2 class="text-lg sm:text-xl lg:text-2xl font-extrabold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400 tracking-tight break-words">Manajemen Customer & CRM</h2>
             <p class="text-on-surface-variant font-body mt-1 max-w-xl text-sm sm:text-base">Kelola basis data pelanggan, lacak histori transaksi total belanja, dan kontrol sisa kasbon piutang secara digital.</p>
         </div>
         <a class="w-full sm:w-auto px-6 py-2.5 rounded-xl shadow-lg shadow-emerald-900/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2" 
@@ -19,7 +19,7 @@
     </div>
 
     @if (session('success'))
-        <div class="rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-100 px-4 py-3 text-sm font-medium">
+        <div class="rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-400 dark:text-emerald-300 border border-emerald-100 px-4 py-3 text-sm font-medium">
             {{ session('success') }}
         </div>
     @endif
@@ -35,23 +35,23 @@
     <!-- Mini Statistics Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <article class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-gray-100 dark:border-zinc-800/50 hover:shadow-md transition-all duration-300">
-            <p class="text-xs uppercase tracking-widest text-slate-500 dark:text-white font-semibold">Total Customer</p>
-            <h3 class="mt-2 text-3xl font-extrabold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250">{{ $customers->total() }}</h3>
-            <p class="text-xs text-slate-500 dark:text-white mt-1">mitra terdaftar di CRM</p>
+            <p class="text-xs uppercase tracking-widest text-slate-500 dark:text-zinc-400 font-semibold">Total Customer</p>
+            <h3 class="mt-2 text-3xl font-extrabold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400">{{ $customers->total() }}</h3>
+            <p class="text-xs text-slate-500 dark:text-zinc-400 mt-1">mitra terdaftar di CRM</p>
         </article>
         <article class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-gray-100 dark:border-zinc-800/50 hover:shadow-md transition-all duration-300">
-            <p class="text-xs uppercase tracking-widest text-slate-500 dark:text-white font-semibold">Total Kasbon Aktif</p>
+            <p class="text-xs uppercase tracking-widest text-slate-500 dark:text-zinc-400 font-semibold">Total Kasbon Aktif</p>
             <h3 class="mt-2 text-3xl font-extrabold text-amber-700 dark:text-amber-400">
                 Rp {{ number_format((float) \App\Models\Debt::where('status', '!=', 'paid')->sum('remaining_amount'), 0, ',', '.') }}
             </h3>
-            <p class="text-xs text-slate-500 dark:text-white mt-1">akumulasi piutang yang belum terbayar</p>
+            <p class="text-xs text-slate-500 dark:text-zinc-400 mt-1">akumulasi piutang yang belum terbayar</p>
         </article>
         <article class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-gray-100 dark:border-zinc-800/50 hover:shadow-md transition-all duration-300">
-            <p class="text-xs uppercase tracking-widest text-slate-500 dark:text-white font-semibold">Customer Loyal</p>
-            <h3 class="mt-2 text-3xl font-extrabold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250">
+            <p class="text-xs uppercase tracking-widest text-slate-500 dark:text-zinc-400 font-semibold">Customer Loyal</p>
+            <h3 class="mt-2 text-3xl font-extrabold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400">
                 {{ $customers->filter(fn($c) => $c->sales->sum('total') > 500000)->count() }}
             </h3>
-            <p class="text-xs text-slate-500 dark:text-white mt-1">belanja di atas Rp 500k</p>
+            <p class="text-xs text-slate-500 dark:text-zinc-400 mt-1">belanja di atas Rp 500k</p>
         </article>
     </div>
 
@@ -61,7 +61,7 @@
         <!-- Add Customer Panel -->
         <section class="lg:col-span-4 bg-surface-container-lowest rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800/50 overflow-hidden hover:shadow-md transition-all duration-300" id="form-customer">
             <div class="px-6 py-5 bg-surface-container-low border-b border-gray-100 dark:border-zinc-800/50">
-                <h3 class="text-lg font-bold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250 flex items-center">
+                <h3 class="text-lg font-bold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400 flex items-center">
                     <span class="material-symbols-outlined mr-2 text-emerald-600 dark:text-emerald-400 flex-shrink-0">person_add</span> Tambah Customer
                 </h3>
             </div>
@@ -104,13 +104,13 @@
             <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-gray-100 dark:border-zinc-800/50 overflow-hidden hover:shadow-md transition-all duration-300">
                 <div class="px-6 py-5 bg-surface-container-low border-b border-gray-100 dark:border-zinc-800/50 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div class="flex items-center justify-between w-full sm:w-auto">
-                        <h3 class="text-lg font-bold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250 flex items-center">
+                        <h3 class="text-lg font-bold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400 flex items-center">
                             <span class="material-symbols-outlined mr-2 text-emerald-600 dark:text-emerald-400 flex-shrink-0">group</span> Database CRM Customer
                         </h3>
                     </div>
                     
                     <div class="flex flex-wrap items-center gap-2.5 w-full sm:w-auto justify-start sm:justify-end">
-                        <span class="flex-1 sm:flex-none text-center text-[10px] font-bold text-slate-400 dark:text-white bg-white dark:bg-zinc-900 px-3 py-2 rounded-xl border border-outline-variant/5">{{ $customers->total() }} customer terdaftar</span>
+                        <span class="flex-1 sm:flex-none text-center text-[10px] font-bold text-slate-400 dark:text-zinc-400 bg-white dark:bg-zinc-900 px-3 py-2 rounded-xl border border-outline-variant/5">{{ $customers->total() }} customer terdaftar</span>
                         
                         <!-- Status Filter Dropdown -->
                         <form action="{{ route('customers.index') }}" method="GET" class="flex-1 sm:flex-none flex items-center gap-2">
@@ -122,7 +122,7 @@
                             @endif
                             <select name="status" 
                                     onchange="this.form.submit()" 
-                                    class="w-full bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-700 dark:text-zinc-50 dark:text-white outline-none focus:border-emerald-600 transition-all cursor-pointer shadow-sm">
+                                    class="w-full bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-700 dark:text-zinc-50 dark:text-zinc-200 outline-none focus:border-emerald-600 transition-all cursor-pointer shadow-sm">
                                 <option value="all" {{ request('status') === 'all' ? 'selected' : '' }}>Semua Status</option>
                                 <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Status: Aktif</option>
                                 <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Status: Inaktif</option>
@@ -140,7 +140,7 @@
                 
                 <div class="w-full overflow-x-auto border border-gray-100 dark:border-zinc-800/50 rounded-lg mb-4">
                     <table class="min-w-[800px] w-full text-xs text-left whitespace-nowrap">
-                        <thead class="bg-slate-50 dark:bg-zinc-800 text-left text-slate-500 dark:text-white uppercase text-xs tracking-widest">
+                        <thead class="bg-slate-50 dark:bg-zinc-850 dark:bg-zinc-800 text-left text-slate-500 dark:text-white uppercase text-xs tracking-widest">
                             <tr>
                                 <th class="px-6 py-4">Customer</th>
                                 <th class="px-6 py-4">Kontak / Alamat</th>
@@ -155,7 +155,7 @@
                                     $totalBelanja = $c->sales->sum('total');
                                     $sisaKasbon = $c->debts->where('status', '!=', 'paid')->sum('remaining_amount');
                                 @endphp
-                                <tr class="border-t border-slate-100 dark:border-zinc-800/60 hover:bg-slate-50/70 dark:hover:bg-zinc-800/70 transition-colors">
+                                <tr class="border-t border-slate-100 dark:border-zinc-800/60 hover:bg-slate-50/70 dark:hover:bg-zinc-850/70 dark:hover:bg-zinc-800/70 transition-colors">
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-3">
                                             <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 text-emerald-700 dark:text-emerald-400 font-black text-sm flex items-center justify-center shadow-sm">
@@ -163,18 +163,18 @@
                                             </div>
                                             <div class="flex flex-col">
                                                 <span class="font-bold text-slate-800 dark:text-white text-sm">{{ $c->name }}</span>
-                                                <span class="text-[10px] font-bold text-slate-400 dark:text-white uppercase tracking-widest mt-0.5">ID: #{{ str_pad($c->id, 4, '0', STR_PAD_LEFT) }}</span>
+                                                <span class="text-[10px] font-bold text-slate-400 dark:text-zinc-400 uppercase tracking-widest mt-0.5">ID: #{{ str_pad($c->id, 4, '0', STR_PAD_LEFT) }}</span>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex flex-col gap-0.5">
-                                            <span class="font-bold text-slate-700 dark:text-zinc-50 dark:text-white">{{ $c->phone ?: 'No HP Kosong' }}</span>
-                                            <span class="text-slate-400 dark:text-white font-semibold truncate max-w-xs">{{ $c->address ?: 'Alamat belum diinput' }}</span>
+                                            <span class="font-bold text-slate-700 dark:text-zinc-50 dark:text-zinc-200">{{ $c->phone ?: 'No HP Kosong' }}</span>
+                                            <span class="text-slate-400 dark:text-zinc-400 font-semibold truncate max-w-xs">{{ $c->address ?: 'Alamat belum diinput' }}</span>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <span class="px-2.5 py-1 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 rounded-lg border border-emerald-100 font-extrabold text-xs">
+                                        <span class="px-2.5 py-1 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-400 dark:text-emerald-300 rounded-lg border border-emerald-100 font-extrabold text-xs">
                                             Rp {{ number_format($totalBelanja, 0, ',', '.') }}
                                         </span>
                                     </td>
@@ -184,7 +184,7 @@
                                                 Rp {{ number_format($sisaKasbon, 0, ',', '.') }}
                                             </span>
                                         @else
-                                            <span class="px-2.5 py-1 bg-slate-50 dark:bg-zinc-800 text-slate-400 dark:text-white rounded-lg border border-slate-100 dark:border-zinc-800/60 font-extrabold text-xs">
+                                            <span class="px-2.5 py-1 bg-slate-50 dark:bg-zinc-850 dark:bg-zinc-800 text-slate-400 dark:text-white rounded-lg border border-slate-100 dark:border-zinc-800/60 font-extrabold text-xs">
                                                 Lunas
                                             </span>
                                         @endif
@@ -224,7 +224,7 @@
                                 <tr>
                                     <td class="px-6 py-10 text-slate-500 dark:text-white text-center" colspan="5">
                                         <div class="flex flex-col items-center justify-center gap-2">
-                                            <span class="material-symbols-outlined text-4xl text-slate-400 dark:text-white font-light">group_off</span>
+                                            <span class="material-symbols-outlined text-4xl text-slate-400 dark:text-zinc-400 font-light">group_off</span>
                                             <p class="font-semibold">Belum ada customer terdaftar.</p>
                                         </div>
                                     </td>
@@ -234,7 +234,7 @@
                     </table>
                 </div>
 
-                <div class="px-6 py-4 bg-slate-50 dark:bg-zinc-800 border-t border-slate-100 dark:border-zinc-800/60">
+                <div class="px-6 py-4 bg-slate-50 dark:bg-zinc-850 dark:bg-zinc-800 border-t border-slate-100 dark:border-zinc-800/60">
                     {{ $customers->appends(request()->query())->links() }}
                 </div>
             </div>
@@ -248,7 +248,7 @@
         <div class="flex items-center justify-between mb-8">
             <h3 class="text-xl font-bold text-slate-800 dark:text-white">Edit Data Customer</h3>
             <button onclick="closeEditModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/80 transition-colors">
-                <span class="material-symbols-outlined text-slate-400 dark:text-white">close</span>
+                <span class="material-symbols-outlined text-slate-400 dark:text-zinc-400">close</span>
             </button>
         </div>
         <form id="editCustomerForm" method="POST">
@@ -256,16 +256,16 @@
             @method('PUT')
             <div class="space-y-6">
                 <div class="space-y-2">
-                    <label class="text-xs font-bold text-slate-400 dark:text-white uppercase tracking-widest">Nama Customer</label>
-                    <input name="name" id="edit_name" required class="w-full px-4 py-3 bg-slate-50 dark:bg-zinc-800 border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-slate-700 dark:text-zinc-50 dark:text-white font-bold" type="text"/>
+                    <label class="text-xs font-bold text-slate-400 dark:text-zinc-400 uppercase tracking-widest">Nama Customer</label>
+                    <input name="name" id="edit_name" required class="w-full px-4 py-3 bg-slate-50 dark:bg-zinc-850 dark:bg-zinc-800 border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-slate-700 dark:text-zinc-50 dark:text-zinc-200 font-bold" type="text"/>
                 </div>
                 <div class="space-y-2">
-                    <label class="text-xs font-bold text-slate-400 dark:text-white uppercase tracking-widest">No. WhatsApp / HP</label>
-                    <input name="phone" id="edit_phone" class="w-full px-4 py-3 bg-slate-50 dark:bg-zinc-800 border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-slate-700 dark:text-zinc-50 dark:text-white font-bold" type="text"/>
+                    <label class="text-xs font-bold text-slate-400 dark:text-zinc-400 uppercase tracking-widest">No. WhatsApp / HP</label>
+                    <input name="phone" id="edit_phone" class="w-full px-4 py-3 bg-slate-50 dark:bg-zinc-850 dark:bg-zinc-800 border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-slate-700 dark:text-zinc-50 dark:text-zinc-200 font-bold" type="text"/>
                 </div>
                 <div class="space-y-2">
-                    <label class="text-xs font-bold text-slate-400 dark:text-white uppercase tracking-widest">Alamat Lengkap</label>
-                    <textarea name="address" id="edit_address" rows="3" class="w-full px-4 py-3 bg-slate-50 dark:bg-zinc-800 border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-slate-700 dark:text-zinc-50 dark:text-white font-bold"></textarea>
+                    <label class="text-xs font-bold text-slate-400 dark:text-zinc-400 uppercase tracking-widest">Alamat Lengkap</label>
+                    <textarea name="address" id="edit_address" rows="3" class="w-full px-4 py-3 bg-slate-50 dark:bg-zinc-850 dark:bg-zinc-800 border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-slate-700 dark:text-zinc-50 dark:text-zinc-200 font-bold"></textarea>
                 </div>
                 <button class="w-full py-4 rounded-xl shadow-lg shadow-emerald-900/30 transition-all" 
                         style="background-color: #0b6e4f !important; color: #ffffff !important; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em;" 

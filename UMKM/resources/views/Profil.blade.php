@@ -6,7 +6,7 @@
 <div class="p-10 max-w-4xl mx-auto space-y-8">
         
         @if (session('success'))
-        <div class="rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-100 px-4 py-3 text-sm font-medium">
+        <div class="rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-400 dark:text-emerald-300 border border-emerald-100 px-4 py-3 text-sm font-medium">
             {{ session('success') }}
         </div>
         @endif
@@ -22,7 +22,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <section class="bg-surface-container-lowest rounded-xl shadow-sm border border-slate-100 dark:border-zinc-800/60 overflow-hidden">
                 <div class="px-6 py-5 bg-surface-container-low border-b border-slate-100 dark:border-zinc-800/60">
-                    <h3 class="text-lg font-bold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250 flex items-center">
+                    <h3 class="text-lg font-bold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400 flex items-center">
                         <span class="material-symbols-outlined mr-2 text-emerald-600 dark:text-emerald-400">person</span> Informasi Dasar
                     </h3>
                 </div>
@@ -51,7 +51,7 @@
 
             <section class="bg-surface-container-lowest rounded-xl shadow-sm border border-slate-100 dark:border-zinc-800/60 overflow-hidden h-fit">
                 <div class="px-6 py-5 bg-surface-container-low border-b border-slate-100 dark:border-zinc-800/60">
-                    <h3 class="text-lg font-bold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250 flex items-center">
+                    <h3 class="text-lg font-bold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400 flex items-center">
                         <span class="material-symbols-outlined mr-2 text-emerald-600 dark:text-emerald-400">lock</span> Ganti Kata Sandi
                     </h3>
                 </div>

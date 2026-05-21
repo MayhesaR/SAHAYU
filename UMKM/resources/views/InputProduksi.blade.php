@@ -10,7 +10,7 @@
 <!-- Page Header -->
 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
     <div class="w-full">
-        <h2 class="text-3xl font-extrabold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250 tracking-tight break-words">Input Produksi</h2>
+        <h2 class="text-3xl font-extrabold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400 tracking-tight break-words">Input Produksi</h2>
         <p class="text-on-surface-variant font-body mt-1 text-sm md:text-base">Catat batch produksi baru dan pantau penggunaan bahan baku secara real-time untuk akurasi HPP.</p>
     </div>
     <div class="flex flex-wrap items-center gap-2.5 w-full sm:w-auto justify-start sm:justify-end">
@@ -35,7 +35,7 @@
     </div>
 </div>
 @if (session('success'))
-<div class="rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-100 px-4 py-3 text-sm font-medium">
+<div class="rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-400 dark:text-emerald-300 border border-emerald-100 px-4 py-3 text-sm font-medium">
 {{ session('success') }}
 </div>
 @endif
@@ -48,20 +48,20 @@
 @endif
 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
 <article class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-gray-100 dark:border-zinc-800/50 hover:shadow-md transition-all duration-300">
-<p class="text-xs uppercase tracking-widest text-slate-500 dark:text-white font-semibold">Batch Hari Ini</p>
-<h3 class="mt-2 text-3xl font-extrabold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250">{{ $batchesToday }}</h3>
+<p class="text-xs uppercase tracking-widest text-slate-500 dark:text-zinc-400 font-semibold">Batch Hari Ini</p>
+<h3 class="mt-2 text-3xl font-extrabold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400">{{ $batchesToday }}</h3>
 </article>
 <article class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-gray-100 dark:border-zinc-800/50 hover:shadow-md transition-all duration-300">
-<p class="text-xs uppercase tracking-widest text-slate-500 dark:text-white font-semibold">Selesai Hari Ini</p>
-<h3 class="mt-2 text-3xl font-extrabold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250">{{ $doneBatchesToday }}</h3>
+<p class="text-xs uppercase tracking-widest text-slate-500 dark:text-zinc-400 font-semibold">Selesai Hari Ini</p>
+<h3 class="mt-2 text-3xl font-extrabold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400">{{ $doneBatchesToday }}</h3>
 </article>
 <article class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-gray-100 dark:border-zinc-800/50 hover:shadow-md transition-all duration-300">
-<p class="text-xs uppercase tracking-widest text-slate-500 dark:text-white font-semibold">Yield Rata-rata</p>
-<h3 class="mt-2 text-3xl font-extrabold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250">{{ number_format($avgYieldToday, 1, ',', '.') }}%</h3>
+<p class="text-xs uppercase tracking-widest text-slate-500 dark:text-zinc-400 font-semibold">Yield Rata-rata</p>
+<h3 class="mt-2 text-3xl font-extrabold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400">{{ number_format($avgYieldToday, 1, ',', '.') }}%</h3>
 </article>
 <article class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-gray-100 dark:border-zinc-800/50 hover:shadow-md transition-all duration-300">
-<p class="text-xs uppercase tracking-widest text-slate-500 dark:text-white font-semibold">Rata-rata HPP</p>
-<h3 class="mt-2 text-3xl font-extrabold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250">Rp {{ number_format($avgHpp, 0, ',', '.') }}</h3>
+<p class="text-xs uppercase tracking-widest text-slate-500 dark:text-zinc-400 font-semibold">Rata-rata HPP</p>
+<h3 class="mt-2 text-3xl font-extrabold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400">Rp {{ number_format($avgHpp, 0, ',', '.') }}</h3>
 </article>
 </div>
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -139,7 +139,7 @@
                                         </div>
                                         <div class="w-32 flex items-center space-x-2">
                                             <input name="materials[0][quantity]" class="w-full bg-white dark:bg-zinc-900 border-none rounded text-sm p-1 focus:ring-1 focus:ring-primary/20" placeholder="Qty" type="number"/>
-                                            <span class="text-[10px] font-bold text-slate-400 dark:text-white unit-label">SATUAN</span>
+                                            <span class="text-[10px] font-bold text-slate-400 dark:text-zinc-400 unit-label">SATUAN</span>
                                         </div>
                                         <button class="text-slate-300 hover:text-error transition-colors" type="button">
                                             <span class="material-symbols-outlined text-lg">delete</span>
@@ -158,7 +158,7 @@
                                         </div>
                                         <div class="w-32 flex items-center space-x-2">
                                             <input name="materials[1][quantity]" class="w-full bg-white dark:bg-zinc-900 border-none rounded text-sm p-1 focus:ring-1 focus:ring-primary/20" placeholder="Qty" type="number"/>
-                                            <span class="text-[10px] font-bold text-slate-400 dark:text-white unit-label">SATUAN</span>
+                                            <span class="text-[10px] font-bold text-slate-400 dark:text-zinc-400 unit-label">SATUAN</span>
                                         </div>
 <button class="text-slate-300 hover:text-error transition-colors" type="button">
 <span class="material-symbols-outlined text-lg">delete</span>
@@ -181,7 +181,7 @@
 <textarea name="notes" class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all" rows="3" placeholder="Contoh: perubahan formula, kendala mesin, dll."></textarea>
 </div>
 <div class="pt-4 flex justify-end space-x-4">
-<button class="text-on-surface-variant text-sm font-bold px-6 py-2 hover:bg-slate-50 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 rounded-lg transition-colors" type="button">Batal</button>
+<button class="text-on-surface-variant text-sm font-bold px-6 py-2 hover:bg-slate-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 rounded-lg transition-colors" type="button">Batal</button>
 <button class="px-10 py-3 rounded-xl shadow-lg shadow-emerald-900/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2" 
         style="background-color: #0b6e4f !important; color: #ffffff !important; font-weight: 900;" 
         type="submit">
@@ -222,18 +222,18 @@
 </div>
 </div>
 <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm space-y-4">
-<h4 class="text-sm font-bold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250 border-b border-slate-50 pb-3">Estimasi HPP Sementara</h4>
+<h4 class="text-sm font-bold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400 border-b border-slate-50 pb-3">Estimasi HPP Sementara</h4>
 <div class="space-y-3">
 <div class="flex justify-between items-center">
 <span class="text-xs text-on-surface-variant font-medium">Biaya Bahan Baku</span>
-<span class="text-xs font-bold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250">Rp {{ number_format($materialCostEstimate, 0, ',', '.') }}</span>
+<span class="text-xs font-bold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400">Rp {{ number_format($materialCostEstimate, 0, ',', '.') }}</span>
 </div>
 <div class="flex justify-between items-center">
 <span class="text-xs text-on-surface-variant font-medium">Overhead Workshop</span>
-<span class="text-xs font-bold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250">Rp {{ number_format($overheadCostEstimate, 0, ',', '.') }}</span>
+<span class="text-xs font-bold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400">Rp {{ number_format($overheadCostEstimate, 0, ',', '.') }}</span>
 </div>
 <div class="pt-3 border-t border-dashed border-slate-200 dark:border-zinc-800 flex justify-between items-center">
-<span class="text-sm font-bold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250">Total Produksi</span>
+<span class="text-sm font-bold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400">Total Produksi</span>
 <span class="text-sm font-black text-emerald-600 dark:text-emerald-400">Rp {{ number_format($totalProductionEstimate, 0, ',', '.') }}</span>
 </div>
 </div>
@@ -260,8 +260,8 @@
 
 <section class="space-y-6">
 <div class="flex items-center justify-between">
-<h3 class="text-xl font-extrabold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250 tracking-tight">Batch Produksi</h3>
-<span class="text-[10px] font-bold text-slate-400 dark:text-white bg-white dark:bg-zinc-900 px-3 py-1.5 rounded-full border border-outline-variant/5">
+<h3 class="text-xl font-extrabold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400 tracking-tight">Batch Produksi</h3>
+<span class="text-[10px] font-bold text-slate-400 dark:text-zinc-400 bg-white dark:bg-zinc-900 px-3 py-1.5 rounded-full border border-outline-variant/5">
     {{ $runningProductions->total() }} batch ditemukan
 </span>
 </div>
@@ -283,24 +283,24 @@
 @forelse ($runningProductions as $production)
 <tr class="hover:bg-primary-fixed/10 transition-all cursor-pointer group">
 <td class="px-8 py-5">
-<span class="text-sm font-bold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250">{{ $production->batch_code ?: '#PRD-'.str_pad((string) $production->id, 4, '0', STR_PAD_LEFT) }}</span>
+<span class="text-sm font-bold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400">{{ $production->batch_code ?: '#PRD-'.str_pad((string) $production->id, 4, '0', STR_PAD_LEFT) }}</span>
 </td>
 <td class="px-8 py-5">
 <div class="flex items-center">
 <div>
-<p class="text-sm font-bold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250">{{ $production->product?->name ?? '-' }}</p>
-<p class="text-[10px] font-semibold text-slate-400 dark:text-white">{{ $production->supervisor_name ?: 'Tanpa supervisor' }}</p>
+<p class="text-sm font-bold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400">{{ $production->product?->name ?? '-' }}</p>
+<p class="text-[10px] font-semibold text-slate-400 dark:text-zinc-400">{{ $production->supervisor_name ?: 'Tanpa supervisor' }}</p>
 </div>
 </div>
 </td>
 <td class="px-8 py-5 text-center">
-<span class="text-sm font-bold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250">{{ number_format($production->quantity, 0, ',', '.') }} Unit</span>
+<span class="text-sm font-bold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400">{{ number_format($production->quantity, 0, ',', '.') }} Unit</span>
 </td>
 <td class="px-8 py-5 text-center">
-<span class="text-sm font-bold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250" data-production-qty="{{ $production->id }}">{{ number_format((int) ($production->good_quantity ?? 0), 0, ',', '.') }}</span>
+<span class="text-sm font-bold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400" data-production-qty="{{ $production->id }}">{{ number_format((int) ($production->good_quantity ?? 0), 0, ',', '.') }}</span>
 </td>
 <td class="px-8 py-5">
-<span class="text-sm font-bold text-emerald-900 dark:text-emerald-200 dark:text-emerald-250">Rp {{ number_format($production->unit_hpp_snapshot ?? 0, 0, ',', '.') }}</span>
+<span class="text-sm font-bold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400">Rp {{ number_format($production->unit_hpp_snapshot ?? 0, 0, ',', '.') }}</span>
 </td>
 <td class="px-8 py-5">
 <span class="text-sm font-medium text-on-surface-variant">{{ \Carbon\Carbon::parse($production->production_date)->translatedFormat('d M Y') }}</span>

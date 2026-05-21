@@ -31,7 +31,7 @@
 
     <!-- Sessions and Errors Alert -->
     @if (session('success'))
-        <div class="p-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 text-emerald-800 dark:text-emerald-300 rounded-2xl flex items-center gap-3 shadow-sm animate-fade-in text-xs font-bold">
+        <div class="p-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 text-emerald-800 dark:text-emerald-400 dark:text-emerald-300 rounded-2xl flex items-center gap-3 shadow-sm animate-fade-in text-xs font-bold">
             <span class="material-symbols-outlined text-emerald-600 dark:text-emerald-400">check_circle</span>
             <span>{{ session('success') }}</span>
         </div>
@@ -55,9 +55,9 @@
                 <span class="material-symbols-outlined text-2xl font-bold">inventory_2</span>
             </div>
             <div class="min-w-0">
-                <p class="text-xs uppercase tracking-widest text-stone-400 dark:text-white font-bold truncate">Total Produk</p>
+                <p class="text-xs uppercase tracking-widest text-stone-400 dark:text-zinc-400 font-bold truncate">Total Produk</p>
                 <h3 class="mt-0.5 text-2xl font-black text-stone-800 dark:text-white tracking-tight">{{ $products->total() }}</h3>
-                <p class="text-[10px] text-stone-500 dark:text-white font-medium">produk terdaftar</p>
+                <p class="text-[10px] text-stone-500 dark:text-zinc-400 font-medium">produk terdaftar</p>
             </div>
         </article>
 
@@ -66,9 +66,9 @@
                 <span class="material-symbols-outlined text-2xl font-bold">payments</span>
             </div>
             <div class="min-w-0">
-                <p class="text-xs uppercase tracking-widest text-stone-400 dark:text-white font-bold truncate">Harga Rata-rata</p>
+                <p class="text-xs uppercase tracking-widest text-stone-400 dark:text-zinc-400 font-bold truncate">Harga Rata-rata</p>
                 <h3 class="mt-0.5 text-2xl font-black text-stone-800 dark:text-white tracking-tight">Rp {{ number_format((float) $products->avg('selling_price'), 0, ',', '.') }}</h3>
-                <p class="text-[10px] text-stone-500 dark:text-white font-medium">nilai jual per produk</p>
+                <p class="text-[10px] text-stone-500 dark:text-zinc-400 font-medium">nilai jual per produk</p>
             </div>
         </article>
 
@@ -77,9 +77,9 @@
                 <span class="material-symbols-outlined text-2xl font-bold">fact_check</span>
             </div>
             <div class="min-w-0">
-                <p class="text-xs uppercase tracking-widest text-stone-400 dark:text-white font-bold truncate">Stok Barang Jadi</p>
+                <p class="text-xs uppercase tracking-widest text-stone-400 dark:text-zinc-400 font-bold truncate">Stok Barang Jadi</p>
                 <h3 class="mt-0.5 text-2xl font-black text-stone-800 dark:text-white tracking-tight">{{ number_format((int) $products->sum('stock'), 0, ',', '.') }}</h3>
-                <p class="text-[10px] text-stone-500 dark:text-white font-medium">unit siap jual</p>
+                <p class="text-[10px] text-stone-500 dark:text-zinc-400 font-medium">unit siap jual</p>
             </div>
         </article>
     </div>
@@ -89,7 +89,7 @@
         <!-- Left Side: Add Product Form (Admins Only) -->
         @if(auth()->user()->isAdmin())
             <section class="lg:col-span-4 bg-white dark:bg-zinc-900 rounded-3xl shadow-lg shadow-emerald-900/5 border border-stone-100 dark:border-zinc-800/60 overflow-hidden hover:shadow-xl transition-all duration-300" id="form-produk">
-                <div class="px-6 py-5 bg-stone-50/50 dark:bg-zinc-800/30 dark:bg-transparent border-b border-stone-100 dark:border-zinc-800/60">
+                <div class="px-6 py-5 bg-stone-50/50 dark:bg-zinc-850/30 dark:bg-zinc-800/30 dark:bg-transparent border-b border-stone-100 dark:border-zinc-800/60">
                     <h3 class="text-base font-bold text-stone-800 dark:text-white flex items-center">
                         <span class="material-symbols-outlined mr-2 text-emerald-600 dark:text-emerald-400 flex-shrink-0 font-bold">inventory</span> Tambah Produk Baru
                     </h3>
@@ -97,38 +97,38 @@
                 <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-5">
                     @csrf
                     <div class="space-y-2">
-                        <label class="text-xs font-bold text-stone-400 dark:text-white uppercase tracking-widest">Nama Produk</label>
-                        <input class="w-full bg-stone-50 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl p-3 text-sm focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-stone-800 dark:text-white font-semibold transition-all" name="name" placeholder="Contoh: Kue Kering Premium" required type="text"/>
+                        <label class="text-xs font-bold text-stone-400 dark:text-zinc-400 uppercase tracking-widest">Nama Produk</label>
+                        <input class="w-full bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl p-3 text-sm focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-stone-800 dark:text-white font-semibold transition-all" name="name" placeholder="Contoh: Kue Kering Premium" required type="text"/>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-xs font-bold text-stone-400 dark:text-white uppercase tracking-widest">Foto Produk</label>
-                        <div class="relative bg-stone-50 dark:bg-zinc-800 rounded-xl p-3 flex items-center gap-3 border-2 border-dashed border-stone-200 dark:border-zinc-800">
-                            <span class="material-symbols-outlined text-stone-400 dark:text-white">image</span>
-                            <input class="w-full text-xs text-stone-500 dark:text-white file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 dark:file:bg-emerald-950/40 file:text-emerald-700 dark:file:text-emerald-400 hover:file:bg-emerald-100 cursor-pointer font-bold" name="image" accept="image/*" type="file"/>
+                        <label class="text-xs font-bold text-stone-400 dark:text-zinc-400 uppercase tracking-widest">Foto Produk</label>
+                        <div class="relative bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 rounded-xl p-3 flex items-center gap-3 border-2 border-dashed border-stone-200 dark:border-zinc-800">
+                            <span class="material-symbols-outlined text-stone-400 dark:text-zinc-400">image</span>
+                            <input class="w-full text-xs text-stone-500 dark:text-white file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 dark:file:bg-emerald-950/40 file:text-emerald-700 dark:file:text-zinc-400 hover:file:bg-emerald-100 cursor-pointer font-bold" name="image" accept="image/*" type="file"/>
                         </div>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-xs font-bold text-stone-400 dark:text-white uppercase tracking-widest">Kategori Produk</label>
-                        <select name="category_id" class="w-full bg-stone-50 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl p-3 text-sm focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-stone-700 dark:text-zinc-50 dark:text-white font-semibold transition-all">
+                        <label class="text-xs font-bold text-stone-400 dark:text-zinc-400 uppercase tracking-widest">Kategori Produk</label>
+                        <select name="category_id" class="w-full bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl p-3 text-sm focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-stone-700 dark:text-zinc-50 dark:text-zinc-200 font-semibold transition-all">
                             <option value="">-- Pilih Kategori (Opsional) --</option>
                             @foreach($categories as $cat)
                                 <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                             @endforeach
                         </select>
-                        <input class="w-full bg-stone-50 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl p-3 text-xs focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-stone-600 dark:text-white mt-1 transition-all" name="new_category_name" placeholder="Atau ketik kategori baru..." type="text"/>
+                        <input class="w-full bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl p-3 text-xs focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-stone-600 dark:text-zinc-300 mt-1 transition-all" name="new_category_name" placeholder="Atau ketik kategori baru..." type="text"/>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-xs font-bold text-stone-400 dark:text-white uppercase tracking-widest">Harga Jual (Rp)</label>
-                        <input class="w-full bg-stone-50 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl p-3 text-sm focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-stone-800 dark:text-white font-bold transition-all font-mono" min="0" name="selling_price" placeholder="0" required step="0.01" type="number"/>
+                        <label class="text-xs font-bold text-stone-400 dark:text-zinc-400 uppercase tracking-widest">Harga Jual (Rp)</label>
+                        <input class="w-full bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl p-3 text-sm focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-stone-800 dark:text-white font-bold transition-all font-mono" min="0" name="selling_price" placeholder="0" required step="0.01" type="number"/>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="space-y-2">
-                            <label class="text-xs font-bold text-stone-400 dark:text-white uppercase tracking-widest">Stok Awal</label>
-                            <input class="w-full bg-stone-50 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl p-3 text-sm focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-stone-800 dark:text-white font-bold transition-all font-mono" min="0" name="stock" placeholder="0" required type="number"/>
+                            <label class="text-xs font-bold text-stone-400 dark:text-zinc-400 uppercase tracking-widest">Stok Awal</label>
+                            <input class="w-full bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl p-3 text-sm focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-stone-800 dark:text-white font-bold transition-all font-mono" min="0" name="stock" placeholder="0" required type="number"/>
                         </div>
                         <div class="space-y-2">
-                            <label class="text-xs font-bold text-stone-400 dark:text-white uppercase tracking-widest">Min. Stok</label>
-                            <input class="w-full bg-stone-50 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl p-3 text-sm focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-stone-800 dark:text-white font-bold transition-all font-mono" min="0" name="minimum_stock" placeholder="0" required type="number"/>
+                            <label class="text-xs font-bold text-stone-400 dark:text-zinc-400 uppercase tracking-widest">Min. Stok</label>
+                            <input class="w-full bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl p-3 text-sm focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-stone-800 dark:text-white font-bold transition-all font-mono" min="0" name="minimum_stock" placeholder="0" required type="number"/>
                         </div>
                     </div>
                     <button class="w-full px-6 py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full shadow-lg shadow-emerald-500/20 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 font-bold text-xs" 
@@ -168,9 +168,9 @@
                                 @if($product->image)
                                     <img src="{{ asset('storage/' . $product->image) }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="{{ $product->name }}">
                                 @else
-                                    <div class="w-full h-full flex flex-col items-center justify-center text-stone-400 dark:text-white">
+                                    <div class="w-full h-full flex flex-col items-center justify-center text-stone-400 dark:text-zinc-400">
                                         <span class="material-symbols-outlined text-4xl mb-1 text-stone-300">image_not_supported</span>
-                                        <span class="text-[10px] font-bold uppercase tracking-wider text-stone-400 dark:text-white">No Image</span>
+                                        <span class="text-[10px] font-bold uppercase tracking-wider text-stone-400 dark:text-zinc-400">No Image</span>
                                     </div>
                                 @endif
 
@@ -203,7 +203,7 @@
                                             {{ $product->category->name }}
                                         </span>
                                     @else
-                                        <span class="text-[9px] font-bold uppercase bg-stone-50 dark:bg-zinc-800 text-stone-400 dark:text-white px-2 py-0.5 rounded-md border border-stone-100 dark:border-zinc-800/60 tracking-wider">
+                                        <span class="text-[9px] font-bold uppercase bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 text-stone-400 dark:text-zinc-400 px-2 py-0.5 rounded-md border border-stone-100 dark:border-zinc-800/60 tracking-wider">
                                             Umum
                                         </span>
                                     @endif
@@ -234,7 +234,7 @@
                                     </span>
                                 @endif
                                 
-                                <span class="text-[9px] text-stone-400 dark:text-white font-semibold uppercase tracking-wider">
+                                <span class="text-[9px] text-stone-400 dark:text-zinc-400 font-semibold uppercase tracking-wider">
                                     Min: {{ number_format((int)$product->minimum_stock, 0, ',', '.') }} pcs
                                 </span>
                             </div>
@@ -245,7 +245,7 @@
                             <div x-data="{ showInput: false, amount: 1 }" class="mt-4 pt-4 border-t border-stone-100 dark:border-zinc-800/60">
                                 <!-- Default State Button -->
                                 <button x-show="!showInput" @click="showInput = true" type="button"
-                                        class="w-full bg-stone-50 dark:bg-zinc-800 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:text-emerald-600 dark:hover:text-emerald-400 text-stone-700 dark:text-zinc-50 dark:text-white font-bold py-2 rounded-xl transition-all text-xs flex items-center justify-center gap-1.5 border border-stone-200/40 dark:border-zinc-800/40 shadow-sm">
+                                        class="w-full bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:text-emerald-600 dark:hover:text-emerald-400 text-stone-700 dark:text-zinc-50 dark:text-white font-bold py-2 rounded-xl transition-all text-xs flex items-center justify-center gap-1.5 border border-stone-200/40 dark:border-zinc-800/40 shadow-sm">
                                     <span class="material-symbols-outlined text-sm font-bold">add</span>
                                     <span>Tambah Stok</span>
                                 </button>
@@ -254,7 +254,7 @@
                                 <form x-show="showInput" x-cloak action="{{ route('products.add-stock', $product) }}" method="POST"
                                       class="flex items-center justify-between gap-1.5 transition-all">
                                     @csrf
-                                    <div class="flex items-center bg-stone-50 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl px-1.5 py-0.5 max-w-[120px]">
+                                    <div class="flex items-center bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl px-1.5 py-0.5 max-w-[120px]">
                                         <button type="button" @click="amount = Math.max(1, amount - 1)"
                                                 class="w-6 h-6 flex items-center justify-center rounded-lg hover:bg-stone-200/50 text-stone-600 dark:text-white font-bold text-sm">
                                             -
@@ -269,7 +269,7 @@
                                     
                                     <div class="flex items-center gap-1">
                                         <button type="button" @click="showInput = false; amount = 1"
-                                                class="w-8 h-8 rounded-lg bg-stone-100 dark:bg-zinc-800 hover:bg-stone-200 dark:hover:bg-zinc-800 text-stone-500 dark:text-white hover:text-stone-700 dark:hover:text-zinc-50 dark:hover:text-white transition-colors flex items-center justify-center">
+                                                class="w-8 h-8 rounded-lg bg-stone-100 dark:bg-zinc-800 hover:bg-stone-200 dark:hover:bg-zinc-800 text-stone-500 dark:text-white hover:text-stone-700 dark:hover:text-zinc-50 dark:hover:text-zinc-400 transition-colors flex items-center justify-center">
                                             <span class="material-symbols-outlined text-base">close</span>
                                         </button>
                                         <button type="submit"
@@ -285,9 +285,9 @@
                 @empty
                     <div class="col-span-full bg-white dark:bg-zinc-900 rounded-3xl p-10 text-stone-500 dark:text-white border border-stone-100 dark:border-zinc-800/60 shadow-lg shadow-emerald-900/5 text-center">
                         <div class="flex flex-col items-center justify-center gap-2">
-                            <span class="material-symbols-outlined text-4xl text-slate-400 dark:text-white">inventory_2</span>
-                            <p class="font-bold text-stone-700 dark:text-zinc-50 dark:text-white">Belum ada produk.</p>
-                            <p class="text-xs text-stone-400 dark:text-white">Tambahkan produk pertama agar modul Produksi dan Penjualan bisa dipakai.</p>
+                            <span class="material-symbols-outlined text-4xl text-slate-400 dark:text-zinc-400">inventory_2</span>
+                            <p class="font-bold text-stone-700 dark:text-zinc-50 dark:text-zinc-200">Belum ada produk.</p>
+                            <p class="text-xs text-stone-400 dark:text-zinc-400">Tambahkan produk pertama agar modul Produksi dan Penjualan bisa dipakai.</p>
                         </div>
                     </div>
                 @endforelse
@@ -307,7 +307,7 @@
         <div class="flex items-center justify-between mb-8">
             <h3 class="text-lg font-black text-stone-800 dark:text-white font-manrope">Edit Produk</h3>
             <button onclick="closeEditModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-stone-100 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/80 transition-colors">
-                <span class="material-symbols-outlined text-stone-400 dark:text-white">close</span>
+                <span class="material-symbols-outlined text-stone-400 dark:text-zinc-400">close</span>
             </button>
         </div>
         <form id="editProductForm" method="POST" enctype="multipart/form-data">
@@ -315,32 +315,32 @@
             @method('PUT')
             <div class="space-y-6">
                 <div class="space-y-2">
-                    <label class="text-xs font-bold text-stone-400 dark:text-white uppercase tracking-widest">Nama Produk</label>
-                    <input name="name" id="edit_name" required class="w-full px-4 py-3 bg-stone-50 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-stone-800 dark:text-white font-semibold" type="text"/>
+                    <label class="text-xs font-bold text-stone-400 dark:text-zinc-400 uppercase tracking-widest">Nama Produk</label>
+                    <input name="name" id="edit_name" required class="w-full px-4 py-3 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-stone-800 dark:text-white font-semibold" type="text"/>
                 </div>
                 <div class="space-y-2">
-                    <label class="text-xs font-bold text-stone-400 dark:text-white uppercase tracking-widest">Foto Produk</label>
-                    <div class="relative bg-stone-50 dark:bg-zinc-800 rounded-xl p-3 flex flex-col gap-2 border-2 border-dashed border-stone-200 dark:border-zinc-800">
+                    <label class="text-xs font-bold text-stone-400 dark:text-zinc-400 uppercase tracking-widest">Foto Produk</label>
+                    <div class="relative bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 rounded-xl p-3 flex flex-col gap-2 border-2 border-dashed border-stone-200 dark:border-zinc-800">
                         <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-stone-400 dark:text-white">image</span>
-                            <input class="w-full text-xs text-stone-500 dark:text-white file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 dark:file:bg-emerald-950/40 file:text-emerald-700 dark:file:text-emerald-400 hover:file:bg-emerald-100 cursor-pointer font-bold" name="image" accept="image/*" type="file"/>
+                            <span class="material-symbols-outlined text-stone-400 dark:text-zinc-400">image</span>
+                            <input class="w-full text-xs text-stone-500 dark:text-white file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 dark:file:bg-emerald-950/40 file:text-emerald-700 dark:file:text-zinc-400 hover:file:bg-emerald-100 cursor-pointer font-bold" name="image" accept="image/*" type="file"/>
                         </div>
-                        <p class="text-[10px] text-stone-400 dark:text-white font-semibold">*Biarkan kosong jika tidak ingin mengubah foto</p>
+                        <p class="text-[10px] text-stone-400 dark:text-zinc-400 font-semibold">*Biarkan kosong jika tidak ingin mengubah foto</p>
                     </div>
                 </div>
                 <div class="space-y-2">
-                    <label class="text-xs font-bold text-stone-400 dark:text-white uppercase tracking-widest">Kategori Produk</label>
-                    <select name="category_id" id="edit_category_id" class="w-full px-4 py-3 bg-stone-50 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-stone-700 dark:text-zinc-50 dark:text-white font-semibold">
+                    <label class="text-xs font-bold text-stone-400 dark:text-zinc-400 uppercase tracking-widest">Kategori Produk</label>
+                    <select name="category_id" id="edit_category_id" class="w-full px-4 py-3 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-stone-700 dark:text-zinc-50 dark:text-zinc-200 font-semibold">
                         <option value="">-- Pilih Kategori (Opsional) --</option>
                         @foreach($categories as $cat)
                             <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                         @endforeach
                     </select>
-                    <input class="w-full px-4 py-2.5 bg-stone-50 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-stone-600 dark:text-white text-xs mt-1" name="new_category_name" placeholder="Atau ketik kategori baru..." type="text"/>
+                    <input class="w-full px-4 py-2.5 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-stone-600 dark:text-white text-xs mt-1" name="new_category_name" placeholder="Atau ketik kategori baru..." type="text"/>
                 </div>
                 <div class="space-y-2">
-                    <label class="text-xs font-bold text-stone-400 dark:text-white uppercase tracking-widest">Harga Jual (Rp)</label>
-                    <input name="selling_price" id="edit_price" required class="w-full px-4 py-3 bg-stone-50 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-stone-800 dark:text-white font-bold font-mono" type="number"/>
+                    <label class="text-xs font-bold text-stone-400 dark:text-zinc-400 uppercase tracking-widest">Harga Jual (Rp)</label>
+                    <input name="selling_price" id="edit_price" required class="w-full px-4 py-3 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-stone-800 dark:text-white font-bold font-mono" type="number"/>
                 </div>
                 <button class="w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl shadow-lg shadow-emerald-500/20 transition-all font-bold text-xs uppercase tracking-widest" 
                         type="submit">

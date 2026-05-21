@@ -118,7 +118,7 @@
     </style>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-stone-50 dark:bg-zinc-800 text-stone-800 dark:text-white antialiased selection:bg-emerald-500/20 selection:text-emerald-900 dark:selection:text-emerald-200 overflow-x-hidden max-w-full" x-data="{ sidebarOpen: false }">
+<body class="bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 text-stone-800 dark:text-white antialiased selection:bg-emerald-500/20 selection:text-emerald-900 dark:selection:text-emerald-300 dark:selection:text-white overflow-x-hidden max-w-full" x-data="{ sidebarOpen: false }">
 
     <!-- Mobile sidebar backdrop -->
     <div x-show="sidebarOpen" 
