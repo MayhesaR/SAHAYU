@@ -217,17 +217,15 @@
                                             {{ strtoupper(substr($product->name, 0, 2)) }}
                                         </div>
                                     @endif
-
-                                    <!-- Stock Badge in real time -->
-                                    <div class="absolute bottom-1 right-1 bg-stone-900/75 text-white px-1.5 py-0.5 rounded text-[8px] font-semibold flex items-center gap-0.5 backdrop-blur-sm">
-                                        <span>📦 {{ $product->stock }}</span>
-                                    </div>
                                 </div>
 
                                 <!-- Title and price -->
                                 <div class="mt-1 space-y-0.5">
                                     <p class="text-[11px] font-bold text-stone-800 dark:text-white truncate">{{ $product->name }}</p>
-                                    <p class="text-[10px] font-bold text-[#0b6e4f] dark:text-emerald-400">Rp {{ number_format($product->selling_price, 0, ',', '.') }}</p>
+                                    <div class="flex items-center justify-between gap-1">
+                                        <p class="text-[10px] font-bold text-[#0b6e4f] dark:text-emerald-400">Rp {{ number_format($product->selling_price, 0, ',', '.') }}</p>
+                                        <span class="text-[9px] font-bold text-stone-400 dark:text-zinc-400">Stok: {{ $product->stock }}</span>
+                                    </div>
                                 </div>
                             </div>
                         @empty
