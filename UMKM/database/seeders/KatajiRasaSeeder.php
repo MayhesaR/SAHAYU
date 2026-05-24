@@ -89,6 +89,54 @@ class KatajiRasaSeeder extends Seeder
                 $products[] = $product;
             }
 
+            // 3b. Seed Standard Recipes (product_ingredient)
+            foreach ($products as $product) {
+                $recipe = [];
+                if (str_contains($product->name, 'Klasik 2 Rasa')) {
+                    $recipe = [
+                        'Roti Kasur / Roti Terigu' => 1.0,
+                        'Margarin / Mentega' => 0.05,
+                        'Selai Cokelat Premium' => 0.05,
+                        'Selai Matcha / Green Tea' => 0.05,
+                        'Susu Kental Manis' => 0.1,
+                        'Kemasan Box Roti Kataji' => 1.0,
+                    ];
+                } elseif (str_contains($product->name, 'Full Keju')) {
+                    $recipe = [
+                        'Roti Kasur / Roti Terigu' => 1.0,
+                        'Margarin / Mentega' => 0.05,
+                        'Keju Cheddar Batangan' => 0.1,
+                        'Susu Kental Manis' => 0.15,
+                        'Kemasan Box Roti Kataji' => 1.0,
+                    ];
+                } elseif (str_contains($product->name, 'Cokelat Matcha')) {
+                    $recipe = [
+                        'Roti Kasur / Roti Terigu' => 1.0,
+                        'Margarin / Mentega' => 0.05,
+                        'Selai Cokelat Premium' => 0.08,
+                        'Selai Matcha / Green Tea' => 0.08,
+                        'Susu Kental Manis' => 0.1,
+                        'Kemasan Box Roti Kataji' => 1.0,
+                    ];
+                } elseif (str_contains($product->name, 'Basreng Garing')) {
+                    $recipe = [
+                        'Kemasan Box Roti Kataji' => 1.0,
+                    ];
+                }
+
+                foreach ($recipe as $materialName => $qty) {
+                    $material = collect($materials)->first(function ($m) use ($materialName) {
+                        return str_contains($m->name, $materialName) || str_contains($materialName, $m->name);
+                    });
+                    if ($material) {
+                        $product->ingredients()->attach($material->id, [
+                            'quantity' => $qty,
+                            'company_id' => $company->id
+                        ]);
+                    }
+                }
+            }
+
             // 4. CUSTOMERS
             $customersData = [
                 ['name' => 'Teh Amanda', 'phone' => '08111222333', 'address' => 'Jl. Dipatiukur No 10'],

@@ -57,6 +57,19 @@ class DummyDataSeeder extends Seeder
         $croissant = Product::create(['name' => 'Croissant Almond', 'stock' => 5000, 'selling_price' => 18000, 'minimum_stock' => 15, 'image' => 'products/croissant.png']);
         $brownies = Product::create(['name' => 'Brownies Lumer', 'stock' => 5000, 'selling_price' => 45000, 'minimum_stock' => 10, 'image' => 'products/brownies.png']);
 
+        // 3b. Seed Standard Recipes (product_ingredient)
+        $rotiTawar->ingredients()->attach($tepung->id, ['quantity' => 0.25]);
+        $rotiTawar->ingredients()->attach($gula->id, ['quantity' => 0.05]);
+        $rotiTawar->ingredients()->attach($mentega->id, ['quantity' => 0.03]);
+
+        $croissant->ingredients()->attach($tepung->id, ['quantity' => 0.2]);
+        $croissant->ingredients()->attach($mentega->id, ['quantity' => 0.1]);
+        $croissant->ingredients()->attach($gula->id, ['quantity' => 0.03]);
+
+        $brownies->ingredients()->attach($tepung->id, ['quantity' => 0.15]);
+        $brownies->ingredients()->attach($gula->id, ['quantity' => 0.2]);
+        $brownies->ingredients()->attach($mentega->id, ['quantity' => 0.12]);
+
         // 4. Time Range: Last 3 Months
         $startDate = Carbon::now()->subMonths(3)->startOfDay();
         $endDate = Carbon::now();

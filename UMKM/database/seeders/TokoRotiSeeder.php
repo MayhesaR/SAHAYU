@@ -75,6 +75,59 @@ class TokoRotiSeeder extends Seeder
             $createdProducts[] = Product::create($product);
         }
 
+        // 2b. Seed Standard Recipes (product_ingredient)
+        $tempMaterials = Material::where('company_id', $company->id)->get();
+        foreach ($createdProducts as $product) {
+            $recipe = [];
+            if (str_contains($product->name, 'Roti Cokelat Lumer')) {
+                $recipe = [
+                    'Tepung Terigu (Premium)' => 0.2,
+                    'Gula Pasir' => 0.05,
+                    'Mentega (Butter)' => 0.03,
+                    'Telur Ayam' => 0.5,
+                    'Cokelat Bubuk' => 0.05,
+                    'Ragi Instan' => 0.01,
+                ];
+            } elseif (str_contains($product->name, 'Roti Keju Spesial')) {
+                $recipe = [
+                    'Tepung Terigu (Premium)' => 0.2,
+                    'Gula Pasir' => 0.05,
+                    'Mentega (Butter)' => 0.03,
+                    'Telur Ayam' => 0.5,
+                    'Keju Cheddar' => 0.06,
+                    'Ragi Instan' => 0.01,
+                ];
+            } elseif (str_contains($product->name, 'Croissant Butter')) {
+                $recipe = [
+                    'Tepung Terigu (Premium)' => 0.25,
+                    'Gula Pasir' => 0.03,
+                    'Mentega (Butter)' => 0.1,
+                    'Telur Ayam' => 0.5,
+                    'Ragi Instan' => 0.01,
+                ];
+            } elseif (str_contains($product->name, 'Brownies Panggang')) {
+                $recipe = [
+                    'Tepung Terigu (Premium)' => 0.15,
+                    'Gula Pasir' => 0.2,
+                    'Mentega (Butter)' => 0.12,
+                    'Telur Ayam' => 3.0,
+                    'Cokelat Bubuk' => 0.15,
+                ];
+            }
+
+            foreach ($recipe as $materialName => $qty) {
+                $material = $tempMaterials->first(function ($m) use ($materialName) {
+                    return str_contains($m->name, $materialName) || str_contains($materialName, $m->name);
+                });
+                if ($material) {
+                    $product->ingredients()->attach($material->id, [
+                        'quantity' => $qty,
+                        'company_id' => $company->id
+                    ]);
+                }
+            }
+        }
+
         // 3. Overhead Costs (From 2025 to Now)
         $overheadCategories = ['Listrik', 'Sewa', 'Gaji', 'Kemasan'];
         for ($i = 0; $i <= $totalMonths; $i++) {

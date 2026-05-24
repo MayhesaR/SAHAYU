@@ -30,10 +30,8 @@ Route::post('/register', [RegisterController::class, 'register'])->middleware('g
 // Temporary setup route for Railway (to migrate, seed, and link storage via browser)
 Route::get('/run-setup', function () {
     try {
-        $migration = \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-        $seeder = \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'KatajiRasaSeeder', '--force' => true]);
         $storageLink = \Illuminate\Support\Facades\Artisan::call('storage:link', ['--force' => true]);
-        
+
         return response()->json([
             'status' => 'success',
             'message' => 'Setup completed successfully!',
