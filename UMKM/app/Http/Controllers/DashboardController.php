@@ -10,10 +10,11 @@ use App\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\Services\AIService;
 
 class DashboardController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, AIService $aiService)
     {
         if (!auth()->check()) {
             return view('welcome');
@@ -307,6 +308,7 @@ class DashboardController extends Controller
             'targetDate' => $now->toDateString(),
             'isTimeTravel' => $isTimeTravel,
             'topProducts' => $topProducts,
+            'bcgAnalysis' => $aiService->getBcgMenuAnalysis($companyId),
         ]);
     }
 

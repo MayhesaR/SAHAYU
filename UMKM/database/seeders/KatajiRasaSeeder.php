@@ -73,10 +73,10 @@ class KatajiRasaSeeder extends Seeder
 
             // 3. FINISHED PRODUCTS
             $productsData = [
-                ['name' => 'Roti Bakar Klasik 2 Rasa', 'selling_price' => 18000, 'minimum_stock' => 10, 'cogs' => 8000],
-                ['name' => 'Roti Bakar Spesial Full Keju', 'selling_price' => 23500, 'minimum_stock' => 10, 'cogs' => 11000],
-                ['name' => 'Roti Bakar Premium Cokelat Matcha', 'selling_price' => 25000, 'minimum_stock' => 10, 'cogs' => 12000],
-                ['name' => 'Basreng Garing Chili Oil Kataji', 'selling_price' => 15000, 'minimum_stock' => 20, 'cogs' => 6500],
+                ['name' => 'Roti Bakar Klasik 2 Rasa', 'selling_price' => 18000, 'minimum_stock' => 10, 'cogs' => 8000, 'image' => 'products/roti_bakar_klasik.png'],
+                ['name' => 'Roti Bakar Spesial Full Keju', 'selling_price' => 23500, 'minimum_stock' => 10, 'cogs' => 11000, 'image' => 'products/roti_bakar_keju.png'],
+                ['name' => 'Roti Bakar Premium Cokelat Matcha', 'selling_price' => 25000, 'minimum_stock' => 10, 'cogs' => 12000, 'image' => 'products/roti_bakar_matcha.png'],
+                ['name' => 'Basreng Garing Chili Oil Kataji', 'selling_price' => 15000, 'minimum_stock' => 20, 'cogs' => 6500, 'image' => 'products/basreng_chili_oil.png'],
             ];
 
             $products = [];

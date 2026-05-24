@@ -45,4 +45,11 @@ class Material extends Model
     {
         return $this->hasMany(MaterialStockMovement::class)->latest('transaction_date')->latest('id');
     }
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'product_ingredient', 'material_id', 'product_id')
+                    ->withPivot('quantity')
+                    ->withTimestamps();
+    }
 }

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Events\ProductSold;
 use App\Events\ProductionStatusUpdated;
 use App\Events\MaterialUsed;
+use App\Events\StockLowAlert;
 
 class ProductionController extends Controller
 {
@@ -109,7 +110,7 @@ class ProductionController extends Controller
         foreach ($materialsInput as $index => $materialInput) {
             $materialValidator = Validator::make($materialInput, [
                 'material_id' => ['required', 'exists:materials,id'],
-                'quantity' => ['required', 'integer', 'min:1'],
+                'quantity' => ['required', 'numeric', 'min:0.0001'],
             ]);
 
             if ($materialValidator->fails()) {
@@ -140,7 +141,7 @@ class ProductionController extends Controller
                     ]);
                 }
 
-                if ((int) $materialModel->stock < (int) $material['quantity']) {
+                if ((float) $materialModel->stock < (float) $material['quantity']) {
                     throw ValidationException::withMessages([
                         'materials' => 'Stok bahan "'.$materialModel->name.'" tidak mencukupi untuk produksi.',
                     ]);
@@ -150,7 +151,7 @@ class ProductionController extends Controller
             $materialCostSnapshot = collect($materialsInput)->sum(function (array $material) use ($lockedMaterials): float {
                 $materialModel = $lockedMaterials->get((int) $material['material_id']);
 
-                return (float) ((int) $material['quantity'] * (float) ($materialModel?->price ?? 0));
+                return (float) ((float) $material['quantity'] * (float) ($materialModel?->price ?? 0));
             });
 
             $rejectQuantity = min((int) ($validated['reject_quantity'] ?? 0), (int) $validated['quantity']);
@@ -196,12 +197,12 @@ class ProductionController extends Controller
 
             foreach ($materialsInput as $material) {
                 $materialId = (int) $material['material_id'];
-                $qtyUsed = (int) $material['quantity'];
+                $qtyUsed = (float) $material['quantity'];
 
                 /** @var Material $materialModel */
                 $materialModel = $lockedMaterials->get($materialId);
 
-                $before = (int) $materialModel->stock;
+                $before = (float) $materialModel->stock;
                 $after = $before - $qtyUsed;
 
                 $materialModel->update([
@@ -253,7 +254,7 @@ class ProductionController extends Controller
             ));
 
             $updatedMaterial = Material::find((int) $materialInput['material_id']);
-            if ($updatedMaterial && (int) $updatedMaterial->stock <= (int) ($updatedMaterial->minimum_stock ?? 0)) {
+            if ($updatedMaterial && (float) $updatedMaterial->stock <= (float) ($updatedMaterial->minimum_stock ?? 0)) {
                 event(new StockLowAlert(
                     productId: (int) $updatedMaterial->id,
                     currentStock: (float) $updatedMaterial->stock,
@@ -292,9 +293,9 @@ class ProductionController extends Controller
             $production->loadMissing(['materials', 'product']);
 
             foreach ($production->materials as $material) {
-                $qtyUsed = (int) $material->pivot->quantity;
+                $qtyUsed = (float) $material->pivot->quantity;
                 $freshMaterial = Material::query()->lockForUpdate()->findOrFail($material->id);
-                $before = (int) $freshMaterial->stock;
+                $before = (float) $freshMaterial->stock;
                 $after = $before + $qtyUsed;
 
                 $freshMaterial->update(['stock' => $after]);
@@ -314,7 +315,7 @@ class ProductionController extends Controller
                     'id' => (int) $freshMaterial->id,
                     'quantity' => $qtyUsed,
                     'stock' => $after,
-                    'minimum_stock' => (int) ($freshMaterial->minimum_stock ?? 0),
+                    'minimum_stock' => (float) ($freshMaterial->minimum_stock ?? 0),
                 ];
             }
 
@@ -354,7 +355,7 @@ class ProductionController extends Controller
                 productionId: (int) $production->id
             ));
 
-            if ((int) $materialBroadcast['stock'] <= (int) $materialBroadcast['minimum_stock']) {
+            if ((float) $materialBroadcast['stock'] <= (float) $materialBroadcast['minimum_stock']) {
                 event(new StockLowAlert(
                     productId: $materialBroadcast['id'],
                     currentStock: (float) $materialBroadcast['stock'],
@@ -634,5 +635,27 @@ class ProductionController extends Controller
             \Illuminate\Support\Facades\Log::error('Production XLSX Export Error: ' . $e->getMessage());
             return redirect()->back()->withErrors(['export' => 'Gagal export XLSX: ' . $e->getMessage()]);
         }
+    }
+
+    public function getIngredients(Product $product)
+    {
+        $companyId = auth()->user()->company_id;
+
+        if ($product->company_id !== $companyId) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $ingredients = $product->ingredients()->get()->map(function ($material) {
+            return [
+                'id' => $material->id,
+                'name' => $material->name,
+                'unit' => $material->unit,
+                'price' => (float) $material->price,
+                'default_quantity' => (float) $material->pivot->quantity,
+                'stock' => (float) $material->stock,
+            ];
+        });
+
+        return response()->json($ingredients);
     }
 }

@@ -53,9 +53,9 @@ class DummyDataSeeder extends Seeder
         $gula = Material::create(['name' => 'Gula Pasir', 'category' => 'Dasar', 'stock' => 3000, 'unit' => 'Kg', 'price' => 15000, 'minimum_stock' => 30, 'default_supplier' => 'Distributor Gula Lokal']);
 
         // 3. Products
-        $rotiTawar = Product::create(['name' => 'Roti Tawar Premium', 'stock' => 5000, 'selling_price' => 25000, 'minimum_stock' => 20]);
-        $croissant = Product::create(['name' => 'Croissant Almond', 'stock' => 5000, 'selling_price' => 18000, 'minimum_stock' => 15]);
-        $brownies = Product::create(['name' => 'Brownies Lumer', 'stock' => 5000, 'selling_price' => 45000, 'minimum_stock' => 10]);
+        $rotiTawar = Product::create(['name' => 'Roti Tawar Premium', 'stock' => 5000, 'selling_price' => 25000, 'minimum_stock' => 20, 'image' => 'products/roti_tawar.png']);
+        $croissant = Product::create(['name' => 'Croissant Almond', 'stock' => 5000, 'selling_price' => 18000, 'minimum_stock' => 15, 'image' => 'products/croissant.png']);
+        $brownies = Product::create(['name' => 'Brownies Lumer', 'stock' => 5000, 'selling_price' => 45000, 'minimum_stock' => 10, 'image' => 'products/brownies.png']);
 
         // 4. Time Range: Last 3 Months
         $startDate = Carbon::now()->subMonths(3)->startOfDay();

@@ -401,6 +401,57 @@
                     @endforelse
                 </div>
             </div>
+
+            <!-- AI Menu Insights (BCG Matrix) -->
+            <div class="bg-white dark:bg-zinc-900 p-6 sm:p-8 rounded-[1.5rem] border border-stone-200/60 dark:border-zinc-800/80 shadow-sm mt-6" id="tour-dashboard-ai-bcg">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h4 class="text-sm font-bold text-stone-850 dark:text-white font-manrope flex items-center gap-2">
+                            <span class="material-symbols-outlined text-emerald-600 dark:text-emerald-450 animate-pulse">psychology</span>
+                            <span>SAHAYU AI Menu Insights</span>
+                        </h4>
+                        <p class="text-xs text-stone-400 dark:text-zinc-400 font-medium mt-0.5">Klasifikasi performa menu menggunakan analisis Matriks BCG (30 hari terakhir)</p>
+                    </div>
+                    <span class="text-[9px] font-black uppercase tracking-wider text-[#0b6e4f] dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-full border border-emerald-100/50">DSS Activated</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    @forelse($bcgAnalysis['products'] as $item)
+                        @php
+                            $prod = $item['product'];
+                            $category = $item['category'];
+                            $badgeColor = $item['badge_color'];
+                            $icon = $item['icon'];
+                            $rec = $item['recommendation'];
+                        @endphp
+                        <div class="p-4 rounded-2xl bg-gradient-to-br from-stone-50 to-stone-100/30 dark:from-zinc-850 dark:to-zinc-900 border border-stone-200/40 dark:border-zinc-800 flex flex-col justify-between space-y-3.5 hover:shadow-md transition-all duration-200">
+                            <div class="flex items-start justify-between gap-3">
+                                <div class="space-y-1">
+                                    <h5 class="text-xs font-bold text-stone-800 dark:text-white leading-snug">{{ $prod->name }}</h5>
+                                    <div class="flex items-center gap-2 text-[10px] text-stone-400 dark:text-zinc-400 font-semibold font-mono">
+                                        <span>Terjual: {{ number_format($item['qty_sold'], 0, ',', '.') }} unit</span>
+                                        <span>&bull;</span>
+                                        <span>Margin: {{ number_format($item['margin_percent'], 1, ',', '.') }}%</span>
+                                    </div>
+                                </div>
+                                <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[9px] font-black tracking-widest uppercase {{ $badgeColor }}">
+                                    <span class="material-symbols-outlined text-xs">{{ $icon }}</span>
+                                    <span>{{ $category }}</span>
+                                </span>
+                            </div>
+                            <div class="p-3 rounded-xl bg-white/70 dark:bg-zinc-900/60 border border-stone-200/20 dark:border-zinc-800/40 text-[10px] leading-relaxed text-stone-600 dark:text-zinc-300 font-medium">
+                                {{ $rec }}
+                            </div>
+                        </div>
+                    @empty
+                        <div class="col-span-full py-12 text-center flex flex-col items-center justify-center gap-2 max-w-sm mx-auto">
+                            <span class="material-symbols-outlined text-4xl text-stone-400 dark:text-zinc-500 font-light">analytics</span>
+                            <p class="font-bold text-stone-700 dark:text-zinc-200">Data belum memadai</p>
+                            <p class="text-xs text-stone-400 dark:text-zinc-500">Klasifikasi performa menu AI membutuhkan data penjualan minimal 30 hari.</p>
+                        </div>
+                    @endforelse
+                </div>
+            </div>
         </div>
 
         <!-- Right Column (1/3 width) -->

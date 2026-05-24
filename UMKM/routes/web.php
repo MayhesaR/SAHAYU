@@ -69,6 +69,7 @@ Route::middleware('auth')->group(function () {
 
     // Produksi
     Route::get('/produksi', [ProductionController::class, 'index'])->name('productions.index');
+    Route::get('/produksi/resep/{product}', [ProductionController::class, 'getIngredients'])->name('productions.ingredients');
     Route::get('/produksi/export', [ProductionController::class, 'exportExcel'])->name('productions.export');
     Route::get('/produksi/export-pdf', [ProductionController::class, 'exportPdf'])->name('productions.export-pdf');
     Route::get('/produksi/export-sheets', [ProductionController::class, 'exportGoogleSheets'])->name('productions.export-sheets');

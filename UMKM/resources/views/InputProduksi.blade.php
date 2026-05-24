@@ -71,11 +71,11 @@
 <h3 class="mt-2 text-3xl font-extrabold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400">Rp {{ number_format($avgHpp, 0, ',', '.') }}</h3>
 </article>
 </div>
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start" x-data="productionForm()" x-init="init()">
 @if(auth()->user()->isAdmin())
 <!-- Production Form Card -->
 <section class="lg:col-span-8 bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden" id="production-form">
-<form action="{{ route('productions.store') }}" method="POST">
+<form action="{{ route('productions.store') }}" method="POST" @submit="submitForm($event)">
 @csrf
 <div class="px-8 py-6 bg-surface-container-low">
 <h3 class="text-lg font-bold text-primary flex items-center">
@@ -86,11 +86,11 @@
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 <div class="space-y-2">
 <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Tanggal Produksi</label>
-<input name="production_date" class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all" type="date" value="{{ now()->format('Y-m-d') }}"/>
+<input name="production_date" class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all text-emerald-900 dark:text-emerald-300 dark:text-emerald-250" type="date" value="{{ now()->format('Y-m-d') }}"/>
 </div>
 <div class="space-y-2">
 <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Nama Produk Jadi</label>
-<select name="product_id" class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all">
+<select name="product_id" x-model="productId" class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all text-emerald-900 dark:text-emerald-300 dark:text-emerald-250">
 <option value="">Pilih produk</option>
 @forelse ($products as $product)
 <option value="{{ $product->id }}">{{ $product->name }}</option>
@@ -104,91 +104,147 @@
 </div>
 <div class="space-y-2">
 <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Target Kuantitas (Unit)</label>
-<input name="quantity" class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all" placeholder="0" type="number"/>
+<input name="quantity" x-model.number="quantity" @input="updateQuantityMultiplier()" class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all text-emerald-900 dark:text-emerald-300 dark:text-emerald-250" placeholder="0" type="number" min="1"/>
 </div>
 <div class="space-y-2">
 <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Penanggung Jawab</label>
-<input name="supervisor_name" class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Nama Supervisor" type="text"/>
+<input name="supervisor_name" class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all text-emerald-900 dark:text-emerald-300 dark:text-emerald-250" placeholder="Nama Supervisor" type="text" value="{{ old('supervisor_name') }}"/>
 </div>
 <div class="space-y-2">
 <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Produk Reject (Unit)</label>
-<input name="reject_quantity" class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all" placeholder="0" type="number" min="0" value="0"/>
+<input name="reject_quantity" x-model.number="rejectQuantity" class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all text-emerald-900 dark:text-emerald-300 dark:text-emerald-250" placeholder="0" type="number" min="0"/>
 </div>
 <div class="space-y-2">
 <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Status Batch</label>
-<select name="status" class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all">
-<option value="process">Dalam Proses</option>
-<option value="done">Selesai</option>
-<option value="cancelled">Dibatalkan</option>
+<select name="status" class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all text-emerald-900 dark:text-emerald-300 dark:text-emerald-250">
+<option value="process" {{ old('status') === 'process' ? 'selected' : '' }}>Dalam Proses</option>
+<option value="done" {{ old('status') === 'done' ? 'selected' : '' }}>Selesai</option>
+<option value="cancelled" {{ old('status') === 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
 </select>
 </div>
 </div>
+
 <!-- Raw Materials List -->
 <div class="space-y-4">
 <div class="flex justify-between items-center">
 <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Daftar Bahan Baku Digunakan</label>
-<button class="px-4 py-2 bg-[#0b6e4f]/10 text-[#0b6e4f] dark:text-emerald-400 text-xs font-black rounded-lg flex items-center hover:bg-[#0b6e4f]/20 transition-all" type="button" id="add-production-material-row">
-<span class="material-symbols-outlined text-sm mr-1">add_circle</span>
-<span>Tambah Bahan Baku</span>
+<button class="px-4 py-2 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 text-xs font-bold rounded-lg flex items-center border border-emerald-200/50 dark:border-emerald-800/40 shadow-sm transition-all"
+        type="button"
+        @click="addExtraIngredient()">
+    <span class="material-symbols-outlined text-sm mr-1 text-emerald-700 dark:text-emerald-400">add_circle</span>
+    <span>+ Tambah Bahan Ekstra</span>
 </button>
 </div>
-<div class="space-y-3" id="production-material-rows">
-<!-- Row 1 -->
-<div class="flex items-center space-x-4 bg-surface-container-low p-3 rounded-lg group production-material-row">
-<div class="flex-1">
-                                            <select name="materials[0][material_id]" class="w-full bg-transparent border-none text-sm font-medium focus:ring-0 material-select">
-                                                @forelse ($materials as $material)
-                                                    <option value="{{ $material->id }}" data-unit="{{ $material->unit }}">{{ $material->name }}</option>
-                                                @empty
-                                                    <option>Tidak ada bahan baku</option>
-                                                @endforelse
-                                            </select>
-                                        </div>
-                                        <div class="w-32 flex items-center space-x-2">
-                                            <input name="materials[0][quantity]" class="w-full bg-white dark:bg-zinc-900 border-none rounded text-sm p-1 focus:ring-1 focus:ring-primary/20" placeholder="Qty" type="number"/>
-                                            <span class="text-[10px] font-bold text-slate-400 dark:text-zinc-400 unit-label">SATUAN</span>
-                                        </div>
-                                        <button class="text-slate-300 hover:text-error transition-colors" type="button">
-                                            <span class="material-symbols-outlined text-lg">delete</span>
-                                        </button>
-                                    </div>
-                                    <!-- Row 2 -->
-                                    <div class="flex items-center space-x-4 bg-surface-container-low p-3 rounded-lg group production-material-row">
-                                        <div class="flex-1">
-                                            <select name="materials[1][material_id]" class="w-full bg-transparent border-none text-sm font-medium focus:ring-0 material-select">
-                                                @forelse ($materials as $material)
-                                                    <option value="{{ $material->id }}" data-unit="{{ $material->unit }}">{{ $material->name }}</option>
-                                                @empty
-                                                    <option>Tidak ada bahan baku</option>
-                                                @endforelse
-                                            </select>
-                                        </div>
-                                        <div class="w-32 flex items-center space-x-2">
-                                            <input name="materials[1][quantity]" class="w-full bg-white dark:bg-zinc-900 border-none rounded text-sm p-1 focus:ring-1 focus:ring-primary/20" placeholder="Qty" type="number"/>
-                                            <span class="text-[10px] font-bold text-slate-400 dark:text-zinc-400 unit-label">SATUAN</span>
-                                        </div>
-<button class="text-slate-300 hover:text-error transition-colors" type="button">
-<span class="material-symbols-outlined text-lg">delete</span>
-</button>
+
+<div class="space-y-3">
+    <!-- Loading indicator -->
+    <div x-show="isLoading" class="text-center py-4 text-emerald-600 dark:text-emerald-400 text-sm font-semibold flex items-center justify-center gap-2">
+        <svg class="animate-spin h-5 w-5 text-emerald-600 dark:text-emerald-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span>Memuat resep standar...</span>
+    </div>
+
+    <!-- Empty state -->
+    <div x-show="!isLoading && ingredients.length === 0" class="text-center py-6 text-on-surface-variant/60 dark:text-zinc-500 text-sm border-2 border-dashed border-outline-variant/30 rounded-lg">
+        Pilih produk untuk memuat daftar bahan baku standar atau tambahkan bahan ekstra.
+    </div>
+
+    <!-- Ingredient Rows -->
+    <template x-for="(ing, index) in ingredients" :key="index">
+        <div class="flex flex-col md:flex-row md:items-center gap-4 bg-surface-container-low p-4 rounded-xl border border-outline-variant/10 hover:border-emerald-100/50 dark:hover:border-emerald-950/50 transition-all duration-300 relative group">
+            
+            <!-- Ingredient Selector (Read-only for standard recipes, Dropdown for extra ingredients) -->
+            <div class="flex-1 min-w-0">
+                <!-- Standard Ingredient Name -->
+                <template x-if="!ing.is_extra">
+                    <div>
+                        <input type="hidden" :name="'materials[' + index + '][material_id]'" :value="ing.material_id">
+                        <p class="text-sm font-semibold text-emerald-900 dark:text-emerald-300 dark:text-emerald-250" x-text="ing.name"></p>
+                        <span class="text-[9px] font-extrabold px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 rounded border border-emerald-100/30">Resep Standar</span>
+                    </div>
+                </template>
+
+                <!-- Extra Ingredient Dropdown Selector -->
+                <template x-if="ing.is_extra">
+                    <div class="space-y-1">
+                        <label class="text-[9px] font-extrabold text-amber-600 dark:text-amber-400 uppercase tracking-wider">Bahan Ekstra</label>
+                        <select :name="'materials[' + index + '][material_id]'"
+                                x-model="ing.material_id"
+                                @change="onExtraMaterialChange(index)"
+                                class="w-full bg-surface-container-highest border-none rounded-lg p-2.5 text-xs font-semibold focus:ring-2 focus:ring-primary/20 text-emerald-900 dark:text-emerald-300 dark:text-emerald-250">
+                            <option value="">Pilih bahan baku...</option>
+                            @foreach ($materials as $mat)
+                                <option value="{{ $mat->id }}" :disabled="ingredients.some(i => i.material_id == {{ $mat->id }} && i !== ing)">
+                                    {{ $mat->name }} ({{ $mat->unit }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Stock & Cost Details -->
+            <div class="flex flex-wrap items-center gap-4">
+                <!-- Available Stock -->
+                <div class="text-left w-24">
+                    <span class="block text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase">Stok Gudang</span>
+                    <span class="text-xs font-semibold" :class="ing.stock < ing.quantity ? 'text-red-500 dark:text-red-400' : 'text-emerald-700 dark:text-emerald-400'" x-text="new Intl.NumberFormat('id-ID', { maximumFractionDigits: 4 }).format(ing.stock) + ' ' + ing.unit"></span>
+                </div>
+
+                <!-- Input Quantity -->
+                <div class="w-32 flex items-center space-x-2">
+                    <div class="relative w-full">
+                        <input :name="'materials[' + index + '][quantity]'"
+                               type="number"
+                               step="any"
+                               min="0.0001"
+                               x-model.number="ing.quantity"
+                               placeholder="Qty"
+                               class="w-full bg-surface-container-highest dark:bg-zinc-900 border-none rounded-lg p-2 text-xs font-semibold focus:ring-2 focus:ring-primary/20 text-emerald-900 dark:text-emerald-300 text-center"/>
+                        <span class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] font-extrabold text-slate-400 dark:text-zinc-500 uppercase" x-text="ing.unit"></span>
+                    </div>
+                </div>
+
+                <!-- Price/Unit -->
+                <div class="text-left w-28">
+                    <span class="block text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase">Harga/Unit</span>
+                    <span class="text-xs font-semibold text-slate-600 dark:text-zinc-300" x-text="formatRupiah(ing.price)"></span>
+                </div>
+
+                <!-- Line Item HPP (Subtotal Cost) -->
+                <div class="text-right w-28">
+                    <span class="block text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase">Subtotal HPP</span>
+                    <span class="text-xs font-black text-emerald-900 dark:text-emerald-300 dark:text-emerald-250" x-text="formatRupiah((ing.quantity || 0) * ing.price)"></span>
+                </div>
+
+                <!-- Delete Button -->
+                <button type="button" @click="removeIngredient(index)" class="text-slate-350 hover:text-red-500 dark:hover:text-red-400 transition-colors p-1.5 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-lg">
+                    <span class="material-symbols-outlined text-lg">delete</span>
+                </button>
+            </div>
+        </div>
+    </template>
 </div>
 </div>
-</div>
+
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 <div class="space-y-2">
 <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Biaya Tenaga Kerja (Rp)</label>
-<input name="labor_cost" class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all" placeholder="0" type="number" min="0" step="0.01" value="0"/>
+<input name="labor_cost" x-model.number="laborCost" class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all text-emerald-900 dark:text-emerald-300 dark:text-emerald-250" placeholder="0" type="number" min="0" step="0.01"/>
 </div>
 <div class="space-y-2">
 <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Biaya Overhead Batch (Rp)</label>
-<input name="overhead_cost_snapshot" class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all" placeholder="0" type="number" min="0" step="0.01" value="0"/>
+<input name="overhead_cost_snapshot" x-model.number="overheadCost" class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all text-emerald-900 dark:text-emerald-300 dark:text-emerald-250" placeholder="0" type="number" min="0" step="0.01"/>
 </div>
 </div>
 <div class="space-y-2">
 <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Catatan Batch</label>
-<textarea name="notes" class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all" rows="3" placeholder="Contoh: perubahan formula, kendala mesin, dll."></textarea>
+<textarea name="notes" class="w-full bg-surface-container-highest border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/20 transition-all text-emerald-900 dark:text-emerald-300 dark:text-emerald-250" rows="3" placeholder="Contoh: perubahan formula, kendala mesin, dll.">{{ old('notes') }}</textarea>
 </div>
 <div class="pt-4 flex justify-end space-x-4">
-<button class="text-on-surface-variant text-sm font-bold px-6 py-2 hover:bg-slate-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 rounded-lg transition-colors" type="button">Batal</button>
+<button class="text-on-surface-variant text-sm font-bold px-6 py-2 hover:bg-slate-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 rounded-lg transition-colors" type="button" onclick="window.history.back()">Batal</button>
 <button class="px-10 py-3 rounded-xl shadow-lg shadow-emerald-900/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2" 
         style="background-color: #0b6e4f !important; color: #ffffff !important; font-weight: 900;" 
         type="submit">
@@ -197,8 +253,8 @@
 </button>
 </div>
 </div>
+</form>
 </section>
-  </form>
 @else
 <!-- Staff View - Production List Only -->
 <section class="lg:col-span-8 space-y-6">
@@ -213,14 +269,48 @@
 </div>
 </section>
 @endif
+
 <!-- Status & Insights Sidebar -->
 <aside class="lg:col-span-4 space-y-6">
+<!-- Estimasi HPP Real-Time (Alpine.js) -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-gray-100 dark:border-zinc-800/50 space-y-4 hover:shadow-md transition-all duration-300" x-show="productId">
+    <h4 class="text-sm font-bold text-emerald-900 dark:text-emerald-300 dark:text-emerald-250 border-b border-slate-100 dark:border-zinc-800/80 pb-3 flex items-center">
+        <span class="material-symbols-outlined mr-1.5 text-emerald-600 dark:text-emerald-400 text-lg">monetization_on</span>
+        Estimasi HPP Real-Time
+    </h4>
+    <div class="space-y-3">
+        <div class="flex justify-between items-center text-xs">
+            <span class="text-on-surface-variant font-medium text-slate-500 dark:text-zinc-400">Bahan Baku</span>
+            <span class="font-bold text-emerald-950 dark:text-emerald-300" x-text="formatRupiah(totalMaterialCost)">Rp 0</span>
+        </div>
+        <div class="flex justify-between items-center text-xs">
+            <span class="text-on-surface-variant font-medium text-slate-500 dark:text-zinc-400">Tenaga Kerja</span>
+            <span class="font-bold text-emerald-950 dark:text-emerald-300" x-text="formatRupiah(laborCost)">Rp 0</span>
+        </div>
+        <div class="flex justify-between items-center text-xs">
+            <span class="text-on-surface-variant font-medium text-slate-500 dark:text-zinc-400">Overhead Batch</span>
+            <span class="font-bold text-emerald-950 dark:text-emerald-300" x-text="formatRupiah(overheadCost)">Rp 0</span>
+        </div>
+        <div class="pt-3 border-t border-dashed border-slate-200 dark:border-zinc-800 flex justify-between items-center">
+            <span class="text-xs font-bold text-emerald-900 dark:text-emerald-350">Total Biaya</span>
+            <span class="text-xs font-black text-emerald-600 dark:text-emerald-400" x-text="formatRupiah(totalProductionCost)">Rp 0</span>
+        </div>
+        <div class="pt-3 border-t border-solid border-slate-100 dark:border-zinc-850 flex justify-between items-center">
+            <div>
+                <span class="text-xs font-bold text-slate-600 dark:text-zinc-300">Estimasi HPP/Unit</span>
+                <p class="text-[9px] text-slate-400 dark:text-zinc-500" x-show="goodQuantity > 0" x-text="'Untuk ' + goodQuantity + ' unit bagus'"></p>
+            </div>
+            <span class="text-base font-black text-emerald-700 dark:text-emerald-400" x-text="formatRupiah(hppPerUnit)">Rp 0</span>
+        </div>
+    </div>
+</div>
+
 <div class="bg-emerald-900 text-white rounded-xl p-8 relative overflow-hidden shadow-xl">
 <div class="relative z-10">
 <p class="text-emerald-300 text-[10px] font-bold uppercase tracking-widest mb-1">Stock Alert</p>
 <h4 class="text-xl font-bold mb-4">{{ $stockAlertMaterial?->name ?? 'Belum ada data stok' }}</h4>
 <p class="text-emerald-100 text-sm leading-relaxed mb-6">
-{{ $stockAlertMaterial ? 'Tersisa' . number_format($stockAlertMaterial->stock, 0, ',', '.') . '' . $stockAlertMaterial->unit . '. Segera lakukan restock.' : 'Data bahan baku belum tersedia.' }}
+{{ $stockAlertMaterial ? 'Tersisa ' . number_format($stockAlertMaterial->stock, 2, ',', '.') . ' ' . $stockAlertMaterial->unit . '. Segera lakukan restock.' : 'Data bahan baku belum tersedia.' }}
 </p>
 <a href="{{ route('materials.index') }}" class="block text-center w-full bg-emerald-800 text-emerald-100 text-xs font-bold py-3 rounded-lg hover:bg-emerald-700 transition-colors">Pesan Sekarang</a>
 </div>
@@ -228,19 +318,19 @@
 <span class="material-symbols-outlined text-[160px]" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
 </div>
 </div>
-<div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm space-y-4">
-<h4 class="text-sm font-bold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400 border-b border-slate-50 pb-3">Estimasi HPP Sementara</h4>
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-gray-100 dark:border-zinc-800/50 space-y-4 hover:shadow-md transition-all duration-300">
+<h4 class="text-sm font-bold text-emerald-900 dark:text-emerald-300 dark:text-emerald-250 border-b border-slate-50 dark:border-zinc-800/80 pb-3">Ringkasan Pengeluaran</h4>
 <div class="space-y-3">
-<div class="flex justify-between items-center">
-<span class="text-xs text-on-surface-variant font-medium">Biaya Bahan Baku</span>
-<span class="text-xs font-bold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400">Rp {{ number_format($materialCostEstimate, 0, ',', '.') }}</span>
+<div class="flex justify-between items-center text-xs">
+<span class="text-on-surface-variant font-medium text-slate-500 dark:text-zinc-400">Total Biaya Bahan Baku</span>
+<span class="font-bold text-emerald-900 dark:text-emerald-300">Rp {{ number_format($materialCostEstimate, 0, ',', '.') }}</span>
 </div>
-<div class="flex justify-between items-center">
-<span class="text-xs text-on-surface-variant font-medium">Overhead Workshop</span>
-<span class="text-xs font-bold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400">Rp {{ number_format($overheadCostEstimate, 0, ',', '.') }}</span>
+<div class="flex justify-between items-center text-xs">
+<span class="text-on-surface-variant font-medium text-slate-500 dark:text-zinc-400">Overhead Workshop</span>
+<span class="font-bold text-emerald-900 dark:text-emerald-300">Rp {{ number_format($overheadCostEstimate, 0, ',', '.') }}</span>
 </div>
 <div class="pt-3 border-t border-dashed border-slate-200 dark:border-zinc-800 flex justify-between items-center">
-<span class="text-sm font-bold text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 dark:text-emerald-400">Total Produksi</span>
+<span class="text-sm font-bold text-emerald-900 dark:text-emerald-300 dark:text-emerald-400">Total Produksi</span>
 <span class="text-sm font-black text-emerald-600 dark:text-emerald-400">Rp {{ number_format($totalProductionEstimate, 0, ',', '.') }}</span>
 </div>
 </div>
@@ -379,68 +469,203 @@
 
 @section('scripts')
 <script>
-(() => {
-  const addButton = document.getElementById('add-production-material-row');
-  const rowsContainer = document.getElementById('production-material-rows');
+function productionForm() {
+    return {
+        productId: '',
+        quantity: parseFloat('{{ old('quantity') }}') || '',
+        rejectQuantity: parseFloat('{{ old('reject_quantity') }}') || 0,
+        laborCost: parseFloat('{{ old('labor_cost') }}') || 0,
+        overheadCost: parseFloat('{{ old('overhead_cost_snapshot') }}') || 0,
+        ingredients: [],
+        availableMaterials: {!! json_encode($materials->map(function($m) {
+            return [
+                'id' => $m->id,
+                'name' => $m->name,
+                'unit' => $m->unit,
+                'price' => (float) $m->price,
+                'stock' => (float) $m->stock
+            ];
+        })) !!},
+        isLoading: false,
 
-  if (!addButton || !rowsContainer) {
-    return;
-  }
+        init() {
+            const oldProductId = '{{ old('product_id', '') }}';
+            const oldMaterials = @json(old('materials', []));
+            
+            if (oldProductId) {
+                this.productId = oldProductId;
+                this.quantity = parseFloat('{{ old('quantity') }}') || 0;
+                this.rejectQuantity = parseFloat('{{ old('reject_quantity') }}') || 0;
+                this.laborCost = parseFloat('{{ old('labor_cost') }}') || 0;
+                this.overheadCost = parseFloat('{{ old('overhead_cost_snapshot') }}') || 0;
+                
+                this.isLoading = true;
+                fetch(`/produksi/resep/${oldProductId}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        const standardIngredients = data.map(item => {
+                            const oldItem = oldMaterials.find(om => om.material_id == item.id);
+                            return {
+                                material_id: item.id,
+                                name: item.name,
+                                unit: item.unit,
+                                price: parseFloat(item.price),
+                                quantity: oldItem ? parseFloat(oldItem.quantity) : (parseFloat(item.default_quantity) * (parseFloat(this.quantity) || 1)),
+                                stock: parseFloat(item.stock),
+                                is_extra: false,
+                                default_quantity: parseFloat(item.default_quantity)
+                            };
+                        });
+                        
+                        const extraIngredients = [];
+                        oldMaterials.forEach(om => {
+                            if (!data.some(item => item.id == om.material_id)) {
+                                const mat = this.availableMaterials.find(m => m.id == om.material_id);
+                                if (mat) {
+                                    extraIngredients.push({
+                                        material_id: om.material_id,
+                                        name: mat.name,
+                                        unit: mat.unit,
+                                        price: parseFloat(mat.price),
+                                        quantity: parseFloat(om.quantity) || 0,
+                                        stock: parseFloat(mat.stock),
+                                        is_extra: true,
+                                        default_quantity: 0
+                                    });
+                                }
+                            }
+                        });
+                        
+                        this.ingredients = [...standardIngredients, ...extraIngredients];
+                        this.isLoading = false;
+                    })
+                    .catch(err => {
+                        console.error('Error restoring old inputs:', err);
+                        this.isLoading = false;
+                    });
+            }
 
-    const bindUnitChange = (select) => {
-    const updateUnit = () => {
-      const selectedOption = select.options[select.selectedIndex];
-      const unit = selectedOption ? selectedOption.dataset.unit : '-';
-      const row = select.closest('.production-material-row');
-      const unitLabel = row.querySelector('.unit-label');
-      if (unitLabel) unitLabel.textContent = unit;
+            this.$watch('productId', value => {
+                if (value && value !== oldProductId) {
+                    this.loadRecipe(value);
+                } else if (!value) {
+                    this.ingredients = [];
+                }
+            });
+        },
+
+        loadRecipe(productId) {
+            if (!productId) {
+                this.ingredients = [];
+                return;
+            }
+            this.isLoading = true;
+            fetch(`/produksi/resep/${productId}`)
+                .then(res => res.json())
+                .then(data => {
+                    this.ingredients = data.map(item => ({
+                        material_id: item.id,
+                        name: item.name,
+                        unit: item.unit,
+                        price: parseFloat(item.price),
+                        quantity: parseFloat(item.default_quantity) * (parseFloat(this.quantity) || 1),
+                        stock: parseFloat(item.stock),
+                        is_extra: false,
+                        default_quantity: parseFloat(item.default_quantity)
+                    }));
+                    this.isLoading = false;
+                })
+                .catch(err => {
+                    console.error('Error fetching recipe:', err);
+                    this.isLoading = false;
+                });
+        },
+
+        updateQuantityMultiplier() {
+            if (this.ingredients.length > 0) {
+                this.ingredients.forEach(item => {
+                    if (!item.is_extra) {
+                        item.quantity = item.default_quantity * (parseFloat(this.quantity) || 1);
+                    }
+                });
+            }
+        },
+
+        addExtraIngredient() {
+            this.ingredients.push({
+                material_id: '',
+                name: '',
+                unit: 'SATUAN',
+                price: 0,
+                quantity: 1,
+                stock: 0,
+                is_extra: true,
+                default_quantity: 0
+            });
+        },
+
+        onExtraMaterialChange(index) {
+            const ing = this.ingredients[index];
+            const mat = this.availableMaterials.find(m => m.id == ing.material_id);
+            if (mat) {
+                ing.name = mat.name;
+                ing.unit = mat.unit;
+                ing.price = mat.price;
+                ing.stock = mat.stock;
+            } else {
+                ing.name = '';
+                ing.unit = 'SATUAN';
+                ing.price = 0;
+                ing.stock = 0;
+            }
+        },
+
+        removeIngredient(index) {
+            this.ingredients.splice(index, 1);
+        },
+
+        get totalMaterialCost() {
+            return this.ingredients.reduce((sum, ing) => {
+                const qty = parseFloat(ing.quantity) || 0;
+                const price = parseFloat(ing.price) || 0;
+                return sum + (qty * price);
+            }, 0);
+        },
+
+        get totalProductionCost() {
+            return this.totalMaterialCost + (parseFloat(this.laborCost) || 0) + (parseFloat(this.overheadCost) || 0);
+        },
+
+        get goodQuantity() {
+            const qty = parseInt(this.quantity) || 0;
+            const reject = parseInt(this.rejectQuantity) || 0;
+            return Math.max(0, qty - reject);
+        },
+
+        get hppPerUnit() {
+            const goodQty = this.goodQuantity;
+            return goodQty > 0 ? this.totalProductionCost / goodQty : 0;
+        },
+
+        formatRupiah(val) {
+            return 'Rp ' + new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(val);
+        },
+
+        submitForm(e) {
+            if (this.ingredients.length === 0) {
+                alert('Minimal satu bahan baku harus diisi.');
+                e.preventDefault();
+                return false;
+            }
+            const hasUnselectedExtra = this.ingredients.some(ing => ing.is_extra && !ing.material_id);
+            if (hasUnselectedExtra) {
+                alert('Silakan pilih bahan baku untuk semua bahan ekstra yang ditambahkan.');
+                e.preventDefault();
+                return false;
+            }
+        }
     };
-    select.addEventListener('change', updateUnit);
-    updateUnit(); // Initial call
-  };
-
-  rowsContainer.querySelectorAll('.material-select').forEach(bindUnitChange);
-
-  const bindDeleteButton = (button) => {
-    button.addEventListener('click', (event) => {
-      event.preventDefault();
-      const row = button.closest('.production-material-row');
-      if (row && rowsContainer.querySelectorAll('.production-material-row').length > 1) {
-        row.remove();
-      }
-    });
-  };
-
-  rowsContainer.querySelectorAll('.production-material-row button').forEach(bindDeleteButton);
-
-  addButton.addEventListener('click', () => {
-    const rows = rowsContainer.querySelectorAll('.production-material-row');
-    const nextIndex = rows.length;
-    const template = rows[0].cloneNode(true);
-
-    template.querySelectorAll('select, input').forEach((element) => {
-      if (element.tagName === 'SELECT') {
-        element.name = `materials[${nextIndex}][material_id]`;
-        element.selectedIndex = 0;
-      }
-
-      if (element.tagName === 'INPUT') {
-        element.name = `materials[${nextIndex}][quantity]`;
-        element.value = '';
-      }
-    });
-
-    const select = template.querySelector('select');
-    if (select) bindUnitChange(select);
-
-    const deleteButton = template.querySelector('button');
-    if (deleteButton) {
-      bindDeleteButton(deleteButton);
-    }
-
-    rowsContainer.appendChild(template);
-  });
-})();
+}
 
 // Driver.js Guided Tour Initialization for Input Produksi
 document.addEventListener('DOMContentLoaded', function () {

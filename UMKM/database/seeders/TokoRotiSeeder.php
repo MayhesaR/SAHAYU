@@ -64,10 +64,10 @@ class TokoRotiSeeder extends Seeder
 
         // 2. Products
         $products = [
-            ['company_id' => $company->id, 'name' => 'Roti Cokelat Lumer', 'selling_price' => 12000, 'stock' => 0, 'minimum_stock' => 10],
-            ['company_id' => $company->id, 'name' => 'Roti Keju Spesial', 'selling_price' => 15000, 'stock' => 0, 'minimum_stock' => 10],
-            ['company_id' => $company->id, 'name' => 'Croissant Butter', 'selling_price' => 20000, 'stock' => 0, 'minimum_stock' => 5],
-            ['company_id' => $company->id, 'name' => 'Brownies Panggang', 'selling_price' => 45000, 'stock' => 0, 'minimum_stock' => 5],
+            ['company_id' => $company->id, 'name' => 'Roti Cokelat Lumer', 'selling_price' => 12000, 'stock' => 0, 'minimum_stock' => 10, 'image' => 'products/roti_cokelat.png'],
+            ['company_id' => $company->id, 'name' => 'Roti Keju Spesial', 'selling_price' => 15000, 'stock' => 0, 'minimum_stock' => 10, 'image' => 'products/roti_keju.png'],
+            ['company_id' => $company->id, 'name' => 'Croissant Butter', 'selling_price' => 20000, 'stock' => 0, 'minimum_stock' => 5, 'image' => 'products/croissant.png'],
+            ['company_id' => $company->id, 'name' => 'Brownies Panggang', 'selling_price' => 45000, 'stock' => 0, 'minimum_stock' => 5, 'image' => 'products/brownies.png'],
         ];
 
         $createdProducts = [];

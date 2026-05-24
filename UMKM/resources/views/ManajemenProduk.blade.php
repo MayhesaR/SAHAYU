@@ -15,7 +15,7 @@
                 Kelola daftar produk jadi agar proses Produksi, Penjualan, dan perhitungan HPP tetap sinkron.
             </p>
         </div>
-        <div class="flex items-center gap-3 w-full sm:w-auto">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
             <!-- Guided Tour Button -->
             <button type="button" id="btn-start-tour"
                     class="bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 rounded-xl px-4 py-2.5 text-xs font-bold transition-all flex items-center justify-center gap-2 border border-emerald-200/50 shadow-sm w-full sm:w-auto">
@@ -139,6 +139,35 @@
                             <input class="w-full bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl p-3 text-sm focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-stone-800 dark:text-white font-bold transition-all font-mono" min="0" name="minimum_stock" placeholder="0" required type="number"/>
                         </div>
                     </div>
+                    
+                    <!-- Resep Standar (Bahan Baku) -->
+                    <div class="space-y-3" x-data="{
+                        rows: [{ material_id: '', quantity: '' }]
+                    }">
+                        <div class="flex justify-between items-center">
+                            <label class="text-xs font-bold text-stone-400 dark:text-zinc-400 uppercase tracking-widest">Resep Standar (Bahan Baku)</label>
+                            <button class="px-2 py-1 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold rounded-lg border border-emerald-200/50 dark:border-emerald-800/40 flex items-center hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-all flex-shrink-0" type="button" @click="rows.push({ material_id: '', quantity: '' })">
+                                <span class="material-symbols-outlined text-xs mr-0.5 font-bold">add_circle</span> Tambah Bahan
+                            </button>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <template x-for="(row, idx) in rows" :key="idx">
+                                <div class="flex items-center gap-2 bg-stone-50/50 dark:bg-zinc-850/20 p-2 rounded-xl border border-stone-150 dark:border-zinc-800/40 min-w-0">
+                                    <select :name="'ingredients['+idx+'][material_id]'" x-model="row.material_id" required class="flex-1 min-w-0 bg-transparent border-none text-xs font-semibold focus:ring-0 text-stone-700 dark:text-zinc-350 bg-stone-50 dark:bg-zinc-800">
+                                        <option value="">Pilih bahan...</option>
+                                        @foreach($materials as $mat)
+                                            <option value="{{ $mat->id }}">{{ $mat->name }} ({{ $mat->unit }})</option>
+                                        @endforeach
+                                    </select>
+                                    <input type="number" step="any" min="0.0001" :name="'ingredients['+idx+'][quantity]'" x-model="row.quantity" placeholder="Qty" required class="w-20 flex-shrink-0 bg-white dark:bg-zinc-900 border-none rounded-lg p-1.5 text-xs text-center font-bold text-stone-850 dark:text-white focus:ring-1 focus:ring-emerald-500/30"/>
+                                    <button type="button" @click="if(rows.length > 1) rows.splice(idx,1)" class="text-stone-350 hover:text-red-500 transition-colors p-1 flex-shrink-0">
+                                        <span class="material-symbols-outlined text-base">delete</span>
+                                    </button>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
                     <button class="w-full px-6 py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full shadow-lg shadow-emerald-500/20 hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 font-bold text-xs" 
                             type="submit">
                         <span class="material-symbols-outlined text-base">save</span>
@@ -184,12 +213,13 @@
 
                                 <!-- Actions Overlay for Admin -->
                                 @if(auth()->user()->isAdmin())
-                                    <div class="absolute top-3 right-3 flex items-center gap-1.5 z-10 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200">
+                                    <div class="absolute top-3 right-3 flex items-center gap-1.5 z-10 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200">
                                         <button class="w-8 h-8 rounded-full bg-white/95 hover:bg-emerald-500 hover:text-white text-[#0b6e4f] dark:text-emerald-400 shadow-md flex items-center justify-center transition-all edit-product-btn"
                                                 data-id="{{ $product->id }}"
                                                 data-name="{{ $product->name }}"
                                                 data-price="{{ (int)$product->selling_price }}"
-                                                data-category-id="{{ $product->category_id }}">
+                                                data-category-id="{{ $product->category_id }}"
+                                                data-ingredients="{{ json_encode($product->ingredients->map(fn($ing) => ['material_id' => $ing->id, 'quantity' => (float) $ing->pivot->quantity])) }}">
                                             <span class="material-symbols-outlined text-base">edit</span>
                                         </button>
                                         <form action="{{ route('products.destroy', $product) }}" method="POST" onsubmit="return confirm('Hapus produk ini?')" class="inline">
@@ -350,6 +380,35 @@
                     <label class="text-xs font-bold text-stone-400 dark:text-zinc-400 uppercase tracking-widest">Harga Jual (Rp)</label>
                     <input name="selling_price" id="edit_price" required class="w-full px-4 py-3 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 border border-stone-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 text-stone-800 dark:text-white font-bold font-mono" type="number"/>
                 </div>
+                
+                <!-- Resep Standar (Bahan Baku) -->
+                <div class="space-y-3" id="edit-recipe-container" x-data="{
+                    rows: []
+                }" @edit-product-loaded.window="rows = $event.detail.ingredients.length > 0 ? $event.detail.ingredients : [{ material_id: '', quantity: '' }]">
+                    <div class="flex justify-between items-center">
+                        <label class="text-xs font-bold text-stone-400 dark:text-zinc-400 uppercase tracking-widest">Resep Standar (Bahan Baku)</label>
+                        <button class="px-2 py-1 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold rounded-lg border border-emerald-200/50 dark:border-emerald-800/40 flex items-center hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-all flex-shrink-0" type="button" @click="rows.push({ material_id: '', quantity: '' })">
+                            <span class="material-symbols-outlined text-xs mr-0.5 font-bold">add_circle</span> Tambah Bahan
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                        <template x-for="(row, idx) in rows" :key="idx">
+                            <div class="flex items-center gap-2 bg-stone-50/50 dark:bg-zinc-850/20 p-2 rounded-xl border border-stone-150 dark:border-zinc-800/40 min-w-0">
+                                <select :name="'ingredients['+idx+'][material_id]'" x-model="row.material_id" required class="flex-1 min-w-0 bg-transparent border-none text-xs font-semibold focus:ring-0 text-stone-700 dark:text-zinc-350 bg-stone-50 dark:bg-zinc-800">
+                                    <option value="">Pilih bahan...</option>
+                                    @foreach($materials as $mat)
+                                        <option value="{{ $mat->id }}">{{ $mat->name }} ({{ $mat->unit }})</option>
+                                    @endforeach
+                                </select>
+                                <input type="number" step="any" min="0.0001" :name="'ingredients['+idx+'][quantity]'" x-model="row.quantity" placeholder="Qty" required class="w-20 flex-shrink-0 bg-white dark:bg-zinc-900 border-none rounded-lg p-1.5 text-xs text-center font-bold text-stone-850 dark:text-white focus:ring-1 focus:ring-emerald-500/30"/>
+                                <button type="button" @click="if(rows.length > 1) rows.splice(idx,1)" class="text-stone-350 hover:text-red-500 transition-colors p-1 flex-shrink-0">
+                                    <span class="material-symbols-outlined text-base">delete</span>
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+                </div>
                 <button class="w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl shadow-lg shadow-emerald-500/20 transition-all font-bold text-xs uppercase tracking-widest" 
                         type="submit">
                     <span>Simpan Perubahan</span>
@@ -370,11 +429,15 @@
             const name = btn.dataset.name;
             const price = btn.dataset.price;
             const categoryId = btn.dataset.categoryId;
+            const ingredients = JSON.parse(btn.dataset.ingredients || '[]');
 
             document.getElementById('edit_name').value = name;
             document.getElementById('edit_price').value = price;
             document.getElementById('edit_category_id').value = categoryId || '';
             editForm.action = `/products/${id}`;
+
+            // Dispatch event to load ingredients in the Alpine.js component inside the modal
+            window.dispatchEvent(new CustomEvent('edit-product-loaded', { detail: { ingredients: ingredients } }));
 
             editModal.classList.remove('hidden');
             setTimeout(() => {

@@ -15,7 +15,7 @@
         </div>
     </div>
     
-    <div class="flex items-center space-x-3.5">
+    <div class="flex items-center gap-1.5 sm:gap-3.5">
         <!-- Theme Toggle Button -->
         <button @click="darkMode = !darkMode" 
                 class="text-stone-500 dark:text-white hover:text-[#0b6e4f] dark:hover:text-zinc-400 hover:bg-stone-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 p-2 rounded-xl transition-all duration-200 flex items-center justify-center cursor-pointer animate-fade-in" 
@@ -32,7 +32,7 @@
 
         <!-- Mail Button & Dropdown -->
         <div class="relative flex items-center" x-data="{ open: false }">
-            <button @click="open = !open" class="text-stone-500 dark:text-white hover:text-[#0b6e4f] dark:hover:text-zinc-400 hover:bg-stone-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 p-2 rounded-xl transition-all duration-200 relative hidden sm:block" title="Pesan">
+            <button @click="open = !open" class="text-stone-500 dark:text-white hover:text-[#0b6e4f] dark:hover:text-zinc-400 hover:bg-stone-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 p-2 rounded-xl transition-all duration-200 relative" title="Pesan">
                 <span class="material-symbols-outlined text-xl">mail</span>
                 <span class="absolute top-2 right-2 w-1.5 h-1.5 bg-[#0b6e4f] dark:bg-emerald-600 rounded-full border border-white"></span>
             </button>
@@ -45,7 +45,7 @@
                  x-transition:leave="transition ease-in duration-75"
                  x-transition:leave-start="transform opacity-100 scale-100"
                  x-transition:leave-end="transform opacity-0 scale-95"
-                 class="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-stone-100 dark:border-zinc-800/60 dark:border-zinc-800/80 p-4 z-50 focus:outline-none"
+                 class="absolute right-0 top-full mt-2 w-72 sm:w-80 bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-stone-100 dark:border-zinc-800/60 dark:border-zinc-800/80 p-4 z-50 focus:outline-none"
                  style="display: none;">
                 <div class="flex items-center justify-between border-b border-stone-100 dark:border-zinc-800/60 dark:border-zinc-800 pb-2.5 mb-3">
                     <h3 class="text-xs font-bold text-stone-800 dark:text-white flex items-center gap-1.5">
@@ -76,7 +76,7 @@
 
         <!-- Notifications Button & Dropdown -->
         <div class="relative flex items-center" x-data="{ open: false }">
-            <button @click="open = !open" class="text-stone-500 dark:text-white hover:text-[#0b6e4f] dark:hover:text-zinc-400 hover:bg-stone-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 p-2 rounded-xl transition-all duration-200 relative hidden sm:block" title="Notifikasi">
+            <button @click="open = !open" class="text-stone-500 dark:text-white hover:text-[#0b6e4f] dark:hover:text-zinc-400 hover:bg-stone-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 p-2 rounded-xl transition-all duration-200 relative" title="Notifikasi">
                 <span class="material-symbols-outlined text-xl">notifications</span>
                 <span class="absolute top-2 right-2 w-1.5 h-1.5 bg-rose-500 rounded-full border border-white"></span>
                 <span class="absolute top-2 right-2 w-1.5 h-1.5 bg-rose-500 rounded-full border border-white animate-ping"></span>
@@ -90,7 +90,7 @@
                  x-transition:leave="transition ease-in duration-75"
                  x-transition:leave-start="transform opacity-100 scale-100"
                  x-transition:leave-end="transform opacity-0 scale-95"
-                 class="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-stone-100 dark:border-zinc-800/60 dark:border-zinc-800/80 p-4 z-50 focus:outline-none"
+                 class="absolute right-0 top-full mt-2 w-72 sm:w-80 bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-stone-100 dark:border-zinc-800/60 dark:border-zinc-800/80 p-4 z-50 focus:outline-none"
                  style="display: none;">
                 <div class="flex items-center justify-between border-b border-stone-100 dark:border-zinc-800/60 dark:border-zinc-800 pb-2.5 mb-3">
                     <h3 class="text-xs font-bold text-stone-800 dark:text-white flex items-center gap-1.5">
@@ -116,7 +116,7 @@
         </div>
         
         <!-- Settings Button -->
-        <a href="{{ route('settings.index') }}" class="text-stone-500 dark:text-white hover:text-[#0b6e4f] dark:hover:text-zinc-400 hover:bg-stone-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 p-2 rounded-xl transition-all duration-200 hidden sm:block" title="Pengaturan">
+        <a href="{{ route('settings.index') }}" class="text-stone-500 dark:text-white hover:text-[#0b6e4f] dark:hover:text-zinc-400 hover:bg-stone-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 p-2 rounded-xl transition-all duration-200" title="Pengaturan">
             <span class="material-symbols-outlined text-xl">settings</span>
         </a>
 

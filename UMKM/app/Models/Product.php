@@ -51,4 +51,11 @@ class Product extends Model
             
         return $avg ? (float) $avg : 0.0;
     }
+
+    public function ingredients()
+    {
+        return $this->belongsToMany(Material::class, 'product_ingredient', 'product_id', 'material_id')
+            ->withPivot('quantity')
+            ->withTimestamps();
+    }
 }
