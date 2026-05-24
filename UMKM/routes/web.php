@@ -27,6 +27,26 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register')->middleware('guest');
 Route::post('/register', [RegisterController::class, 'register'])->middleware('guest');
 
+// Temporary setup route for Railway (to migrate, seed, and link storage via browser)
+Route::get('/run-setup', function () {
+    try {
+        $migration = \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        $seeder = \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'KatajiRasaSeeder', '--force' => true]);
+        $storageLink = \Illuminate\Support\Facades\Artisan::call('storage:link', ['--force' => true]);
+        
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Setup completed successfully!',
+            'output' => \Illuminate\Support\Facades\Artisan::output(),
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage()
+        ], 500);
+    }
+});
+
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
 // Main Authenticated Workspace Routes
