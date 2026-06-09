@@ -66,6 +66,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/history-transaksi/export', [TransactionHistoryController::class, 'export'])->name('history.export');
     Route::get('/catatan-utang', [DebtController::class, 'index'])->name('debts.index');
     Route::post('/catatan-utang/{debt}/bayar', [DebtController::class, 'payInstallment'])->name('debts.pay');
+    Route::post('/catatan-utang/pelanggan/{customer}/bayar-banyak', [DebtController::class, 'payMultipleInstallments'])->name('debts.pay-multiple');
 
     // Customer CRM Routes
     Route::get('/pelanggan', [CustomerController::class, 'index'])->name('customers.index');

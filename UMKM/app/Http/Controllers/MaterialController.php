@@ -208,7 +208,7 @@ class MaterialController extends Controller
             }
         });
 
-        event(new MaterialUsed(
+        $this->dispatchEvent(new MaterialUsed(
             materialId: (int) $material->id,
             quantityUsed: (float) (0 - (int) $validated['quantity']),
             productionId: 0
@@ -216,7 +216,7 @@ class MaterialController extends Controller
 
         $updatedMaterial = Material::findOrFail($material->id);
         if ((int) $updatedMaterial->stock <= (int) ($updatedMaterial->minimum_stock ?? 0)) {
-            event(new StockLowAlert(
+            $this->dispatchEvent(new StockLowAlert(
                 productId: (int) $material->id,
                 currentStock: (float) $updatedMaterial->stock,
                 minimumThreshold: (float) ($updatedMaterial->minimum_stock ?? 0),
@@ -268,7 +268,7 @@ class MaterialController extends Controller
             ]);
         });
 
-        event(new MaterialUsed(
+        $this->dispatchEvent(new MaterialUsed(
             materialId: (int) $material->id,
             quantityUsed: (float) $validated['quantity'],
             productionId: 0
@@ -276,7 +276,7 @@ class MaterialController extends Controller
 
         $updatedMaterial = Material::findOrFail($material->id);
         if ((int) $updatedMaterial->stock <= (int) ($updatedMaterial->minimum_stock ?? 0)) {
-            event(new StockLowAlert(
+            $this->dispatchEvent(new StockLowAlert(
                 productId: (int) $material->id,
                 currentStock: (float) $updatedMaterial->stock,
                 minimumThreshold: (float) ($updatedMaterial->minimum_stock ?? 0),
@@ -335,7 +335,7 @@ class MaterialController extends Controller
 
         $delta = (float) ((int) $validated['target_stock'] - $originalStock);
         if ($delta !== 0.0) {
-            event(new MaterialUsed(
+            $this->dispatchEvent(new MaterialUsed(
                 materialId: (int) $material->id,
                 quantityUsed: (float) (0 - $delta),
                 productionId: 0
@@ -344,7 +344,7 @@ class MaterialController extends Controller
 
         $updatedMaterial = Material::findOrFail($material->id);
         if ((int) $updatedMaterial->stock <= (int) ($updatedMaterial->minimum_stock ?? 0)) {
-            event(new StockLowAlert(
+            $this->dispatchEvent(new StockLowAlert(
                 productId: (int) $material->id,
                 currentStock: (float) $updatedMaterial->stock,
                 minimumThreshold: (float) ($updatedMaterial->minimum_stock ?? 0),
@@ -366,7 +366,7 @@ class MaterialController extends Controller
         $material->update($validated);
 
         if ((int) $material->stock <= (int) ($material->minimum_stock ?? 0)) {
-            event(new StockLowAlert(
+            $this->dispatchEvent(new StockLowAlert(
                 productId: (int) $material->id,
                 currentStock: (float) $material->stock,
                 minimumThreshold: (float) ($material->minimum_stock ?? 0),
@@ -389,7 +389,7 @@ class MaterialController extends Controller
             $material->delete();
 
             if ($stockDelta !== 0) {
-                event(new MaterialUsed(
+                $this->dispatchEvent(new MaterialUsed(
                     materialId: (int) $material->id,
                     quantityUsed: (float) (0 - $stockDelta),
                     productionId: 0

@@ -440,5 +440,94 @@ class FinalPolishTest extends TestCase
         $response->assertSee('QUESTION MARK');
         $response->assertSee('DOG');
     }
+
+    public function test_it_allows_bulk_payment_distributed_fifo_across_multiple_debts()
+    {
+        $company = Company::create([
+            'name' => 'SAHAYU Test Bakery',
+        ]);
+
+        $user = User::create([
+            'name' => 'Test Admin',
+            'email' => 'admin@sahayu.com',
+            'password' => bcrypt('password123'),
+            'company_id' => $company->id,
+            'role' => 'admin',
+        ]);
+
+        $customer = \App\Models\Customer::create([
+            'company_id' => $company->id,
+            'name' => 'Pelanggan Setia',
+            'phone' => '08123456789',
+        ]);
+
+        $sale1 = \App\Models\Sale::create([
+            'company_id' => $company->id,
+            'customer_id' => $customer->id,
+            'customer' => $customer->name,
+            'total' => 150000,
+            'payment_method' => 'debt',
+            'status' => 'unpaid',
+        ]);
+
+        $sale2 = \App\Models\Sale::create([
+            'company_id' => $company->id,
+            'customer_id' => $customer->id,
+            'customer' => $customer->name,
+            'total' => 250000,
+            'payment_method' => 'debt',
+            'status' => 'unpaid',
+        ]);
+
+        $debt1 = \App\Models\Debt::create([
+            'company_id' => $company->id,
+            'customer_id' => $customer->id,
+            'sale_id' => $sale1->id,
+            'total_amount' => 150000,
+            'remaining_amount' => 150000,
+            'due_date' => now()->addDays(5)->toDateString(),
+            'status' => 'unpaid',
+        ]);
+
+        $debt2 = \App\Models\Debt::create([
+            'company_id' => $company->id,
+            'customer_id' => $customer->id,
+            'sale_id' => $sale2->id,
+            'total_amount' => 250000,
+            'remaining_amount' => 250000,
+            'due_date' => now()->addDays(10)->toDateString(),
+            'status' => 'unpaid',
+        ]);
+
+        $response = $this->actingAs($user)->post(route('debts.pay-multiple', $customer), [
+            'amount_paid' => 200000,
+            'payment_method' => 'transfer',
+            'payment_date' => now()->toDateString(),
+            'selected_debts' => [$debt1->id, $debt2->id],
+        ]);
+
+        $response->assertRedirect(route('debts.index'));
+        $response->assertSessionHas('success');
+
+        $this->assertEquals(0.00, (float) $debt1->fresh()->remaining_amount);
+        $this->assertEquals('paid', $debt1->fresh()->status);
+        $this->assertEquals('paid', $sale1->fresh()->status);
+
+        $this->assertEquals(200000.00, (float) $debt2->fresh()->remaining_amount);
+        $this->assertEquals('partial', $debt2->fresh()->status);
+        $this->assertEquals('unpaid', $sale2->fresh()->status);
+
+        $this->assertDatabaseHas('debt_payments', [
+            'debt_id' => $debt1->id,
+            'amount_paid' => 150000,
+            'payment_method' => 'transfer',
+        ]);
+
+        $this->assertDatabaseHas('debt_payments', [
+            'debt_id' => $debt2->id,
+            'amount_paid' => 50000,
+            'payment_method' => 'transfer',
+        ]);
+    }
 }
 

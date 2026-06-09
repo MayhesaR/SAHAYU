@@ -247,7 +247,7 @@ class ProductionController extends Controller
         $goodQuantity = (int) ($production?->good_quantity ?? 0);
 
         foreach ($materialsInput as $materialInput) {
-            event(new MaterialUsed(
+            $this->dispatchEvent(new MaterialUsed(
                 materialId: (int) $materialInput['material_id'],
                 quantityUsed: (float) $materialInput['quantity'],
                 productionId: (int) ($production?->id ?? 0)
@@ -255,7 +255,7 @@ class ProductionController extends Controller
 
             $updatedMaterial = Material::find((int) $materialInput['material_id']);
             if ($updatedMaterial && (float) $updatedMaterial->stock <= (float) ($updatedMaterial->minimum_stock ?? 0)) {
-                event(new StockLowAlert(
+                $this->dispatchEvent(new StockLowAlert(
                     productId: (int) $updatedMaterial->id,
                     currentStock: (float) $updatedMaterial->stock,
                     minimumThreshold: (float) ($updatedMaterial->minimum_stock ?? 0),
@@ -265,14 +265,14 @@ class ProductionController extends Controller
         }
 
         if ($status === 'done' && $goodQuantity > 0) {
-            event(new ProductSold(
+            $this->dispatchEvent(new ProductSold(
                 productId: (int) $validated['product_id'],
                 qtyDeducted: (int) (0 - $goodQuantity),
             ));
 
             $updatedProduct = Product::findOrFail($validated['product_id']);
             if ((int) $updatedProduct->stock <= (int) ($updatedProduct->minimum_stock ?? 0)) {
-                event(new StockLowAlert(
+                $this->dispatchEvent(new StockLowAlert(
                     productId: (int) $updatedProduct->id,
                     currentStock: (float) $updatedProduct->stock,
                     minimumThreshold: (float) ($updatedProduct->minimum_stock ?? 0),
@@ -349,14 +349,14 @@ class ProductionController extends Controller
         });
 
         foreach ($materialBroadcasts as $materialBroadcast) {
-            event(new MaterialUsed(
+            $this->dispatchEvent(new MaterialUsed(
                 materialId: $materialBroadcast['id'],
                 quantityUsed: (float) (0 - $materialBroadcast['quantity']),
                 productionId: (int) $production->id
             ));
 
             if ((float) $materialBroadcast['stock'] <= (float) $materialBroadcast['minimum_stock']) {
-                event(new StockLowAlert(
+                $this->dispatchEvent(new StockLowAlert(
                     productId: $materialBroadcast['id'],
                     currentStock: (float) $materialBroadcast['stock'],
                     minimumThreshold: (float) $materialBroadcast['minimum_stock'],
@@ -366,13 +366,13 @@ class ProductionController extends Controller
         }
 
         if ($productBroadcast) {
-            event(new ProductSold(
+            $this->dispatchEvent(new ProductSold(
                 productId: $productBroadcast['id'],
                 qtyDeducted: $productBroadcast['quantity'],
             ));
 
             if ((int) $productBroadcast['stock'] <= (int) $productBroadcast['minimum_stock']) {
-                event(new StockLowAlert(
+                $this->dispatchEvent(new StockLowAlert(
                     productId: $productBroadcast['id'],
                     currentStock: (float) $productBroadcast['stock'],
                     minimumThreshold: (float) $productBroadcast['minimum_stock'],
@@ -445,7 +445,7 @@ class ProductionController extends Controller
             ]);
         });
 
-        event(new ProductionStatusUpdated(
+        $this->dispatchEvent(new ProductionStatusUpdated(
             productionId: (int) $production->id,
             status: $validated['status'],
             productId: (int) ($production->product_id ?? 0),
@@ -462,7 +462,7 @@ class ProductionController extends Controller
             }
 
             if ($quantityDelta !== 0) {
-                event(new ProductSold(
+                $this->dispatchEvent(new ProductSold(
                     productId: (int) $production->product_id,
                     qtyDeducted: (int) $quantityDelta,
                 ));
@@ -535,7 +535,7 @@ class ProductionController extends Controller
             ]);
         });
 
-        event(new ProductionStatusUpdated(
+        $this->dispatchEvent(new ProductionStatusUpdated(
             productionId: (int) $production->id,
             status: $validated['status'],
             productId: (int) ($production->product_id ?? 0),
@@ -552,7 +552,7 @@ class ProductionController extends Controller
             }
 
             if ($quantityDelta !== 0) {
-                event(new ProductSold(
+                $this->dispatchEvent(new ProductSold(
                     productId: (int) $production->product_id,
                     qtyDeducted: (int) $quantityDelta,
                 ));

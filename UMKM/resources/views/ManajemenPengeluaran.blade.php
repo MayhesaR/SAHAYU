@@ -2,19 +2,19 @@
 
 @section('content')
 <div class="space-y-6">
-    
+
     <!-- HEADER -->
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div class="space-y-1">
             <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight font-manrope">
-                Catat Pengeluaran <span class="text-rose-600 dark:text-rose-400">(Petty Cash)</span>
+                Catat Pengeluaran <span class="text-rose-600 dark:text-rose-400"></span>
             </h1>
             <p class="text-slate-500 dark:text-white font-medium text-sm flex items-center gap-2">
                 <span class="material-symbols-outlined text-sm">receipt_long</span>
                 Pencatatan kas keluar harian operasional UMKM secara cepat, disiplin, dan real-time.
             </p>
         </div>
-        
+
         <div class="flex items-center gap-3">
             <!-- Guided Tour Button -->
             <button type="button" id="btn-start-tour"
@@ -22,7 +22,7 @@
                 <span class="material-symbols-outlined text-[16px]">lightbulb</span>
                 Panduan Pengeluaran
             </button>
-            
+
             <!-- BACK TO DASHBOARD -->
             <a href="{{ route('dashboard') }}" class="flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-zinc-900 text-slate-600 dark:text-white font-bold text-xs rounded-xl shadow-sm hover:shadow-md hover:text-primary transition-all border border-slate-100 dark:border-zinc-800/60 w-fit">
                 <span class="material-symbols-outlined text-sm">arrow_back</span>
@@ -66,7 +66,7 @@
 
     <!-- MAIN TWO-COLUMN COCKPIT LAYOUT -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
+
         <!-- Left Side: Form to Record Expense (5 columns) -->
         <div id="tour-expense-form" class="lg:col-span-5 bg-white dark:bg-zinc-900 p-6 sm:p-8 rounded-[1.5rem] border border-stone-200/60 dark:border-zinc-800/80 shadow-sm space-y-6">
             <div class="space-y-1">
@@ -97,17 +97,17 @@
                 }
             }">
                 @csrf
-                
+
                 <!-- Tanggal -->
                 <div class="space-y-2">
                     <label for="expense_date" class="block text-[10px] font-black uppercase tracking-wider text-stone-450 dark:text-zinc-400">Tanggal Pengeluaran</label>
                     <div class="relative">
                         <span class="material-symbols-outlined absolute left-4 top-3.5 text-stone-400 dark:text-white text-sm">calendar_today</span>
-                        <input type="date" 
-                               id="expense_date" 
-                               name="expense_date" 
-                               value="{{ old('expense_date', date('Y-m-d')) }}" 
-                               required 
+                        <input type="date"
+                               id="expense_date"
+                               name="expense_date"
+                               value="{{ old('expense_date', date('Y-m-d')) }}"
+                               required
                                class="w-full bg-slate-50/70 dark:bg-zinc-850/70 dark:bg-zinc-800/70 border border-stone-200/60 dark:border-zinc-800/80 rounded-2xl pl-12 pr-4 py-3.5 text-sm font-semibold text-slate-800 dark:text-white focus:bg-white dark:focus:bg-zinc-900 focus:border-[#0b6e4f] dark:focus:border-emerald-500 focus:ring-4 focus:ring-[#0b6e4f]/10 dark:focus:ring-emerald-500/10 transition-all outline-none" />
                     </div>
                     @error('expense_date')
@@ -120,8 +120,8 @@
                     <label for="category" class="block text-[10px] font-black uppercase tracking-wider text-stone-450 dark:text-zinc-400">Kategori Pengeluaran</label>
                     <div class="relative">
                         <span class="material-symbols-outlined absolute left-4 top-3.5 text-stone-400 dark:text-white text-sm">category</span>
-                        <select id="category" 
-                                name="category" 
+                        <select id="category"
+                                name="category"
                                 required
                                 class="w-full bg-slate-50/70 dark:bg-zinc-850/70 dark:bg-zinc-800/70 border border-stone-200/60 dark:border-zinc-800/80 rounded-2xl pl-12 pr-10 py-3.5 text-sm font-semibold text-slate-800 dark:text-white focus:bg-white dark:focus:bg-zinc-900 focus:border-[#0b6e4f] dark:focus:border-emerald-500 focus:ring-4 focus:ring-[#0b6e4f]/10 dark:focus:ring-emerald-500/10 transition-all outline-none appearance-none cursor-pointer">
                             <option value="" disabled selected>-- Pilih Kategori --</option>
@@ -142,12 +142,12 @@
                     <label for="amount_display" class="block text-[10px] font-black uppercase tracking-wider text-stone-450 dark:text-zinc-400">Nominal Pengeluaran (Rupiah)</label>
                     <div class="relative">
                         <span class="absolute left-4 top-3.5 text-stone-400 dark:text-white text-sm font-black">Rp</span>
-                        <input type="text" 
-                               id="amount_display" 
+                        <input type="text"
+                               id="amount_display"
                                x-model="displayAmount"
                                @input="updateAmount($event.target.value)"
-                               placeholder="Contoh: 15.000" 
-                               required 
+                               placeholder="Contoh: 15.000"
+                               required
                                class="w-full bg-slate-50/70 dark:bg-zinc-850/70 dark:bg-zinc-800/70 border border-stone-200/60 dark:border-zinc-800/80 rounded-2xl pl-12 pr-4 py-3.5 text-sm font-semibold text-slate-800 dark:text-white focus:bg-white dark:focus:bg-zinc-900 focus:border-[#0b6e4f] dark:focus:border-emerald-500 focus:ring-4 focus:ring-[#0b6e4f]/10 dark:focus:ring-emerald-500/10 transition-all outline-none font-mono" />
                         <input type="hidden" name="amount" :value="rawAmount" />
                     </div>
@@ -161,10 +161,10 @@
                     <label for="description" class="block text-[10px] font-black uppercase tracking-wider text-stone-450 dark:text-zinc-400">Keterangan / Deskripsi (Opsional)</label>
                     <div class="relative">
                         <span class="material-symbols-outlined absolute left-4 top-3.5 text-stone-400 dark:text-white text-sm">description</span>
-                        <textarea id="description" 
-                                  name="description" 
+                        <textarea id="description"
+                                  name="description"
                                   rows="3"
-                                  placeholder="Tulis detail keperluan pengeluaran..." 
+                                  placeholder="Tulis detail keperluan pengeluaran..."
                                   class="w-full bg-slate-50/70 dark:bg-zinc-850/70 dark:bg-zinc-800/70 border border-stone-200/60 dark:border-zinc-800/80 rounded-2xl pl-12 pr-4 py-3.5 text-sm font-semibold text-slate-800 dark:text-white focus:bg-white dark:focus:bg-zinc-900 focus:border-[#0b6e4f] dark:focus:border-emerald-500 focus:ring-4 focus:ring-[#0b6e4f]/10 dark:focus:ring-emerald-500/10 transition-all outline-none">{{ old('description') }}</textarea>
                     </div>
                     @error('description')
@@ -173,7 +173,7 @@
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" 
+                <button type="submit"
                         class="w-full py-4 text-white hover:bg-[#09523b] font-bold text-sm rounded-2xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#0b6e4f]/10 dark:shadow-emerald-950/15 bg-[#0b6e4f] dark:bg-emerald-600">
                     <span class="material-symbols-outlined text-lg">save</span>
                     <span>Simpan Pengeluaran Baru</span>
@@ -183,7 +183,7 @@
 
         <!-- Right Side: Recent Expenditures Table (7 columns) -->
         <div id="tour-expense-table" class="lg:col-span-7 bg-white dark:bg-zinc-900 rounded-[1.5rem] border border-stone-200/60 dark:border-zinc-800/80 shadow-sm overflow-hidden flex flex-col">
-            
+
             <!-- Table Header -->
             <div class="px-8 py-6 border-b border-stone-200/60 dark:border-zinc-800/80">
                 <h4 class="text-lg font-black text-slate-900 dark:text-white font-manrope">Log Kas Keluar Terbaru</h4>
@@ -195,19 +195,19 @@
                 <form action="{{ route('expenses.index') }}" method="GET" class="flex flex-wrap items-center gap-3 flex-1">
                     <!-- Date Range -->
                     <div class="flex items-center gap-2">
-                        <input type="date" 
-                               name="start_date" 
-                               value="{{ request('start_date') }}" 
+                        <input type="date"
+                               name="start_date"
+                               value="{{ request('start_date') }}"
                                class="bg-white dark:bg-zinc-900 border border-stone-200/60 dark:border-zinc-800/80 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 dark:text-zinc-50 dark:text-zinc-200 outline-none focus:border-[#0b6e4f] dark:focus:border-emerald-500 transition-all" />
                         <span class="text-xs text-slate-400 dark:text-zinc-400 font-bold">s/d</span>
-                        <input type="date" 
-                               name="end_date" 
-                               value="{{ request('end_date') }}" 
+                        <input type="date"
+                               name="end_date"
+                               value="{{ request('end_date') }}"
                                class="bg-white dark:bg-zinc-900 border border-stone-200/60 dark:border-zinc-800/80 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 dark:text-zinc-50 dark:text-zinc-200 outline-none focus:border-[#0b6e4f] dark:focus:border-emerald-500 transition-all" />
                     </div>
 
                     <!-- Category Filter -->
-                    <select name="category" 
+                    <select name="category"
                             class="bg-white dark:bg-zinc-900 border border-stone-200/60 dark:border-zinc-800/80 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 dark:text-zinc-50 dark:text-zinc-200 outline-none focus:border-[#0b6e4f] dark:focus:border-emerald-500 transition-all">
                         <option value="all" {{ request('category') === 'all' ? 'selected' : '' }}>Semua Kategori</option>
                         <option value="Listrik/Air" {{ request('category') === 'Listrik/Air' ? 'selected' : '' }}>Listrik/Air</option>
@@ -218,18 +218,18 @@
                     </select>
 
                     <!-- Sort Filter -->
-                    <select name="sort_by" 
+                    <select name="sort_by"
                             class="bg-white dark:bg-zinc-900 border border-stone-200/60 dark:border-zinc-800/80 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 dark:text-zinc-50 dark:text-zinc-200 outline-none focus:border-[#0b6e4f] dark:focus:border-emerald-500 transition-all">
                         <option value="newest" {{ request('sort_by') === 'newest' ? 'selected' : '' }}>Terbaru</option>
                         <option value="highest" {{ request('sort_by') === 'highest' ? 'selected' : '' }}>Nominal Terbesar</option>
                     </select>
 
-                    <button type="submit" 
+                    <button type="submit"
                             class="px-4 py-2 bg-[#0b6e4f] dark:bg-emerald-600 hover:bg-[#09523b] text-white rounded-xl text-xs font-bold transition-all shadow-sm">
                         Cari
                     </button>
                     @if(request('start_date') || request('end_date') || (request('category') && request('category') !== 'all') || request('sort_by') !== 'newest')
-                        <a href="{{ route('expenses.index') }}" 
+                        <a href="{{ route('expenses.index') }}"
                            class="px-4 py-2 bg-stone-100 dark:bg-zinc-800 hover:bg-stone-200 dark:hover:bg-zinc-800 text-slate-600 dark:text-white rounded-xl text-xs font-bold transition-all">
                             Reset
                         </a>
@@ -237,7 +237,7 @@
                 </form>
 
                 <!-- Excel Export -->
-                <a href="{{ route('expenses.export', request()->all()) }}" 
+                <a href="{{ route('expenses.export', request()->all()) }}"
                    class="px-4 py-2 bg-[#0b6e4f] dark:bg-emerald-600 hover:bg-[#09523b] text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm">
                     <span class="material-symbols-outlined text-[16px]">download</span>
                     <span>Ekspor Excel</span>

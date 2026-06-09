@@ -68,7 +68,7 @@ class TransactionHistoryController extends Controller
                 'raw_amount' => (float) $sale->total,
                 'amount' => 'Rp ' . number_format($sale->total, 0, ',', '.'),
                 'time' => $sale->created_at,
-                'transaction_date' => $sale->created_at,
+                'transaction_date' => $sale->created_at->clone()->startOfDay(),
                 'created_at' => $sale->created_at,
                 'icon' => $isDebt ? 'menu_book' : 'payments',
                 'color' => $isDebt ? 'amber' : 'emerald',
@@ -103,6 +103,10 @@ class TransactionHistoryController extends Controller
 
         $paymentsItems = $payments->map(function ($pay) {
             $customerName = $pay->debt->customer->name ?? 'Pelanggan';
+            $parsedDate = \Carbon\Carbon::parse($pay->payment_date);
+            if ($pay->created_at) {
+                $parsedDate->setTimeFrom($pay->created_at);
+            }
             return [
                 'type' => 'payment',
                 'subtype' => 'payment',
@@ -110,7 +114,7 @@ class TransactionHistoryController extends Controller
                 'title' => "Cicilan Piutang",
                 'raw_amount' => (float) $pay->amount_paid,
                 'amount' => 'Rp ' . number_format($pay->amount_paid, 0, ',', '.'),
-                'time' => \Carbon\Carbon::parse($pay->payment_date),
+                'time' => $parsedDate,
                 'transaction_date' => \Carbon\Carbon::parse($pay->payment_date)->startOfDay(),
                 'created_at' => $pay->created_at,
                 'icon' => 'price_check',
@@ -316,7 +320,7 @@ class TransactionHistoryController extends Controller
                 'subtype' => $isDebt ? 'sale_debt' : 'sale_cash',
                 'raw_amount' => (float) $sale->total,
                 'created_at' => $sale->created_at,
-                'transaction_date' => $sale->created_at,
+                'transaction_date' => $sale->created_at->clone()->startOfDay(),
                 'customer_name' => $sale->customer ?? '',
                 'details' => $rincianKonten,
             ];
@@ -344,8 +348,12 @@ class TransactionHistoryController extends Controller
 
         $paymentsItems = $payments->map(function ($pay) {
             $customerName = $pay->debt->customer->name ?? 'Pelanggan';
+            $parsedDate = \Carbon\Carbon::parse($pay->payment_date);
+            if ($pay->created_at) {
+                $parsedDate->setTimeFrom($pay->created_at);
+            }
             return [
-                'tanggal' => \Carbon\Carbon::parse($pay->payment_date)->setTimezone('Asia/Jakarta')->format('d/m/Y H:i') . ' WIB',
+                'tanggal' => $parsedDate->setTimezone('Asia/Jakarta')->format('d/m/Y H:i') . ' WIB',
                 'nota_id' => '#' . str_pad($pay->id, 5, '0', STR_PAD_LEFT),
                 'kategori' => 'Cicilan',
                 'identitas' => $customerName,

@@ -147,6 +147,101 @@ class DebtController extends Controller
             }
         });
 
-        return redirect()->route('debts.index')->with('success', 'Cicilan pembayaran sebesar Rp ' . number_format($amountPaid, 0, ',', '.') . ' berhasil dicatat.');
+        return redirect()->route('debts.index')
+            ->with('success', 'Cicilan pembayaran sebesar Rp ' . number_format($amountPaid, 0, ',', '.') . ' berhasil dicatat.')
+            ->with('payment_success', true)
+            ->with('payment_amount', $amountPaid)
+            ->with('payment_customer', $debt->customer->name ?? 'Umum')
+            ->with('payment_method', $validated['payment_method'])
+            ->with('payment_date', $validated['payment_date']);
+    }
+
+    public function payMultipleInstallments(Request $request, Customer $customer): RedirectResponse
+    {
+        // Enforce multi-tenancy access check
+        if ((int)$customer->company_id !== (int)auth()->user()->company_id) {
+            abort(403, 'Aksi tidak diizinkan untuk perusahaan Anda.');
+        }
+
+        $validated = $request->validate([
+            'amount_paid' => ['required', 'numeric', 'min:1'],
+            'payment_method' => ['required', 'in:cash,transfer,qris'],
+            'payment_date' => ['required', 'date'],
+            'selected_debts' => ['required', 'array', 'min:1'],
+            'selected_debts.*' => ['required', 'exists:debts,id'],
+        ]);
+
+        $amountPaid = (float) $validated['amount_paid'];
+
+        // Get selected unpaid or partially paid debts for this customer, oldest first
+        $debts = Debt::where('customer_id', $customer->id)
+            ->whereIn('id', $validated['selected_debts'])
+            ->whereIn('status', ['unpaid', 'partial'])
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        $totalOutstanding = $debts->sum('remaining_amount');
+
+        if ($amountPaid > $totalOutstanding) {
+            throw ValidationException::withMessages([
+                'amount_paid' => 'Jumlah nominal bayar (Rp ' . number_format($amountPaid, 0, ',', '.') . ') melebihi total tagihan nota terpilih (Total: Rp ' . number_format($totalOutstanding, 0, ',', '.') . ').',
+            ]);
+        }
+
+        DB::transaction(function () use ($debts, $amountPaid, $validated) {
+            $remainingToDistribute = $amountPaid;
+
+            foreach ($debts as $debt) {
+                if ($remainingToDistribute <= 0) {
+                    break;
+                }
+
+                $debtRemaining = (float) $debt->remaining_amount;
+                $paymentForThisDebt = min($remainingToDistribute, $debtRemaining);
+
+                if ($paymentForThisDebt <= 0) {
+                    continue;
+                }
+
+                // Create payment log for this specific debt
+                $debt->payments()->create([
+                    'payment_date' => $validated['payment_date'],
+                    'amount_paid' => $paymentForThisDebt,
+                    'payment_method' => $validated['payment_method'],
+                ]);
+
+                // Recalculate remaining amount strictly based on the SUM of all payments
+                $totalPaid = $debt->payments()->sum('amount_paid');
+                $newRemaining = max(0.00, (float)$debt->total_amount - (float)$totalPaid);
+
+                // Transition status dynamically
+                $newStatus = 'partial';
+                if ($newRemaining <= 0) {
+                    $newStatus = 'paid';
+                } elseif ($newRemaining >= (float)$debt->total_amount) {
+                    $newStatus = 'unpaid';
+                }
+
+                $debt->update([
+                    'remaining_amount' => $newRemaining,
+                    'status' => $newStatus,
+                ]);
+
+                // Sync with parent sale status if fully settled
+                if ($newStatus === 'paid' && $debt->sale) {
+                    $debt->sale->update(['status' => 'paid']);
+                }
+
+                $remainingToDistribute -= $paymentForThisDebt;
+            }
+        });
+
+        return redirect()->route('debts.index')
+            ->with('success', 'Pembayaran sekaligus sebesar Rp ' . number_format($amountPaid, 0, ',', '.') . ' berhasil didistribusikan untuk ' . $customer->name . '.')
+            ->with('payment_success', true)
+            ->with('payment_amount', $amountPaid)
+            ->with('payment_customer', $customer->name)
+            ->with('payment_method', $validated['payment_method'])
+            ->with('payment_date', $validated['payment_date']);
     }
 }

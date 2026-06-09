@@ -120,9 +120,22 @@ class SaleController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        // Backward compatibility for single product submissions
+        if (!$request->has('items') && $request->has('product_id')) {
+            $request->merge([
+                'items' => [
+                    [
+                        'product_id' => $request->input('product_id'),
+                        'quantity' => $request->input('quantity', 1)
+                    ]
+                ]
+            ]);
+        }
+
         $validated = $request->validate([
-            'product_id' => ['required', 'exists:products,id'],
-            'quantity' => ['required', 'integer', 'min:1'],
+            'items' => ['required', 'array', 'min:1'],
+            'items.*.product_id' => ['required', 'exists:products,id'],
+            'items.*.quantity' => ['required', 'integer', 'min:1'],
             'customer_id' => ['nullable', 'exists:customers,id'],
             'payment_method' => ['required', 'in:cash,transfer,qris,debt'],
             'due_date' => ['nullable', 'date', 'after_or_equal:today'],
@@ -149,37 +162,32 @@ class SaleController extends Controller
             }
         }
 
-        $product = Product::findOrFail($validated['product_id']);
-        $unitPrice = (float) ($product->selling_price ?? 0);
-        $total = $unitPrice * (int) $validated['quantity'];
-        $quantity = (int) $validated['quantity'];
-
         $createdSaleId = null;
 
-        DB::transaction(function () use ($validated, $total, $unitPrice, $product, $quantity, $customerName, &$createdSaleId) {
-            $freshProduct = Product::query()->lockForUpdate()->findOrFail($product->id);
+        DB::transaction(function () use ($validated, $customerName, &$createdSaleId) {
+            $total = 0;
+            $itemsData = [];
 
-            if ((int) $freshProduct->stock < $quantity) {
-                throw ValidationException::withMessages([
-                    'quantity' => 'Stok produk "'.$freshProduct->name.'" tidak mencukupi.',
-                ]);
+            foreach ($validated['items'] as $itemInput) {
+                $freshProduct = Product::query()->lockForUpdate()->findOrFail($itemInput['product_id']);
+                $quantity = (int) $itemInput['quantity'];
+
+                if ((int) $freshProduct->stock < $quantity) {
+                    throw ValidationException::withMessages([
+                        'quantity' => 'Stok produk "'.$freshProduct->name.'" tidak mencukupi.',
+                    ]);
+                }
+
+                $unitPrice = (float) ($freshProduct->selling_price ?? 0);
+                $subtotal = $unitPrice * $quantity;
+                $total += $subtotal;
+
+                $itemsData[] = [
+                    'product' => $freshProduct,
+                    'quantity' => $quantity,
+                    'price' => $unitPrice,
+                ];
             }
-
-            $before = (int) $freshProduct->stock;
-            $after = $before - $quantity;
-
-            $freshProduct->update(['stock' => $after]);
-
-            $freshProduct->stockMovements()->create([
-                'type' => 'out',
-                'quantity' => $quantity,
-                'stock_before' => $before,
-                'stock_after' => $after,
-                'unit_price' => (float) $freshProduct->selling_price,
-                'transaction_date' => now()->toDateString(),
-                'reference' => 'Penjualan',
-                'note' => 'Pengurangan stok barang jadi karena penjualan.',
-            ]);
 
             $sale = Sale::create([
                 'company_id' => auth()->user()->company_id,
@@ -204,29 +212,49 @@ class SaleController extends Controller
                 ]);
             }
 
-            SaleItem::create([
-                'company_id' => auth()->user()->company_id,
-                'sale_id' => $sale->id,
-                'product_id' => $validated['product_id'],
-                'quantity' => $validated['quantity'],
-                'price' => $unitPrice,
-            ]);
+            foreach ($itemsData as $item) {
+                $product = $item['product'];
+                $quantity = $item['quantity'];
+
+                $before = (int) $product->stock;
+                $after = $before - $quantity;
+
+                $product->update(['stock' => $after]);
+
+                $product->stockMovements()->create([
+                    'type' => 'out',
+                    'quantity' => $quantity,
+                    'stock_before' => $before,
+                    'stock_after' => $after,
+                    'unit_price' => (float) $product->selling_price,
+                    'transaction_date' => now()->toDateString(),
+                    'reference' => 'Penjualan',
+                    'note' => 'Pengurangan stok barang jadi karena penjualan.',
+                ]);
+
+                SaleItem::create([
+                    'company_id' => auth()->user()->company_id,
+                    'sale_id' => $sale->id,
+                    'product_id' => $product->id,
+                    'quantity' => $quantity,
+                    'price' => $item['price'],
+                ]);
+
+                $this->dispatchEvent(new ProductSold(
+                    productId: (int) $product->id,
+                    qtyDeducted: $quantity,
+                ));
+
+                if ($after <= (int) ($product->minimum_stock ?? 0)) {
+                    $this->dispatchEvent(new StockLowAlert(
+                        productId: (int) $product->id,
+                        currentStock: (float) $after,
+                        minimumThreshold: (float) ($product->minimum_stock ?? 0),
+                        itemType: 'product'
+                    ));
+                }
+            }
         });
-
-        event(new ProductSold(
-            productId: (int) $validated['product_id'],
-            qtyDeducted: $quantity,
-        ));
-
-        $updatedProduct = Product::findOrFail($validated['product_id']);
-        if ((int) $updatedProduct->stock <= (int) ($updatedProduct->minimum_stock ?? 0)) {
-            event(new StockLowAlert(
-                productId: (int) $validated['product_id'],
-                currentStock: (float) $updatedProduct->stock,
-                minimumThreshold: (float) ($updatedProduct->minimum_stock ?? 0),
-                itemType: 'product'
-            ));
-        }
 
         $todayRevenue = Sale::whereDate('created_at', Carbon::today())->sum('total');
         $todayTransactions = Sale::whereDate('created_at', Carbon::today())->count();
@@ -258,7 +286,9 @@ class SaleController extends Controller
                     'timestamp' => $sale->created_at->timestamp,
                     'time' => $sale->created_at->format('H:i'),
                     'full_time' => $sale->created_at->format('d M Y H:i'),
-                    'product' => $sale->items->first()?->product?->name ?? '-',
+                    'product' => $sale->items->count() > 1 
+                        ? $sale->items->first()?->product?->name . ' +' . ($sale->items->count() - 1) . ' item lainnya'
+                        : ($sale->items->first()?->product?->name ?? '-'),
                     'qty' => (int) $sale->items->sum('quantity'),
                     'customer' => $sale->customer ?: 'Walk-in',
                     'payment_method' => strtoupper((string) $sale->payment_method),
@@ -275,7 +305,7 @@ class SaleController extends Controller
             }
         }
 
-        event(new SalesAnalyticsUpdated(
+        $this->dispatchEvent(new SalesAnalyticsUpdated(
             totalSales: (float) SaleItem::query()
                 ->join('sales', 'sales.id', '=', 'sale_items.sale_id')
                 ->whereDate('sales.created_at', Carbon::today())

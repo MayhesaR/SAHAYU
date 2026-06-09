@@ -197,7 +197,7 @@ class ProductController extends Controller
                         ]);
 
                         // Fire MaterialUsed event
-                        event(new MaterialUsed(
+                        $this->dispatchEvent(new MaterialUsed(
                             materialId: (int) $material->id,
                             quantityUsed: (float) $requiredQty,
                             productionId: 0
@@ -205,7 +205,7 @@ class ProductController extends Controller
 
                         // Fire StockLowAlert if needed
                         if ($after <= (float) ($material->minimum_stock ?? 0)) {
-                            event(new StockLowAlert(
+                            $this->dispatchEvent(new StockLowAlert(
                                 productId: (int) $material->id,
                                 currentStock: $after,
                                 minimumThreshold: (float) ($material->minimum_stock ?? 0),

@@ -7,15 +7,12 @@
      x-data="{ 
         paymentMethod: 'cash', 
         selectedCategory: 'all',
-        selectedProductId: '',
-        selectedProductPrice: 0,
-        selectedProductStock: 0,
-        quantity: 1,
         customerId: '',
         dueDate: '',
         isNewCustomerModalOpen: false,
         isSuccessModalOpen: {{ session('print_sale_id') ? 'true' : 'false' }},
         searchQuery: '',
+        cart: [],
         init() {
             const date = new Date();
             const yyyy = date.getFullYear();
@@ -31,14 +28,24 @@
             const dd = String(date.getDate()).padStart(2, '0');
             this.dueDate = `${yyyy}-${mm}-${dd}`;
         },
-        updateProductDetailsById(id, price, stock) {
-            this.selectedProductId = id;
-            this.selectedProductPrice = parseFloat(price);
-            this.selectedProductStock = parseInt(stock);
-            this.quantity = 1;
+        addToCart(id, name, price, stock) {
+            const existingItem = this.cart.find(item => item.product_id === id);
+            if (existingItem) {
+                if (existingItem.quantity < existingItem.stock) {
+                    existingItem.quantity++;
+                }
+            } else {
+                this.cart.push({
+                    product_id: id,
+                    name: name,
+                    price: parseFloat(price),
+                    stock: parseInt(stock),
+                    quantity: 1
+                });
+            }
         },
         get totalBill() {
-            return this.selectedProductPrice * this.quantity;
+            return this.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         },
         formatRupiah(val) {
             return 'Rp ' + new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(val);
@@ -132,8 +139,13 @@
             <form id="pos-form" action="{{ route('sales.store') }}" method="POST" class="space-y-5">
                 @csrf
 
-                <!-- Hidden Selected Product ID input -->
-                <input type="hidden" name="product_id" x-model="selectedProductId" required />
+                <!-- Dynamic Hidden Inputs for Cart Items -->
+                <template x-for="(item, index) in cart" :key="item.product_id">
+                    <div>
+                        <input type="hidden" :name="'items['+index+'][product_id]'" :value="item.product_id">
+                        <input type="hidden" :name="'items['+index+'][quantity]'" :value="item.quantity">
+                    </div>
+                </template>
 
                 <!-- 1. Product Grid & Filters -->
                 <div id="tour-pos-catalog" class="space-y-3">
@@ -184,21 +196,21 @@
                             @endphp
                             <div 
                                 @if(!$isOutOfStock)
-                                    @click="updateProductDetailsById('{{ $product->id }}', '{{ $product->selling_price }}', '{{ $product->stock }}')"
+                                    @click="addToCart('{{ $product->id }}', '{{ $product->name }}', '{{ $product->selling_price }}', '{{ $product->stock }}')"
                                 @endif
                                 x-show="(selectedCategory === 'all' || selectedCategory === '{{ $product->category_id }}') && '{{ strtolower($product->name) }}'.includes(searchQuery.toLowerCase())"
                                 :class="{
-                                    'border-[#0b6e4f] dark:border-emerald-500 bg-emerald-50/10 ring-2 ring-[#0b6e4f]/20 dark:ring-emerald-500/10': selectedProductId == '{{ $product->id }}',
-                                    'border-stone-200/60 dark:border-zinc-800/80 bg-white dark:bg-zinc-900 hover:border-stone-300 hover:shadow-sm': selectedProductId != '{{ $product->id }}' && !{{ $isOutOfStock ? 'true' : 'false' }},
+                                    'border-[#0b6e4f] dark:border-emerald-500 bg-emerald-50/10 ring-2 ring-[#0b6e4f]/20 dark:ring-emerald-500/10': cart.find(item => item.product_id == '{{ $product->id }}'),
+                                    'border-stone-200/60 dark:border-zinc-800/80 bg-white dark:bg-zinc-900 hover:border-stone-300 hover:shadow-sm': !cart.find(item => item.product_id == '{{ $product->id }}') && !{{ $isOutOfStock ? 'true' : 'false' }},
                                     'opacity-40 grayscale bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 cursor-not-allowed': {{ $isOutOfStock ? 'true' : 'false' }}
                                 }"
                                 class="relative rounded-xl border p-2.5 flex flex-col justify-between h-36 cursor-pointer transition-all duration-300 overflow-hidden select-none">
                                 
-                                <!-- Selection indicator dot/icon -->
-                                <div x-show="selectedProductId == '{{ $product->id }}'" 
-                                     class="absolute top-2 left-2 z-20 bg-[#0b6e4f] dark:bg-emerald-600 text-white w-5 h-5 rounded-full flex items-center justify-center shadow-md"
+                                <!-- Selection indicator dot/icon (Cart quantity) -->
+                                <div x-show="cart.find(item => item.product_id == '{{ $product->id }}')" 
+                                     class="absolute top-2 left-2 z-20 bg-[#0b6e4f] dark:bg-emerald-600 text-white min-w-5 h-5 px-1.5 rounded-full flex items-center justify-center shadow-md text-[10px] font-black"
                                      x-cloak x-transition>
-                                     <span class="material-symbols-outlined text-[12px] font-bold">check</span>
+                                     <span x-text="cart.find(item => item.product_id == '{{ $product->id }}')?.quantity"></span>
                                 </div>
 
                                 <!-- Out of stock overlay badge -->
@@ -240,41 +252,10 @@
                     </div>
                 </div>
 
-                <!-- 2 & 3. Quantity Stepper & Pilih Pelanggan (Side-by-Side to reduce spacing) -->
+                <!-- 2. Pilih Pelanggan (Stepped up for Multi-cart) -->
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-4 pt-4 border-t border-stone-100 dark:border-zinc-800/60">
-                    
-                    <!-- Stepper (5 Columns) -->
-                    <div class="md:col-span-5 space-y-2">
-                        <div class="flex justify-between items-center">
-                            <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-zinc-300">Jumlah Unit</label>
-                            <span x-show="selectedProductId && selectedProductStock > 0" class="text-[10px] font-semibold text-stone-400 dark:text-zinc-400" x-cloak>
-                                Sedia: <span class="text-[#0b6e4f] dark:text-emerald-400 font-bold" x-text="selectedProductStock"></span>
-                            </span>
-                        </div>
-                        <div class="flex items-center gap-3 bg-stone-50/50 dark:bg-zinc-850/30 dark:bg-zinc-800/30 p-1.5 rounded-xl border border-stone-200/60 dark:border-zinc-800/80 w-full h-[46px]">
-                            <button type="button" 
-                                    @click="if(quantity > 1) quantity--" 
-                                    class="w-10 h-10 bg-white dark:bg-zinc-900 hover:bg-stone-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800 text-stone-850 dark:text-white rounded-lg flex items-center justify-center border border-stone-200/60 dark:border-zinc-800/80 shadow-sm font-black text-sm active:scale-95 transition-all cursor-pointer">
-                                -
-                            </button>
-                            <input type="number" 
-                                   name="quantity" 
-                                   x-model.number="quantity" 
-                                   min="1" 
-                                   :max="selectedProductStock"
-                                   @input="if(quantity > selectedProductStock) quantity = selectedProductStock; if(quantity < 1) quantity = 1;"
-                                   class="flex-1 text-center bg-transparent border-none text-lg font-black text-stone-850 dark:text-white outline-none w-10"
-                                   required />
-                            <button type="button" 
-                                    @click="if(quantity < selectedProductStock) quantity++" 
-                                    class="w-10 h-10 bg-white dark:bg-zinc-900 hover:bg-stone-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800 text-stone-850 dark:text-white rounded-lg flex items-center justify-center border border-stone-200/60 dark:border-zinc-800/80 shadow-sm font-black text-sm active:scale-95 transition-all cursor-pointer">
-                                +
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Customer Dropdown (7 Columns) -->
-                    <div id="tour-pos-customer" class="md:col-span-7 space-y-2">
+                    <!-- Customer Dropdown (Full Width) -->
+                    <div id="tour-pos-customer" class="col-span-full space-y-2">
                         <div class="flex justify-between items-center">
                             <label class="text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-zinc-300">Pilih Pelanggan</label>
                             <span x-show="paymentMethod === 'debt'" 
@@ -389,20 +370,58 @@
                 </div>
                 
                 <div class="p-4 space-y-4">
-                    <!-- Item Line -->
-                    <div class="flex justify-between items-start gap-4">
-                        <div class="flex gap-2.5">
-                            <div class="w-10 h-10 bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 border border-stone-200/60 dark:border-zinc-800/80 rounded-xl flex items-center justify-center text-stone-400 dark:text-zinc-400 flex-shrink-0">
-                                <span class="material-symbols-outlined text-xl">bakery_dining</span>
+                    <!-- Cart List -->
+                    <div class="space-y-3">
+                        <template x-for="(item, index) in cart" :key="item.product_id">
+                            <div class="flex justify-between items-center gap-4 bg-stone-50/50 dark:bg-zinc-850/20 p-2.5 rounded-xl border border-stone-150 dark:border-zinc-800/40">
+                                <div class="flex items-center gap-2.5 min-w-0">
+                                    <div class="w-9 h-9 bg-white dark:bg-zinc-900 border border-stone-200/60 dark:border-zinc-800/80 rounded-lg flex items-center justify-center text-[#0b6e4f] dark:text-emerald-400 flex-shrink-0">
+                                        <span class="material-symbols-outlined text-lg">bakery_dining</span>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <p class="text-xs font-bold text-stone-850 dark:text-white truncate" x-text="item.name"></p>
+                                        <p class="text-[10px] font-semibold text-stone-400 dark:text-zinc-400 mt-0.5" x-text="formatRupiah(item.price)"></p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 flex-shrink-0">
+                                    <!-- Stepper in Cart -->
+                                    <div class="flex items-center bg-white dark:bg-zinc-950 border border-stone-200/60 dark:border-zinc-800/80 rounded-xl p-0.5 shadow-inner gap-0.5">
+                                        <button type="button" 
+                                                @click="if(item.quantity > 1) item.quantity--" 
+                                                class="w-8 h-8 flex items-center justify-center hover:bg-stone-50 dark:hover:bg-zinc-850 text-stone-600 dark:text-white rounded-lg text-sm font-bold select-none cursor-pointer transition-colors">
+                                            -
+                                        </button>
+                                        <input type="number" 
+                                               x-model.number="item.quantity" 
+                                               @input="
+                                                   let val = parseInt($event.target.value);
+                                                   if (!isNaN(val)) {
+                                                       item.quantity = Math.max(1, Math.min(val, item.stock));
+                                                   }
+                                               "
+                                               @blur="
+                                                   if (isNaN(item.quantity) || item.quantity < 1) {
+                                                       item.quantity = 1;
+                                                   }
+                                               "
+                                               class="w-8 text-center text-xs font-extrabold text-stone-850 dark:text-white bg-transparent border-none focus:ring-0 focus:outline-none p-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+                                        <button type="button" 
+                                                @click="if(item.quantity < item.stock) item.quantity++" 
+                                                class="w-8 h-8 flex items-center justify-center hover:bg-stone-50 dark:hover:bg-zinc-850 text-stone-600 dark:text-white rounded-lg text-sm font-bold select-none cursor-pointer transition-colors">
+                                            +
+                                        </button>
+                                    </div>
+                                    <!-- Remove Button -->
+                                    <button type="button" @click="cart.splice(index, 1)" class="text-stone-350 hover:text-red-500 transition-colors p-1 flex-shrink-0">
+                                        <span class="material-symbols-outlined text-base">delete</span>
+                                    </button>
+                                </div>
                             </div>
-                            <div>
-                                <p class="text-xs font-bold text-stone-850 dark:text-white" x-text="selectedProductId ? 'Item Terpilih' : 'Belum Ada Produk'"></p>
-                                <p class="text-[10px] font-semibold text-stone-400 dark:text-zinc-400 mt-0.5" x-text="selectedProductId ? 'Siap Checkout' : 'Sentuh kartu produk di sebelah kiri'"></p>
-                            </div>
-                        </div>
-                        <div class="text-right" x-show="selectedProductId">
-                            <p class="text-xs font-bold text-stone-800 dark:text-white" x-text="formatRupiah(selectedProductPrice)"></p>
-                            <p class="text-[10px] font-semibold text-stone-400 dark:text-zinc-400 mt-0.5" x-text="'x ' + quantity + ' pcs'"></p>
+                        </template>
+                        <div x-show="cart.length === 0" class="flex flex-col items-center justify-center py-6 text-stone-400 dark:text-zinc-500 space-y-1" x-cloak>
+                            <span class="material-symbols-outlined text-3xl opacity-40">shopping_cart</span>
+                            <p class="text-[10px] font-bold text-stone-700 dark:text-zinc-200">Keranjang Belanja Kosong</p>
+                            <p class="text-[9px] text-center max-w-[180px]">Sentuh kartu produk di sebelah kiri untuk menambahkan menu.</p>
                         </div>
                     </div>
 
@@ -445,7 +464,9 @@
                     <!-- Checkout Submit Button - Placed at the bottom of the receipt card -->
                     <button type="submit" 
                             form="pos-form"
-                            class="w-full text-white py-3.5 rounded-xl shadow-md shadow-[#0b6e4f]/10 dark:shadow-emerald-950/15 bg-[#0b6e4f] dark:bg-emerald-600 hover:bg-[#09523b] active:scale-[0.99] transition-all font-bold text-sm flex items-center justify-center gap-2 cursor-pointer">
+                            :disabled="cart.length === 0"
+                            :class="cart.length === 0 ? 'opacity-50 cursor-not-allowed bg-stone-400 dark:bg-zinc-800' : 'bg-[#0b6e4f] dark:bg-emerald-600 hover:bg-[#09523b]'"
+                            class="w-full text-white py-3.5 rounded-xl shadow-md shadow-[#0b6e4f]/10 dark:shadow-emerald-950/15 active:scale-[0.99] transition-all font-bold text-sm flex items-center justify-center gap-2 cursor-pointer">
                         <span class="material-symbols-outlined text-lg">check_circle</span>
                         <span>Konfirmasi & Cetak Nota</span>
                     </button>
