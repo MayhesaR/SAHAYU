@@ -677,4 +677,270 @@ class DashboardController extends Controller
             return redirect()->back()->withErrors(['export' => 'Gagal export Buku Kas: ' . $e->getMessage()]);
         }
     }
+
+    public function globalSearch(Request $request)
+    {
+        $q = trim($request->query('q', ''));
+        $companyId = auth()->user()->company_id;
+        $isAdmin = auth()->user()->role === 'admin';
+
+        // Static menus matching the sidebar navigation
+        $menus = [
+            [
+                'title' => 'Dashboard Harian',
+                'subtitle' => 'Ringkasan performa keuangan dan statistik harian',
+                'url' => route('dashboard'),
+                'icon' => 'dashboard',
+                'admin_only' => false
+            ],
+            [
+                'title' => 'Kasir POS',
+                'subtitle' => 'Pencatatan penjualan cepat dan kasir digital',
+                'url' => route('sales.index'),
+                'icon' => 'point_of_sale',
+                'admin_only' => false
+            ],
+            [
+                'title' => 'Riwayat Transaksi',
+                'subtitle' => 'Log transaksi penjualan dan cetak struk kembali',
+                'url' => route('history.index'),
+                'icon' => 'history',
+                'admin_only' => false
+            ],
+            [
+                'title' => 'Piutang / Kasbon',
+                'subtitle' => 'Catatan utang pelanggan dan cicilan pembayaran',
+                'url' => route('debts.index'),
+                'icon' => 'book',
+                'admin_only' => false
+            ],
+            [
+                'title' => 'Catat Pengeluaran',
+                'subtitle' => 'Pencatatan petty cash dan pengeluaran harian',
+                'url' => route('expenses.index'),
+                'icon' => 'receipt_long',
+                'admin_only' => false
+            ],
+            [
+                'title' => 'Data Pelanggan',
+                'subtitle' => 'Daftar pelanggan setia dan riwayat piutang mereka',
+                'url' => route('customers.index'),
+                'icon' => 'group',
+                'admin_only' => false
+            ],
+            [
+                'title' => 'Produk Jadi',
+                'subtitle' => 'Manajemen produk jadi, harga jual, dan stok barang',
+                'url' => route('products.index'),
+                'icon' => 'inventory',
+                'admin_only' => false
+            ],
+            [
+                'title' => 'HPP Otomatis',
+                'subtitle' => 'Kalkulasi HPP otomatis produk dari resep bahan baku',
+                'url' => route('hpp.index'),
+                'icon' => 'calculate',
+                'admin_only' => true
+            ],
+            [
+                'title' => 'Bahan Baku',
+                'subtitle' => 'Stok bahan baku, kategori, dan penyesuaian stok',
+                'url' => route('materials.index'),
+                'icon' => 'inventory_2',
+                'admin_only' => false
+            ],
+            [
+                'title' => 'Produksi',
+                'subtitle' => 'Pencatatan produksi harian dan penggunaan bahan baku',
+                'url' => route('productions.index'),
+                'icon' => 'precision_manufacturing',
+                'admin_only' => false
+            ],
+            [
+                'title' => 'Biaya Operasional',
+                'subtitle' => 'Manajemen biaya overhead (listrik, sewa, gaji dll)',
+                'url' => route('overhead.index'),
+                'icon' => 'account_balance_wallet',
+                'admin_only' => false
+            ],
+            [
+                'title' => 'Laporan Analisis',
+                'subtitle' => 'Laporan laba rugi, HPP, dan analisis mendalam',
+                'url' => route('reports.index'),
+                'icon' => 'analytics',
+                'admin_only' => false
+            ],
+            [
+                'title' => 'SAHAYU AI Assistant',
+                'subtitle' => 'Analisis data UMKM interaktif dengan asisten AI',
+                'url' => route('ai.index'),
+                'icon' => 'smart_toy',
+                'admin_only' => false
+            ],
+            [
+                'title' => 'Manajemen Akun',
+                'subtitle' => 'Kelola akun staff kasir dan administrator sistem',
+                'url' => route('accounts.index'),
+                'icon' => 'manage_accounts',
+                'admin_only' => true
+            ],
+        ];
+
+        // Filter menus based on admin status
+        $allowedMenus = array_values(array_filter($menus, function($m) use ($isAdmin) {
+            return !$m['admin_only'] || $isAdmin;
+        }));
+
+        $results = [];
+
+        if (strlen($q) < 2) {
+            // Suggested / Recent state
+            $menuItems = $allowedMenus;
+            if (strlen($q) === 1) {
+                $menuItems = array_values(array_filter($allowedMenus, function($m) use ($q) {
+                    return stripos($m['title'], $q) !== false || stripos($m['subtitle'], $q) !== false;
+                }));
+            }
+            if (!empty($menuItems)) {
+                $results[] = [
+                    'category' => 'Fitur & Navigasi',
+                    'items' => array_slice($menuItems, 0, 8)
+                ];
+            }
+
+            // Recent products
+            $recentProducts = \App\Models\Product::where('company_id', $companyId)
+                ->latest()
+                ->limit(3)
+                ->get()
+                ->map(function($p) {
+                    return [
+                        'title' => $p->name,
+                        'subtitle' => 'Stok: ' . $p->stock . ' | Harga: Rp ' . number_format($p->selling_price, 0, ',', '.'),
+                        'url' => route('products.index') . '?search=' . urlencode($p->name),
+                        'icon' => 'inventory',
+                        'badge' => 'Terbaru'
+                    ];
+                })->toArray();
+            if (!empty($recentProducts)) {
+                $results[] = [
+                    'category' => 'Produk Terbaru',
+                    'items' => $recentProducts
+                ];
+            }
+
+            // Recent Customers
+            $recentCustomers = \App\Models\Customer::where('company_id', $companyId)
+                ->latest()
+                ->limit(3)
+                ->get()
+                ->map(function($c) {
+                    return [
+                        'title' => $c->name,
+                        'subtitle' => 'No. HP: ' . ($c->phone ?: '-') . ' | Alamat: ' . ($c->address ?: '-'),
+                        'url' => route('customers.index') . '?search=' . urlencode($c->name),
+                        'icon' => 'group',
+                        'badge' => 'Pelanggan'
+                    ];
+                })->toArray();
+            if (!empty($recentCustomers)) {
+                $results[] = [
+                    'category' => 'Pelanggan Baru',
+                    'items' => $recentCustomers
+                ];
+            }
+        } else {
+            // Active search state
+            // 1. Menus
+            $matchedMenus = array_values(array_filter($allowedMenus, function($m) use ($q) {
+                return stripos($m['title'], $q) !== false || stripos($m['subtitle'], $q) !== false;
+            }));
+            if (!empty($matchedMenus)) {
+                $results[] = [
+                    'category' => 'Fitur & Navigasi',
+                    'items' => array_map(function($m) {
+                        $m['badge'] = 'Fitur';
+                        return $m;
+                    }, $matchedMenus)
+                ];
+            }
+
+            // 2. Products
+            $matchedProducts = \App\Models\Product::where('company_id', $companyId)
+                ->where('name', 'like', "%{$q}%")
+                ->limit(5)
+                ->get()
+                ->map(function($p) {
+                    return [
+                        'title' => $p->name,
+                        'subtitle' => 'Stok: ' . $p->stock . ' | Harga: Rp ' . number_format($p->selling_price, 0, ',', '.'),
+                        'url' => route('products.index') . '?search=' . urlencode($p->name),
+                        'icon' => 'inventory',
+                        'badge' => 'Produk'
+                    ];
+                })->toArray();
+            if (!empty($matchedProducts)) {
+                $results[] = [
+                    'category' => 'Produk Jadi',
+                    'items' => $matchedProducts
+                ];
+            }
+
+            // 3. Customers
+            $matchedCustomers = \App\Models\Customer::where('company_id', $companyId)
+                ->where(function($query) use ($q) {
+                    $query->where('name', 'like', "%{$q}%")
+                        ->orWhere('phone', 'like', "%{$q}%")
+                        ->orWhere('address', 'like', "%{$q}%");
+                })
+                ->limit(5)
+                ->get()
+                ->map(function($c) {
+                    return [
+                        'title' => $c->name,
+                        'subtitle' => 'No. HP: ' . ($c->phone ?: '-') . ' | Alamat: ' . ($c->address ?: '-'),
+                        'url' => route('customers.index') . '?search=' . urlencode($c->name),
+                        'icon' => 'group',
+                        'badge' => 'Pelanggan'
+                    ];
+                })->toArray();
+            if (!empty($matchedCustomers)) {
+                $results[] = [
+                    'category' => 'Pelanggan',
+                    'items' => $matchedCustomers
+                ];
+            }
+
+            // 4. Sales / Invoices
+            $matchedSales = \App\Models\Sale::where('company_id', $companyId)
+                ->where(function($query) use ($q) {
+                    $query->where('id', 'like', "%{$q}%")
+                        ->orWhere('customer', 'like', "%{$q}%")
+                        ->orWhere('payment_method', 'like', "%{$q}%");
+                })
+                ->latest()
+                ->limit(5)
+                ->get()
+                ->map(function($s) {
+                    $method = strtoupper($s->payment_method);
+                    $customer = $s->customer ?: 'Umum';
+                    return [
+                        'title' => "Penjualan #TRX-" . str_pad($s->id, 5, '0', STR_PAD_LEFT),
+                        'subtitle' => "Pelanggan: {$customer} | Total: Rp " . number_format($s->total, 0, ',', '.') . " | Metode: {$method}",
+                        'url' => route('history.index') . '?search=' . $s->id,
+                        'icon' => $s->payment_method === 'debt' ? 'menu_book' : 'payments',
+                        'badge' => 'Transaksi'
+                    ];
+                })->toArray();
+            if (!empty($matchedSales)) {
+                $results[] = [
+                    'category' => 'Riwayat Transaksi',
+                    'items' => $matchedSales
+                ];
+            }
+        }
+
+        return response()->json($results);
+    }
 }
+

@@ -1,16 +1,23 @@
 <header class="sticky top-0 z-40 bg-white dark:bg-zinc-900 border-b border-stone-200/60 dark:border-zinc-800/80 flex items-center justify-between px-6 md:px-8 h-16 w-full xl:sticky xl:top-4 xl:mt-4 xl:mb-2 xl:mx-8 xl:w-auto xl:bg-white/80 xl:backdrop-blur-md dark:xl:bg-zinc-900/85 xl:border xl:border-stone-200/50 dark:xl:border-zinc-850 dark:xl:border-zinc-800/65 xl:rounded-[1.25rem] xl:shadow-sm xl:shadow-stone-200/5 transition-all duration-300">
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-2 md:gap-4">
         <!-- Hamburger Menu Button (Mobile) -->
         <button @click="sidebarOpen = true" class="p-2 rounded-xl text-stone-500 dark:text-white hover:text-[#0b6e4f] dark:hover:text-zinc-400 hover:bg-stone-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 transition-all duration-200 xl:hidden">
             <span class="material-symbols-outlined text-2xl">menu</span>
+        </button>
+
+        <!-- Mobile Search Button -->
+        <button @click="searchOpen = true" class="p-2 rounded-xl text-stone-500 dark:text-white hover:text-[#0b6e4f] dark:hover:text-zinc-400 hover:bg-stone-50 dark:hover:bg-zinc-850 dark:hover:bg-zinc-800 dark:hover:bg-zinc-800/60 transition-all duration-200 md:hidden" title="Cari data...">
+            <span class="material-symbols-outlined text-2xl">search</span>
         </button>
         
         <!-- Search bar (Always shown or based on section) -->
         <div class="relative group hidden md:block">
             <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 dark:text-white group-focus-within:text-[#0b6e4f] dark:group-focus-within:text-emerald-400 transition-colors text-base">search</span>
-            <input class="pl-9 pr-12 py-1.5 bg-stone-100/60 dark:bg-zinc-800/60 border border-stone-200/40 dark:border-zinc-800/40 dark:border-zinc-700/40 rounded-xl text-xs focus:ring-4 focus:ring-[#0b6e4f]/5 dark:focus:ring-emerald-500/10 focus:border-[#0b6e4f] dark:focus:border-emerald-500 w-64 transition-all duration-200 font-medium placeholder-stone-400 dark:placeholder-zinc-500 text-stone-700 dark:text-zinc-50 dark:text-zinc-200 outline-none" 
+            <input class="pl-9 pr-12 py-1.5 bg-stone-100/60 dark:bg-zinc-800/60 border border-stone-200/40 dark:border-zinc-800/40 dark:border-zinc-700/40 rounded-xl text-xs focus:ring-4 focus:ring-[#0b6e4f]/5 dark:focus:ring-emerald-500/10 focus:border-[#0b6e4f] dark:focus:border-emerald-500 w-64 transition-all duration-200 font-medium placeholder-stone-400 dark:placeholder-zinc-500 text-stone-700 dark:text-zinc-50 dark:text-zinc-200 outline-none cursor-pointer" 
                    placeholder="Cari transaksi atau data..." 
-                   type="text"/>
+                   type="text"
+                   readonly
+                   @click="searchOpen = true"/>
             <span class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] font-bold text-stone-400 dark:text-zinc-400 bg-stone-200/60 dark:bg-zinc-800 px-1.5 py-0.5 rounded-md select-none pointer-events-none">⌘ K</span>
         </div>
     </div>

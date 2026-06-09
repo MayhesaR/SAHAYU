@@ -529,5 +529,52 @@ class FinalPolishTest extends TestCase
             'payment_method' => 'transfer',
         ]);
     }
+
+    public function test_global_search_requires_auth_and_returns_categorized_results()
+    {
+        $response = $this->get(route('api.global-search'));
+        $response->assertRedirect('/login');
+
+        $company = \App\Models\Company::create(['name' => 'Test Company Search']);
+        $user = \App\Models\User::create([
+            'company_id' => $company->id,
+            'name' => 'Searcher User',
+            'email' => 'searcher@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'admin'
+        ]);
+
+        $product = \App\Models\Product::create([
+            'company_id' => $company->id,
+            'name' => 'Basreng Chili Oil',
+            'selling_price' => 15000,
+            'stock' => 10,
+            'minimum_stock' => 2,
+        ]);
+
+        $customer = \App\Models\Customer::create([
+            'company_id' => $company->id,
+            'name' => 'Budi Santoso',
+            'phone' => '0812345',
+            'address' => 'Jl. Mawar',
+        ]);
+
+        // Empty query
+        $response = $this->actingAs($user)->get(route('api.global-search'));
+        $response->assertStatus(200);
+        $response->assertJsonFragment(['category' => 'Fitur & Navigasi']);
+        $response->assertJsonFragment(['category' => 'Produk Terbaru']);
+        $response->assertJsonFragment(['category' => 'Pelanggan Baru']);
+
+        // Query matching product
+        $response = $this->actingAs($user)->get(route('api.global-search', ['q' => 'Basreng']));
+        $response->assertStatus(200);
+        $response->assertJsonFragment(['title' => 'Basreng Chili Oil']);
+
+        // Query matching customer
+        $response = $this->actingAs($user)->get(route('api.global-search', ['q' => 'Budi']));
+        $response->assertStatus(200);
+        $response->assertJsonFragment(['title' => 'Budi Santoso']);
+    }
 }
 

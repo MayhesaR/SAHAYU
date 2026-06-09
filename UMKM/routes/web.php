@@ -50,6 +50,7 @@ Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 // Main Authenticated Workspace Routes
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard/export', [DashboardController::class, 'exportExcel'])->name('dashboard.export');
+    Route::get('/api/global-search', [DashboardController::class, 'globalSearch'])->name('api.global-search');
 
     // Profil Saya
     Route::get('/profil', [ProfileController::class, 'index'])->name('profile.index');

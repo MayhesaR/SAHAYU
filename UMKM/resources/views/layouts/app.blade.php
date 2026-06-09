@@ -218,11 +218,37 @@
             border-color: #18181b !important;
         }
 
+        [x-cloak] { display: none !important; }
+
         @yield('styles')
     </style>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 text-stone-800 dark:text-white antialiased selection:bg-emerald-500/20 selection:text-emerald-900 dark:selection:text-emerald-300 dark:selection:text-white overflow-x-hidden max-w-full" x-data="{ sidebarOpen: false }">
+<body class="bg-stone-50 dark:bg-zinc-850 dark:bg-zinc-800 text-stone-800 dark:text-white antialiased selection:bg-emerald-500/20 selection:text-emerald-900 dark:selection:text-emerald-300 dark:selection:text-white overflow-x-hidden max-w-full"
+      x-data="{ 
+          sidebarOpen: false,
+          searchOpen: false, 
+          searchInput: '', 
+          searchResults: [], 
+          isLoading: false,
+          fetchResults() {
+              this.isLoading = true;
+              fetch('/api/global-search?q=' + encodeURIComponent(this.searchInput))
+                  .then(res => res.json())
+                  .then(data => {
+                      this.searchResults = data;
+                      this.isLoading = false;
+                  })
+                  .catch(() => {
+                      this.isLoading = false;
+                  });
+          }
+      }"
+      x-init="$watch('searchOpen', val => { if(val) { $nextTick(() => $refs.searchInput.focus()); fetchResults(); } else { searchInput = ''; } })"
+      @keydown.window.prevent.cmd.k="searchOpen = true"
+      @keydown.window.prevent.meta.k="searchOpen = true"
+      @keydown.window.prevent.ctrl.k="searchOpen = true"
+      @keydown.window.escape="searchOpen = false">
 
     <!-- Mobile sidebar backdrop -->
     <div x-show="sidebarOpen" 
@@ -239,6 +265,110 @@
             @yield('content')
         </div>
     </main>
+
+    <!-- Global Spotlight Search Modal -->
+    <div x-show="searchOpen" 
+         class="fixed inset-0 z-[150] overflow-y-auto bg-stone-900/40 dark:bg-black/70 backdrop-blur-md flex items-start justify-center pt-20 px-4"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         @click.self="searchOpen = false"
+         x-cloak>
+        
+        <div x-show="searchOpen"
+             class="bg-white dark:bg-zinc-900 border border-stone-200/60 dark:border-zinc-800/80 shadow-2xl rounded-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[75vh]"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+             x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+             x-transition:leave-end="opacity-0 scale-95 translate-y-4">
+             
+            <!-- Search Header -->
+            <div class="relative flex items-center border-b border-stone-100 dark:border-zinc-850 shrink-0">
+                <span class="material-symbols-outlined absolute left-4 text-stone-400 dark:text-zinc-500 text-xl">search</span>
+                <input x-model="searchInput"
+                       @input.debounce.300ms="fetchResults()"
+                       x-ref="searchInput"
+                       type="text"
+                       class="w-full bg-transparent pl-12 pr-12 py-4 text-stone-855 dark:text-zinc-150 text-sm focus:outline-none placeholder-stone-400 dark:placeholder-zinc-500 font-medium"
+                       placeholder="Cari produk, pelanggan, transaksi, atau menu..." />
+                
+                <!-- Loading indicator -->
+                <div x-show="isLoading" class="absolute right-4 flex items-center" x-cloak>
+                    <div class="w-4 h-4 rounded-full border-2 border-[#0b6e4f] dark:border-emerald-500 border-t-transparent animate-spin"></div>
+                </div>
+
+                <!-- Clear button -->
+                <button x-show="searchInput && !isLoading" 
+                        @click="searchInput = ''; fetchResults(); $refs.searchInput.focus()" 
+                        class="absolute right-4 text-stone-400 dark:text-zinc-400 hover:text-stone-650 dark:hover:text-white transition-colors"
+                        type="button" 
+                        x-cloak>
+                    <span class="material-symbols-outlined text-lg">close</span>
+                </button>
+            </div>
+
+            <!-- Search Results Container -->
+            <div class="overflow-y-auto flex-1 px-4 py-3 min-h-[250px] max-h-[450px] bg-white dark:bg-zinc-900 custom-scrollbar">
+                <!-- If there are results -->
+                <div class="space-y-4" x-show="searchResults.length > 0">
+                    <template x-for="group in searchResults" :key="group.category">
+                        <div>
+                            <h4 class="text-[10px] font-bold text-[#0b6e4f] dark:text-emerald-400 uppercase tracking-widest mb-2 px-2" x-text="group.category"></h4>
+                            <div class="space-y-1">
+                                <template x-for="item in group.items" :key="item.title + item.url">
+                                    <a :href="item.url" 
+                                       class="flex items-center justify-between p-2 rounded-xl hover:bg-stone-50 dark:hover:bg-zinc-800/40 transition-all duration-200 group/item">
+                                        <div class="flex items-center gap-3 min-w-0">
+                                            <div class="w-8 h-8 rounded-lg bg-stone-100/80 dark:bg-zinc-800 flex items-center justify-center text-stone-500 dark:text-zinc-400 group-hover/item:bg-[#0b6e4f]/10 dark:group-hover/item:bg-emerald-500/10 group-hover/item:text-[#0b6e4f] dark:group-hover/item:text-emerald-400 transition-colors shrink-0">
+                                                <span class="material-symbols-outlined text-lg" x-text="item.icon"></span>
+                                            </div>
+                                            <div class="min-w-0">
+                                                <p class="text-xs font-semibold text-stone-750 dark:text-zinc-200 group-hover/item:text-[#0b6e4f] dark:group-hover/item:text-emerald-400 transition-colors truncate" x-text="item.title"></p>
+                                                <p class="text-[10px] text-stone-450 dark:text-zinc-500 font-medium mt-0.5 truncate" x-text="item.subtitle"></p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-2 shrink-0">
+                                            <span class="text-[9px] font-bold px-2 py-0.5 rounded-full" 
+                                                  :class="item.badge === 'Fitur' ? 'bg-emerald-50 text-[#0b6e4f] dark:bg-emerald-950/40 dark:text-emerald-400' : 
+                                                          (item.badge === 'Produk' ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-400' :
+                                                          (item.badge === 'Pelanggan' ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400' : 'bg-stone-100 text-stone-600 dark:bg-zinc-800 dark:text-zinc-400'))"
+                                                  x-text="item.badge"></span>
+                                            <span class="material-symbols-outlined text-stone-300 dark:text-zinc-650 group-hover/item:text-[#0b6e4f] dark:group-hover/item:text-emerald-400 text-sm transition-transform duration-200 group-hover/item:translate-x-0.5">chevron_right</span>
+                                        </div>
+                                    </a>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Empty State -->
+                <div x-show="!isLoading && searchResults.length === 0 && searchInput" 
+                     class="py-12 text-center flex flex-col items-center justify-center" 
+                     x-cloak>
+                    <span class="material-symbols-outlined text-stone-300 dark:text-zinc-750 text-5xl mb-3">search_off</span>
+                    <p class="text-xs font-semibold text-stone-650 dark:text-zinc-350">Tidak ada hasil ditemukan untuk "<span class="text-stone-850 dark:text-zinc-150 font-bold" x-text="searchInput"></span>"</p>
+                    <p class="text-[10px] text-stone-400 dark:text-zinc-500 mt-1">Coba gunakan kata kunci pencarian yang lain</p>
+                </div>
+            </div>
+
+            <!-- Search Footer -->
+            <div class="px-4 py-2.5 bg-stone-50 dark:bg-zinc-900/60 border-t border-stone-100 dark:border-zinc-850 flex items-center justify-between text-[10px] text-stone-400 dark:text-zinc-500 font-medium shrink-0">
+                <div class="flex items-center gap-3">
+                    <span class="flex items-center gap-1"><span class="bg-stone-200 dark:bg-zinc-800 px-1 py-0.5 rounded text-[8px] font-bold text-stone-600 dark:text-zinc-400">ESC</span> Keluar</span>
+                    <span class="flex items-center gap-1"><span class="bg-stone-200 dark:bg-zinc-800 px-1.5 py-0.5 rounded text-[8px] font-bold text-stone-600 dark:text-zinc-400">↵</span> Navigasi</span>
+                </div>
+                <div>
+                    <span>SAHAYU Command Palette</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
     @yield('scripts')
 </body>
